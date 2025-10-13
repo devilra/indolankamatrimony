@@ -1,0 +1,46 @@
+"use client";
+import React, { useEffect, useState } from "react";
+
+const images = ["/banner/b1.webp", "/banner/b2.webp"];
+
+const HomePage = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div>
+      <div className="h-[200px] md:h-[400px] lg:h-[530px] overflow-hidden relative ">
+        {/* Background images loop */}
+        {images.map((img, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-transform duration-[5000ms] ease-in-out   ${
+              index === currentIndex
+                ? "opacity-100 scale-150 z-10 "
+                : "opacity-0 scale-100 z-0"
+            } transition-opacity `}
+            style={{
+              backgroundImage: `url(${img})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* section-----------------------2 */}
+
+      <section className="bg-black h-[400px]">
+        <h1 className="text-white">Section-2</h1>
+      </section>
+    </div>
+  );
+};
+
+export default HomePage;
