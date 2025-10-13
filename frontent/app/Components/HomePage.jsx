@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Services from "./Services";
+import StatsSection from "./StatsSection";
 
 const images = ["/banner/b1.webp", "/banner/b2.webp"];
 
@@ -36,9 +38,12 @@ const HomePage = () => {
 
       {/* section-----------------------2 */}
 
-      <section className="bg-black h-[400px]">
-        <h1 className="text-white">Section-2</h1>
-      </section>
+      <div>
+        <Services />
+      </div>
+      <div className="bg-gradient-to-r from-amber-50/50 to-amber-100/40">
+        <StatsSection />
+      </div>
     </div>
   );
 };

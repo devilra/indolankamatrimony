@@ -40,10 +40,10 @@ const Navbar = () => {
 
   return (
     <header
-      className={`transition-all duration-500 ${
+      className={`transition-all z-50 duration-500 ${
         isFixed
-          ? "fixed top-0 left-0 w-full z-50 translate-y-0 shadow-md bg-white"
-          : "relative bg-white"
+          ? "fixed top-0 left-0 w-full z-[999]  shadow-md bg-white"
+          : "relative bg-white z-[50]"
       }`}
     >
       {/* 🔸 Top info bar (hidden on mobile) */}
@@ -161,7 +161,7 @@ const Navbar = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed lg:hidden top-0 right-0 w-1/2 h-full bg-white shadow-2xl z-50 flex flex-col items-start px-5 pt-10 justify-start space-y-2 text-black font-semibold text-[15px]"
+            className="fixed lg:hidden top-0 right-0 w-1/2 h-full z-[50] bg-white shadow-2xl  flex flex-col items-start px-5 pt-10 justify-start space-y-2 text-black font-semibold text-[15px]"
           >
             <button
               onClick={toggleMenu}
