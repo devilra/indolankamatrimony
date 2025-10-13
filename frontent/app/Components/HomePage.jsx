@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Services from "./Services";
 import StatsSection from "./StatsSection";
+import Parterns from "./Parterns";
 
 const images = ["/banner/b1.webp", "/banner/b2.webp"];
 
@@ -43,6 +44,9 @@ const HomePage = () => {
       </div>
       <div className="bg-gradient-to-r from-amber-50/50 to-amber-100/40">
         <StatsSection />
+        <div>
+          <Parterns />
+        </div>
       </div>
     </div>
   );

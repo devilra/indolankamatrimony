@@ -55,7 +55,7 @@ const StatsSection = () => {
           </div>
         ))}
       </div>
-      <div className="py-15 ">
+      <div className="py-10 ">
         <h1 className="cinzel_font text-center font-semibold text-2xl md:text-3xl lg:text-2xl text-[#C48C46]">
           Looking for Partner
         </h1>
