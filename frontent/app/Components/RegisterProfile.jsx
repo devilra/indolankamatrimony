@@ -256,17 +256,22 @@ const RegisterProfile = () => {
   };
 
   //console.log(Object.entries(dropdownData));
-  console.log(formData);
+  //console.log(formData);
 
   const [image, setImage] = useState(null);
 
   const handleSelectChange = (name, value) => {
-    setFormData((prev) => setFormData({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="max-w-7xl mx-auto pt-10 md:pt-15 lg:pt-20  shadow-lg rounded-2xl p-6 md:p-10">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c]  text-center mb-8">
+    <div className="max-w-7xl mx-auto pt-10 md:pt-15 lg:pt-15  shadow-lg rounded-2xl p-6 md:p-10">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c]  text-center mb-14">
         Matrimony Profile Registration
       </h1>
       <div className="lg:max-w-4xl lg:mx-auto  lg:bg-white lg:shadow-2xl lg:p-3 lg:gap-10 rounded-2xl lg:flex">
@@ -277,7 +282,7 @@ const RegisterProfile = () => {
             className="h-[400px] lg:pt-5"
           />
         </div>
-        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2  lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2">
+        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2">
           {Object.entries(dropdownData).map(([label, options]) => {
             const fieldName = dropdownFieldMap[label];
             return (
@@ -343,6 +348,7 @@ const RegisterProfile = () => {
                   name={field}
                   value={formData[field]}
                   placeholder={`Enter ${field}`}
+                  onChange={handleChange}
                   className=""
                 />
               ) : (
@@ -351,6 +357,7 @@ const RegisterProfile = () => {
                   name={field}
                   value={formData[field]}
                   placeholder={`Enter ${field}`}
+                  onChange={handleChange}
                   className="py-5"
                 />
               )}

@@ -4,7 +4,7 @@ import RegisterProfile from "../Components/RegisterProfile";
 const Register = () => {
   return (
     <div className="mt-16">
-      <section className="bg-gradient-to-r  from-gray-400 via-gray-600 to-gray-900 text-center py-24 ">
+      <section className="bg-gradient-to-r  from-gray-400 via-gray-600 to-gray-900 text-center pb-10 pt-28 ">
         <p className="text-yellow-400 text-lg font-semibold tracking-wide mb-4">
           WE ARE HERE TO ASSIST YOU.
         </p>
