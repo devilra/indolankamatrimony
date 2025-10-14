@@ -17,7 +17,7 @@ const Register = () => {
           Most Trusted and Premium Matrimony Service in the World.
         </p>
       </section>
-      <section className="bg-yellow-400/45  h-[300px] md:h-[220px] lg:h-[220px]">
+      {/* <section className="bg-yellow-400/45  h-[300px] md:h-[220px] lg:h-[220px]">
         <div className="flex flex-col justify-center items-center md:flex-row lg:flex-row md:justify-around ">
           <img
             src="/banner/b3.webp"
@@ -28,7 +28,7 @@ const Register = () => {
             Now Registry Your Profile Easy and fast.
           </p>
         </div>
-      </section>
+      </section> */}
       <section className="bg-gradient-to-r from-amber-50/20 to-amber-100/50">
         <RegisterProfile />
       </section>

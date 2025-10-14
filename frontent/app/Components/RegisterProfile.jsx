@@ -269,11 +269,15 @@ const RegisterProfile = () => {
       <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c]  text-center mb-8">
         Matrimony Profile Registration
       </h1>
-      <div className="lg:max-w-4xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:p-3 lg:gap-10 rounded-2xl lg:flex">
+      <div className="lg:max-w-4xl lg:mx-auto  lg:bg-white lg:shadow-2xl lg:p-3 lg:gap-10 rounded-2xl lg:flex">
         <div className="hidden md:hidden lg:block">
-          <img src="/register/r1.jpg" alt="Love" className="h-[400px]" />
+          <img
+            src="/register/r1.jpg"
+            alt="Love"
+            className="h-[400px] lg:pt-5"
+          />
         </div>
-        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-20 md:grid-cols-2  lg:grid-cols-1 gap-2 md:gap-6 lg:gap-6">
+        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2  lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2">
           {Object.entries(dropdownData).map(([label, options]) => {
             const fieldName = dropdownFieldMap[label];
             return (
