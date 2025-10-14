@@ -269,104 +269,111 @@ const RegisterProfile = () => {
       <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c]  text-center mb-8">
         Matrimony Profile Registration
       </h1>
-      <form className="grid grid-cols-1 pt-10 md:pt-15 lg:pt-20 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 lg:gap-6">
-        {Object.entries(dropdownData).map(([label, options]) => {
-          const fieldName = dropdownFieldMap[label];
-          return (
-            <div
-              key={label}
-              className={`flex flex-col w-full ${
-                label === "moccupation" && "lg:col-span-3"
-              } `}
-            >
-              <Label className="capitalize text-sm py-2 ">{label} :</Label>
-              <Select
-                onValueChange={(value) => handleSelectChange(fieldName, value)}
-                className="w-full"
-              >
-                <SelectTrigger className="w-full py-5">
-                  <SelectValue placeholder={`Select ${label}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {options.map((opt) => (
-                    <SelectItem key={opt} value={opt}>
-                      {opt}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          );
-        })}
-
-        {/* 🔤 Text Inputs */}
-
-        {[
-          "pname",
-          "dob",
-          "age",
-          "pbrith",
-          "tbrith",
-          "height",
-          "weight",
-          "subcaste",
-          "fname",
-          "mname",
-          "sister",
-          "brother",
-          "children",
-          "rplace",
-          "whatsappno",
-          "email",
-          "addressdetails",
-          "phonenumber",
-        ].map((field) => (
-          <div
-            key={field}
-            className={`flex flex-col ${
-              field === "addressdetails" ? "sm:col-span-2 lg:col-span-3" : ""
-            }`}
-          >
-            <Label className="capitalize text-sm py-2 ">{field} :</Label>
-            {field === "addressdetails" ? (
-              <Textarea
-                name={field}
-                value={formData[field]}
-                placeholder={`Enter ${field}`}
-                className=""
-              />
-            ) : (
-              <Input
-                type={field === "dob" ? "date" : "text"}
-                name={field}
-                value={formData[field]}
-                placeholder={`Enter ${field}`}
-                className="py-5"
-              />
-            )}
-          </div>
-        ))}
-        {/* 🖼️ Image Upload */}
-        <div className="flex flex-col ">
-          <Label className="capitalize text-sm py-2 ">Profile Image</Label>
-          <Input type="file" accept="image/*" />
+      <div className="lg:max-w-4xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:p-3 lg:gap-10 rounded-2xl lg:flex">
+        <div className="hidden md:hidden lg:block">
+          <img src="/register/r1.jpg" alt="Love" className="h-[400px]" />
         </div>
-        {/* 🔘 Submit */}
-        <div className="sm:col-span-2 lg:col-span-3 flex justify-center mt-6">
-          <Button
-            type="submit"
-            //disabled={loading}
-            className="px-8 py-3 text-base md:text-lg"
-          >
-            {/* {loading ? (
+        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-20 md:grid-cols-2  lg:grid-cols-1 gap-2 md:gap-6 lg:gap-6">
+          {Object.entries(dropdownData).map(([label, options]) => {
+            const fieldName = dropdownFieldMap[label];
+            return (
+              <div
+                key={label}
+                className={`flex flex-col w-full ${
+                  label === "moccupation" && "lg:col-span-3"
+                } `}
+              >
+                <Label className="capitalize text-sm py-2 ">{label} :</Label>
+                <Select
+                  onValueChange={(value) =>
+                    handleSelectChange(fieldName, value)
+                  }
+                  className="w-full"
+                >
+                  <SelectTrigger className="w-full py-5">
+                    <SelectValue placeholder={`Select ${label}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.map((opt) => (
+                      <SelectItem key={opt} value={opt}>
+                        {opt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            );
+          })}
+
+          {/* 🔤 Text Inputs */}
+
+          {[
+            "pname",
+            "dob",
+            "age",
+            "pbrith",
+            "tbrith",
+            "height",
+            "weight",
+            "subcaste",
+            "fname",
+            "mname",
+            "sister",
+            "brother",
+            "children",
+            "rplace",
+            "whatsappno",
+            "email",
+            "addressdetails",
+            "phonenumber",
+          ].map((field) => (
+            <div
+              key={field}
+              className={`flex flex-col ${
+                field === "addressdetails" ? "sm:col-span-2 lg:col-span-1" : ""
+              }`}
+            >
+              <Label className="capitalize text-sm py-2 ">{field} :</Label>
+              {field === "addressdetails" ? (
+                <Textarea
+                  name={field}
+                  value={formData[field]}
+                  placeholder={`Enter ${field}`}
+                  className=""
+                />
+              ) : (
+                <Input
+                  type={field === "dob" ? "date" : "text"}
+                  name={field}
+                  value={formData[field]}
+                  placeholder={`Enter ${field}`}
+                  className="py-5"
+                />
+              )}
+            </div>
+          ))}
+          {/* 🖼️ Image Upload */}
+          <div className="flex flex-col ">
+            <Label className="capitalize text-sm py-2 ">Profile Image</Label>
+            <Input type="file" accept="image/*" />
+          </div>
+          {/* 🔘 Submit */}
+          <div className="sm:col-span-2 lg:col-span-3 flex justify-center mt-6">
+            <Button
+              type="submit"
+              //disabled={loading}
+              className="px-8 py-3 text-base md:text-lg"
+            >
+              {/* {loading ? (
               <Loader2 className="animate-spin" />
             ) : (
               "Register Profile"
             )} */}
-            Register Profile
-          </Button>
-        </div>
-      </form>
+              Register Profile
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
