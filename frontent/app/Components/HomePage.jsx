@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Services from "./Services";
 import StatsSection from "./StatsSection";
-import Parterns from "./Parterns";
+import Parterns from "./Partners";
 
 const images = ["/banner/b1.webp", "/banner/b2.webp"];
 
