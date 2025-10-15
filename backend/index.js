@@ -14,6 +14,7 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:3000", "https://indolankamatrimony.vercel.app"],
+    methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
 );
