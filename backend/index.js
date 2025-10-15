@@ -13,13 +13,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://indolankamatrimony.vercel.app"],
     credentials: true,
   })
 );
 app.use(express.json());
-
-console.log(process.env.DATABASE_URL);
 
 // static folder -> frontend access for uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
