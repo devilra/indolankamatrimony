@@ -7,7 +7,7 @@ exports.registerProfile = async (req, res) => {
     // multer upload file path
     const imagePath = req.file ? req.file.path : null;
 
-    const {
+    let {
       mprofile,
       pname,
       dob,
@@ -43,9 +43,18 @@ exports.registerProfile = async (req, res) => {
       phonenumber,
     } = req.body;
 
+    if (Array.isArray(education)) {
+      education = education.join(", ");
+    }
+
+    const now = new Date();
+    const created_day = now.getDate().toString().padStart(2, "0");
+    const created_month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const created_year = now.getFullYear().toString();
+
     //console.log(imagePath);
 
-    //console.log(req.body);
+    console.log(req.body);
 
     // ✅ Check if email or phone number already exists
 
@@ -113,6 +122,9 @@ exports.registerProfile = async (req, res) => {
       addressdetails,
       phonenumber,
       image: imagePath ? imagePath.replace(/\\/g, "/") : null, // multer store  path
+      created_day,
+      created_month,
+      created_year,
     });
 
     // ----------------------------
@@ -193,6 +205,8 @@ exports.getAllProfiles = async (req, res) => {
         message: "No profiles found ❌",
       });
     }
+
+    console.log(profiles);
 
     res.status(200).json({
       success: true,

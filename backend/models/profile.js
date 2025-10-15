@@ -150,10 +150,25 @@ const Profile = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    // 🕒 Auto date fields
+    created_day: {
+      type: DataTypes.STRING(2),
+      defaultValue: () => new Date().getDate().toString().padStart(2, "0"),
+    },
+    created_month: {
+      type: DataTypes.STRING(2),
+      defaultValue: () =>
+        (new Date().getMonth() + 1).toString().padStart(2, "0"),
+    },
+    created_year: {
+      type: DataTypes.STRING(4),
+      defaultValue: () => new Date().getFullYear().toString(),
+    },
   },
   {
     tableName: "profile", // same as your SQL table name
     timestamps: false, // since not in your SQL table
+
     charset: "utf8mb4", // ✅ full Unicode support
     collate: "utf8mb4_unicode_ci", // ✅ full Unicode support
   }

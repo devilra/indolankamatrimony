@@ -421,33 +421,21 @@ const RegisterProfile = () => {
                 )} */}
 
                 {fieldName === "education" ? (
-                  <div>
-                    <Select
-                      onValueChange={(val) =>
-                        handleSelectChange(fieldName, val)
-                      }
-                      multiple
-                      //value={formData.education}
-                      className="w-full"
-                    >
-                      <SelectTrigger className="w-full py-5">
-                        <SelectValue placeholder={`Select ${label}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {options.map((opt) => (
-                          <SelectItem key={opt} value={opt}>
-                            {opt}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <div className="flex flex-wrap gap-1">
-                      {formData.education.length === 0
-                        ? null
-                        : formData.education.map((item) => (
+                  <Select
+                    onValueChange={(val) => handleSelectChange(fieldName, val)}
+                    multiple
+                    //value={formData.education}
+                    className="w-full"
+                  >
+                    <SelectTrigger className="w-full py-5">
+                      <div className="flex flex-wrap gap-1">
+                        {formData.education.length === 0 ? (
+                          <span className="">Select {label}</span>
+                        ) : (
+                          formData.education.map((item) => (
                             <span
                               key={item}
-                              className="bg-neutral-200 text-neutral-800 px-2 py-1 my-2 rounded-full text-[8px] flex items-center gap-1"
+                              className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[8px] flex items-center gap-1"
                             >
                               {item}
                               {/* Use span instead of button to avoid nested button issue */}
@@ -467,9 +455,18 @@ const RegisterProfile = () => {
                                 ×
                               </span>
                             </span>
-                          ))}
-                    </div>
-                  </div>
+                          ))
+                        )}
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {options.map((opt) => (
+                        <SelectItem key={opt} value={opt}>
+                          {opt}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 ) : (
                   <Select
                     value={formData[fieldName]}

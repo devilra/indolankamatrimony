@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RxCross2 } from "react-icons/rx";
-
 import {
   Popover,
   PopoverContent,
@@ -28,7 +26,6 @@ import { registerProfile } from "../redux/profileSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-// Dropdown options
 const dropdownData = {
   "Matrimony Profile for": ["Bride", "Groom", "Relative", "Friend", "Self"],
   rasi: [
@@ -232,7 +229,7 @@ const RegisterProfile = () => {
     color: "",
     maritalstatus: "",
     gender: "",
-    education: [], // ✅ multi-select
+    education: [],
     occupation: "",
     annualincome: "",
     mothertongue: "",
@@ -271,13 +268,20 @@ const RegisterProfile = () => {
     "Mother's occupation": "moccupation",
   };
 
+  //console.log(Object.entries(dropdownData));
+  //console.log(formData);
+
   const [image, setImage] = useState(null);
   const [dobDate, setDobDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { loading } = useSelector((state) => state.profile);
+  console.log(image);
+
+  const { loading, success, error } = useSelector((state) => state.profile);
+
+  //console.log(dobDate);
 
   const handleSelectChange = (name, value) => {
     if (name === "education") {
@@ -300,7 +304,7 @@ const RegisterProfile = () => {
 
   const handleDateSelect = (date) => {
     setDobDate(date);
-    const formatted = format(date, "yyyy-MM-dd");
+    const formatted = format(date, "yyyy-MM-dd"); // backend expects string
     setFormData((prev) => ({ ...prev, dob: formatted }));
     setIsCalendarOpen(false);
   };
@@ -308,9 +312,12 @@ const RegisterProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // 🔥 1. Create a copy of formData
       const updatedFormData = { ...formData };
 
+      // 🔥 2. Loop through all keys
       for (const key in updatedFormData) {
+        // if empty/null/undefined => assign 'N/A'
         if (
           updatedFormData[key] === "" ||
           updatedFormData[key] === null ||
@@ -319,6 +326,18 @@ const RegisterProfile = () => {
           updatedFormData[key] = key === "education" ? [] : "N/A"; // handle empty education
         }
       }
+
+      // 🔥 3. Create FormData object for sending to backend
+      // const form = new FormData();
+      // for (const key in updatedFormData) {
+      //   form.append(key, updatedFormData[key]);
+      // }
+
+      // if (image) {
+      //   form.append("image", image);
+      // }
+
+      // const result = await dispatch(registerProfile(form));
 
       const form = new FormData();
       for (const key in updatedFormData) {
@@ -336,12 +355,15 @@ const RegisterProfile = () => {
       const result = await dispatch(registerProfile(form));
 
       if (registerProfile.fulfilled.match(result)) {
-        const { data } = result.payload;
+        const { data } = result.payload; // payload from redux
+
         toast("Profile registered successfully!");
+        // router.push(`/success?id=${data.id}&name=${data.pname}`);
         sessionStorage.setItem(
           "registrationSuccess",
           JSON.stringify({ id: data.id, name: data.pname })
         );
+
         router.push("/success");
       } else {
         toast(result.payload?.message || "Something went wrong.");
@@ -349,14 +371,16 @@ const RegisterProfile = () => {
     } catch (error) {
       console.log(error.message);
     }
+
+    //console.log("Final Form Data Sent to Backend:", updatedFormData);
   };
 
   return (
-    <div className="max-w-7xl mx-auto pt-10 md:pt-15 lg:pt-15 shadow-lg rounded-2xl p-6 md:p-10">
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c] text-center mb-14">
+    <div className="max-w-7xl mx-auto pt-10 md:pt-15 lg:pt-15  shadow-lg rounded-2xl p-6 md:p-10">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#4a2f1c]  text-center mb-14">
         Matrimony Profile Registration
       </h1>
-      <div className="lg:max-w-4xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pt-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+      <div className="lg:max-w-4xl lg:mx-auto  lg:bg-white lg:shadow-2xl lg:px-3 lg:pt-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
         <div className="hidden md:hidden lg:block">
           <img
             src="/register/r1.jpg"
@@ -366,7 +390,7 @@ const RegisterProfile = () => {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 md:grid-cols-2 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
+          className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
         >
           {Object.entries(dropdownData).map(([label, options]) => {
             const fieldName = dropdownFieldMap[label];
@@ -377,11 +401,11 @@ const RegisterProfile = () => {
                   label === "moccupation" && "lg:col-span-3"
                 } `}
               >
-                <Label className="capitalize text-sm py-2">{label} :</Label>
+                <Label className="capitalize text-sm py-2 ">{label} :</Label>
 
-                {/* {fieldName === "education" ? (
+                {fieldName === "education" ? (
                   <Select
-                    //value={formData.education.join(",")}
+                    value={formData.education.join(",")}
                     onValueChange={(val) => handleSelectChange(fieldName, val)}
                     multiple
                     className="w-full"
@@ -418,83 +442,16 @@ const RegisterProfile = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                )} */}
-
-                {fieldName === "education" ? (
-                  <div>
-                    <Select
-                      onValueChange={(val) =>
-                        handleSelectChange(fieldName, val)
-                      }
-                      multiple
-                      //value={formData.education}
-                      className="w-full"
-                    >
-                      <SelectTrigger className="w-full py-5">
-                        <SelectValue placeholder={`Select ${label}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {options.map((opt) => (
-                          <SelectItem key={opt} value={opt}>
-                            {opt}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <div className="flex flex-wrap gap-1">
-                      {formData.education.length === 0
-                        ? null
-                        : formData.education.map((item) => (
-                            <span
-                              key={item}
-                              className="bg-neutral-200 text-neutral-800 px-2 py-1 my-2 rounded-full text-[8px] flex items-center gap-1"
-                            >
-                              {item}
-                              {/* Use span instead of button to avoid nested button issue */}
-                              <span
-                                onClick={(e) => {
-                                  e.stopPropagation(); // Prevent dropdown toggle
-                                  setFormData((prev) => ({
-                                    ...prev,
-                                    education: prev.education.filter(
-                                      (edu) => edu !== item
-                                    ),
-                                  }));
-                                }}
-                                className="cursor-pointer text-neutral-600 text-[15px] hover:text-red-500 font-bold"
-                              >
-                                {/* <RxCross2 size={0.2} className="text-[2px]" /> */}
-                                ×
-                              </span>
-                            </span>
-                          ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Select
-                    value={formData[fieldName]}
-                    onValueChange={(val) => handleSelectChange(fieldName, val)}
-                    className="w-full"
-                  >
-                    <SelectTrigger className="w-full py-5">
-                      <SelectValue placeholder={`Select ${label}`} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {options.map((opt) => (
-                        <SelectItem key={opt} value={opt}>
-                          {opt}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                 )}
               </div>
             );
           })}
 
           {/* 🔤 Text Inputs */}
+
           {[
             "pname",
+
             "age",
             "pbrith",
             "tbrith",
@@ -518,7 +475,7 @@ const RegisterProfile = () => {
                 field === "addressdetails" ? "sm:col-span-2 lg:col-span-1" : ""
               }`}
             >
-              <Label className="capitalize text-sm py-2">{field} :</Label>
+              <Label className="capitalize text-sm py-2 ">{field} :</Label>
               {field === "addressdetails" ? (
                 <Textarea
                   name={field}
@@ -540,7 +497,7 @@ const RegisterProfile = () => {
             </div>
           ))}
 
-          {/* 🗓️ DOB Picker */}
+          {/* 🗓️ Calendar Date Picker for DOB */}
           <div className="flex flex-col">
             <Label className="capitalize text-sm py-2">dob</Label>
             <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -567,15 +524,14 @@ const RegisterProfile = () => {
           </div>
 
           {/* 🖼️ Image Upload */}
-          <div className="flex flex-col">
-            <Label className="capitalize text-sm py-2">Profile Image</Label>
+          <div className="flex flex-col ">
+            <Label className="capitalize text-sm py-2 ">Profile Image</Label>
             <Input
               type="file"
               accept="image/*"
               onChange={(e) => setImage(e.target.files?.[0] || null)}
             />
           </div>
-
           {/* 🔘 Submit */}
           <div className="sm:col-span-2 lg:col-span-3 flex justify-center mt-6">
             <Button
