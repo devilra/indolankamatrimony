@@ -119,47 +119,48 @@ exports.registerProfile = async (req, res) => {
     // 🔥 Nodemailer Setup
     // ----------------------------
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: process.env.EMAIL_USER,
+    //     pass: process.env.EMAIL_PASS,
+    //   },
+    // });
 
     // Email to registered user
 
-    const userMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Profile Registration Successful ✅",
-      html: `<h3>Hello ${pname},</h3>
-             <p>Your matrimony profile has been successfully registered.</p>
-             <p>We will contact to soon.</p>
-             <p>Thank you for registering!</p>`,
-    };
+    // const userMailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: email,
+    //   subject: "Profile Registration Successful ✅",
+    //   html: `<h3>Hello ${pname},</h3>
+    //          <p>Your matrimony profile has been successfully registered.</p>
+    //          <p>We will contact to soon.</p>
+    //          <p>Thank you for registering!</p>`,
+    // };
 
     // Email to admin
-    const adminMailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "jkraja089@gmail.com",
-      subject: "New Profile Registered ✅",
-      html: `<h3>New Profile Registered</h3>
-             <p>Name: ${pname}</p>
-             <p>Email: ${email}</p>
-             <p>Phone: ${phonenumber}</p>
-             <p>Profile Type: ${mprofile}</p>`,
-    };
+    // const adminMailOptions = {
+    //   from: process.env.EMAIL_USER,
+    //   to: "jkraja089@gmail.com",
+    //   subject: "New Profile Registered ✅",
+    //   html: `<h3>New Profile Registered</h3>
+    //          <p>Name: ${pname}</p>
+    //          <p>Email: ${email}</p>
+    //          <p>Phone: ${phonenumber}</p>
+    //          <p>Profile Type: ${mprofile}</p>`,
+    // };
 
     // Send emails
-    await transporter.sendMail(userMailOptions);
-    await transporter.sendMail(adminMailOptions);
+    // await transporter.sendMail(userMailOptions);
+    // await transporter.sendMail(adminMailOptions);
 
     res.status(201).json({
       success: true,
       message: "Profile registered successfully ✅",
       data: newProfile,
     });
+    //console.log("Register success");
   } catch (error) {
     console.error(error);
     // Handle Sequelize unique constraint error just in case
