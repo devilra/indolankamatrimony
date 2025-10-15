@@ -1,8 +1,15 @@
 "use client";
 
+import Calendar02 from "@/components/calendar-02";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -11,7 +18,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerProfile } from "../redux/profileSlice";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const dropdownData = {
   "Matrimony Profile for": ["Bride", "Groom", "Relative", "Friend", "Self"],
@@ -259,6 +272,16 @@ const RegisterProfile = () => {
   //console.log(formData);
 
   const [image, setImage] = useState(null);
+  const [dobDate, setDobDate] = useState(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  console.log(image);
+
+  const { loading, success, error } = useSelector((state) => state.profile);
+
+  //console.log(dobDate);
 
   const handleSelectChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -267,6 +290,64 @@ const RegisterProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateSelect = (date) => {
+    setDobDate(date);
+    const formatted = format(date, "yyyy-MM-dd"); // backend expects string
+    setFormData((prev) => ({ ...prev, dob: formatted }));
+    setIsCalendarOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // 🔥 1. Create a copy of formData
+      const updatedFormData = { ...formData };
+
+      // 🔥 2. Loop through all keys
+      for (const key in updatedFormData) {
+        // if empty/null/undefined => assign 'N/A'
+        if (
+          updatedFormData[key] === "" ||
+          updatedFormData[key] === null ||
+          updatedFormData[key] === undefined
+        ) {
+          updatedFormData[key] = "N/A";
+        }
+      }
+
+      // 🔥 3. Create FormData object for sending to backend
+      const form = new FormData();
+      for (const key in updatedFormData) {
+        form.append(key, updatedFormData[key]);
+      }
+
+      if (image) {
+        form.append("image", image);
+      }
+
+      const result = await dispatch(registerProfile(form));
+
+      if (registerProfile.fulfilled.match(result)) {
+        const { data } = result.payload; // payload from redux
+
+        toast("Profile registered successfully!");
+        // router.push(`/success?id=${data.id}&name=${data.pname}`);
+        sessionStorage.setItem(
+          "registrationSuccess",
+          JSON.stringify({ id: data.id, name: data.pname })
+        );
+
+        router.push("/success");
+      } else {
+        toast(result.payload?.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+
+    //console.log("Final Form Data Sent to Backend:", updatedFormData);
   };
 
   return (
@@ -282,7 +363,10 @@ const RegisterProfile = () => {
             className="h-[400px] lg:pt-5"
           />
         </div>
-        <form className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 lg:flex lg:flex-col  pt-10 md:pt-15 lg:pt-5 md:grid-cols-2 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
+        >
           {Object.entries(dropdownData).map(([label, options]) => {
             const fieldName = dropdownFieldMap[label];
             return (
@@ -318,7 +402,7 @@ const RegisterProfile = () => {
 
           {[
             "pname",
-            "dob",
+
             "age",
             "pbrith",
             "tbrith",
@@ -353,7 +437,7 @@ const RegisterProfile = () => {
                 />
               ) : (
                 <Input
-                  type={field === "dob" ? "date" : "text"}
+                  type="text"
                   name={field}
                   value={formData[field]}
                   placeholder={`Enter ${field}`}
@@ -363,24 +447,54 @@ const RegisterProfile = () => {
               )}
             </div>
           ))}
+
+          {/* 🗓️ Calendar Date Picker for DOB */}
+          <div className="flex flex-col">
+            <Label className="capitalize text-sm py-2">dob</Label>
+            <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left font-normal"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dobDate ? format(dobDate, "PPP") : "Select Date of Birth"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  selected={dobDate}
+                  onSelect={handleDateSelect}
+                  captionLayout="dropdown-buttons"
+                  fromYear={1950}
+                  toYear={2025}
+                  mode="single"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
           {/* 🖼️ Image Upload */}
           <div className="flex flex-col ">
             <Label className="capitalize text-sm py-2 ">Profile Image</Label>
-            <Input type="file" accept="image/*" />
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files?.[0] || null)}
+            />
           </div>
           {/* 🔘 Submit */}
           <div className="sm:col-span-2 lg:col-span-3 flex justify-center mt-6">
             <Button
               type="submit"
-              //disabled={loading}
+              disabled={loading}
               className="px-8 py-3 text-base md:text-lg"
             >
-              {/* {loading ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Register Profile"
-            )} */}
-              Register Profile
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Register Profile"
+              )}
             </Button>
           </div>
         </form>

@@ -19,6 +19,8 @@ app.use(
 );
 app.use(express.json());
 
+console.log(process.env.DATABASE_URL);
+
 // static folder -> frontend access for uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 (async () => {

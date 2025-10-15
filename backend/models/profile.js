@@ -148,12 +148,14 @@ const Profile = sequelize.define(
     },
     image: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
     tableName: "profile", // same as your SQL table name
     timestamps: false, // since not in your SQL table
+    charset: "utf8mb4", // ✅ full Unicode support
+    collate: "utf8mb4_unicode_ci", // ✅ full Unicode support
   }
 );
 
