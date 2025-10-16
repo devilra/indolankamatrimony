@@ -192,29 +192,100 @@ exports.registerProfile = async (req, res) => {
   }
 };
 
+// exports.getAllProfiles = async (req, res) => {
+//   try {
+//     const profiles = await Profile.findAll({
+//       order: [["id", "DESC"]],
+//     });
+
+//     // no data check
+//     if (profiles.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No profiles found ❌",
+//       });
+//     }
+
+//     console.log(profiles);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "All profiles fetched successfully ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while fetching profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// ✅ Get Single Profile by ID
+
 exports.getAllProfiles = async (req, res) => {
   try {
+    const { query } = req;
+    const search = query.search ? query.search.trim() : "";
+
+    let whereCondition = {};
+
+    // 🔍 If user types something in search bar
+    if (search) {
+      // if number => try to match id also
+      const isNumber = !isNaN(Number(search));
+
+      if (isNumber) {
+        whereCondition = {
+          [Op.or]: [
+            {
+              id: Number(search),
+            },
+            {
+              pname: {
+                [Op.like]: `%${search}%`,
+              },
+            },
+          ],
+        };
+      } else {
+        whereCondition = {
+          pname: {
+            [Op.like]: `%${search}%`,
+          },
+        };
+      }
+    }
+
     const profiles = await Profile.findAll({
+      where: whereCondition,
       order: [["id", "DESC"]],
     });
 
-    // no data check
+    // ❌ No profiles found
     if (profiles.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No profiles found ❌",
+        message: search
+          ? `No profiles found for "${search}" ❌`
+          : "No profiles found ❌",
       });
     }
 
-    console.log(profiles);
-
+    // ✅ Response success
     res.status(200).json({
       success: true,
-      message: "All profiles fetched successfully ✅",
+      message: search
+        ? `Profiles matching "${search}" fetched successfully ✅`
+        : "All profiles fetched successfully ✅",
       count: profiles.length,
       data: profiles,
     });
   } catch (error) {
+    console.error("❌ Error fetching profiles:", error);
     console.error("❌ Error fetching profiles:", error);
     res.status(500).json({
       success: false,
@@ -223,8 +294,6 @@ exports.getAllProfiles = async (req, res) => {
     });
   }
 };
-
-// ✅ Get Single Profile by ID
 
 exports.getProfileById = async (req, res) => {
   try {

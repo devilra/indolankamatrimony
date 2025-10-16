@@ -52,6 +52,26 @@ export const getProfileById = createAsyncThunk(
   }
 );
 
+// ✅ Get filtered profiles by search query (id or name)
+export const searchProfiles = createAsyncThunk(
+  "profile/searchProfiles",
+  async (search, { rejectWithValue }) => {
+    try {
+      // if search empty => load all profiles
+      const endpoint = search
+        ? `/profile/all?search=${encodeURIComponent(search)}`
+        : "/profile/all";
+      const res = await API.get(endpoint);
+      console.log("🔍 Search result:", res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "Server error" }
+      );
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -113,6 +133,22 @@ const profileSlice = createSlice({
       .addCase(getProfileById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
+      })
+
+      // 🔍 Search Profiles
+      .addCase(searchProfiles.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProfiles.fulfilled, (state, action) => {
+        state.loading = false;
+        state.profiles = action.payload.data || [];
+        state.success = true;
+      })
+      .addCase(searchProfiles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+        state.profiles = []; // clear on not found
       });
   },
 });
