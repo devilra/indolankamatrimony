@@ -6,6 +6,10 @@ require("dotenv").config();
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "mysql",
   logging: false,
+  // connection timeout-a 30 seconds (30000ms) ku increase
+  dialectOptions: {
+    connectTimeout: 30000, // Default-a irukkuratha seconds increased
+  },
 });
 
 sequelize

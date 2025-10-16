@@ -24,7 +24,7 @@ import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerProfile } from "../redux/profileSlice";
+import { getAllProfiles, registerProfile } from "../redux/profileSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -316,16 +316,27 @@ const RegisterProfile = () => {
           updatedFormData[key] === null ||
           updatedFormData[key] === undefined
         ) {
-          updatedFormData[key] = key === "education" ? [] : "N/A"; // handle empty education
+          updatedFormData[key] = "N/A"; // handle empty education
         }
+      }
+
+      if (
+        Array.isArray(updatedFormData.education) &&
+        updatedFormData.education.length === 0
+      ) {
+        updatedFormData.education = "N/A";
       }
 
       const form = new FormData();
       for (const key in updatedFormData) {
         if (key === "education") {
-          updatedFormData.education.forEach((edu) =>
-            form.append("education[]", edu)
-          );
+          if (Array.isArray(updatedFormData.education)) {
+            updatedFormData.education.forEach((edu) =>
+              form.append("education[]", edu)
+            );
+          } else {
+            form.append(key, updatedFormData[key]);
+          }
         } else {
           form.append(key, updatedFormData[key]);
         }
@@ -338,6 +349,7 @@ const RegisterProfile = () => {
       if (registerProfile.fulfilled.match(result)) {
         const { data } = result.payload;
         toast("Profile registered successfully!");
+        dispatch(getAllProfiles());
         sessionStorage.setItem(
           "registrationSuccess",
           JSON.stringify({ id: data.id, name: data.pname })

@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  //baseURL: "http://localhost:4000/api",
-  baseURL: "https://indolankamatrimony.onrender.com/api",
+  //baseURL: process.env.NEXT_PUBLIC_API_URL_DEVELOPMENT,
+  baseURL: NEXT_PUBLIC_API_URL_PRODUCTION,
   withCredentials: true,
 });
 

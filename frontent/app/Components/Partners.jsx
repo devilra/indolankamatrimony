@@ -63,7 +63,7 @@ const Partners = () => {
                   className="md:basis-1/2 lg:basis-1/4"
                 >
                   <div className="p-3">
-                    <Card className="shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 rounded-2xl">
+                    <Card className="shadow-md hover:shadow-xl h-[350px] md:h-[400px]  lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl">
                       <CardContent className="">
                         <img
                           //   src={
@@ -78,14 +78,26 @@ const Partners = () => {
                           className="h-[200px] w-full md:h-[250px] lg:h-[220px] rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
                         />
                         <h3 className="text-lg font-semibold text-gray-800">
+                          <strong className="text-black font-bold">
+                            Name :{" "}
+                          </strong>
                           {profile.pname}
                         </h3>
-                        <p className="text-sm text-gray-600">
-                          {profile.education}
+                        <p className="text-sm py-2 text-gray-600">
+                          <strong className="font-bold  text-black">
+                            Educations :{" "}
+                          </strong>
+                          <span className=" text-[12px]">
+                            {" "}
+                            {profile.education}
+                          </span>
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          📅 Joined: {profile.created_day}/
-                          {profile.created_month}/{profile.created_year}
+                          <strong className="text-black font-bold">
+                            Joined :{" "}
+                          </strong>{" "}
+                          {profile.created_day}-{profile.created_month}-
+                          {profile.created_year}
                         </p>
                       </CardContent>
                     </Card>
