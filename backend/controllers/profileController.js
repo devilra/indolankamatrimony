@@ -223,3 +223,32 @@ exports.getAllProfiles = async (req, res) => {
     });
   }
 };
+
+// ✅ Get Single Profile by ID
+
+exports.getProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const profile = await Profile.findByPk(id);
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: `Profile with ID ${id} not found ❌`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile details fetched successfully ✅",
+      data: profile,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching profile by ID:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while fetching profile details ❌",
+      error: error.message,
+    });
+  }
+};

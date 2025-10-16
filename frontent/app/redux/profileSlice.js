@@ -36,6 +36,22 @@ export const getAllProfiles = createAsyncThunk(
   }
 );
 
+// ✅ Get single profile by ID
+export const getProfileById = createAsyncThunk(
+  "profile/getProfileById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await API.get(`/profile/${id}`);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "Server error" }
+      );
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -81,6 +97,20 @@ const profileSlice = createSlice({
         state.success = true;
       })
       .addCase(getAllProfiles.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      // 🟩 Get Single Profile by ID
+      .addCase(getProfileById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getProfileById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload.data; // ✅ single profile
+        state.success = true;
+      })
+      .addCase(getProfileById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       });

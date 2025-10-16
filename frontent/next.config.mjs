@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  //   images: {
+  //     remotePatterns: [
+  //       {
+  //         protocol: "https",
+  //         //hostname: process.env.NEXT_PUBLIC_API_URL_PRODUCTION,
+  //         port: "",
+  //         pathname: "/**",
+  //       },
+  //     ],
+  //   },
+};
 
 export default nextConfig;

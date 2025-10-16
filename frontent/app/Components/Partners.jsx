@@ -14,10 +14,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { useRouter } from "next/navigation";
 
 const Partners = () => {
   const dispatch = useDispatch();
   const { profiles, loading } = useSelector((state) => state.profile);
+  const router = useRouter();
 
   console.log(profiles);
 
@@ -26,6 +28,11 @@ const Partners = () => {
       dispatch(getAllProfiles());
     }
   }, [dispatch, profiles.length]);
+
+  // 👈 New click change to profile handler function
+  const handleProfileClick = (id) => {
+    router.push(`/profile/${id}`);
+  };
 
   const skeletonArray = Array.from({ length: 4 }); // number of skeleton cards
 
@@ -73,7 +80,10 @@ const Partners = () => {
                   className="md:basis-1/2 lg:basis-1/4"
                 >
                   <div className="p-3">
-                    <Card className="shadow-md hover:shadow-xl h-[350px] md:h-[400px] cursor-pointer lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl">
+                    <Card
+                      className="shadow-md hover:shadow-xl h-[350px] md:h-[400px] cursor-pointer lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl"
+                      onClick={() => handleProfileClick(profile.id)}
+                    >
                       <CardContent className="">
                         <img
                           src={
