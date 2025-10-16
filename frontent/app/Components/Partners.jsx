@@ -66,14 +66,14 @@ const Partners = () => {
                     <Card className="shadow-md hover:shadow-xl h-[350px] md:h-[400px]  lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl">
                       <CardContent className="">
                         <img
-                          //   src={
-                          //     profile.image
-                          //       ? `${import.meta.env.VITE_API_URL}/${
-                          //           profile.image
-                          //         }`
-                          //       : "https://picsum.photos/150"
-                          //   }
-                          src="https://picsum.photos/150"
+                          src={
+                            profile.image
+                              ? `${import.meta.env.VITE_API_URL}/${
+                                  profile.image
+                                }`
+                              : "https://picsum.photos/150"
+                          }
+                          // src="https://picsum.photos/150"
                           alt={profile.pname}
                           className="h-[200px] w-full md:h-[250px] lg:h-[220px] rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
                         />
