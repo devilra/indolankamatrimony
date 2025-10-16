@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 
 const Partners = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,15 @@ const Partners = () => {
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
         Matrimony Profiles
       </h2>
+
+      <div className="mb-8  max-w-6xl mx-auto">
+        <InputGroup>
+          <InputGroupInput
+            className="border border-neutral-400 py-5 rounded-lg w-full"
+            placeholder="Search by ID or Name"
+          />
+        </InputGroup>
+      </div>
 
       <Carousel
         opts={{
@@ -63,7 +73,7 @@ const Partners = () => {
                   className="md:basis-1/2 lg:basis-1/4"
                 >
                   <div className="p-3">
-                    <Card className="shadow-md hover:shadow-xl h-[350px] md:h-[400px]  lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl">
+                    <Card className="shadow-md hover:shadow-xl h-[350px] md:h-[400px] cursor-pointer lg:h-[400px] transition-all duration-300 border border-gray-200 rounded-2xl">
                       <CardContent className="">
                         <img
                           src={

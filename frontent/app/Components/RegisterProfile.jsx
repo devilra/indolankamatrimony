@@ -569,9 +569,7 @@ const RegisterProfile = () => {
                 <Calendar
                   selected={dobDate}
                   onSelect={handleDateSelect}
-                  captionLayout="dropdown-buttons"
-                  fromYear={1950}
-                  toYear={2025}
+                  captionLayout="dropdown"
                   mode="single"
                 />
               </PopoverContent>
