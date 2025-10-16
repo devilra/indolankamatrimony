@@ -68,12 +68,13 @@ const Partners = () => {
                         <img
                           src={
                             profile.image
-                              ? `${import.meta.env.VITE_API_URL}/${
-                                  profile.image
-                                }`
-                              : "https://picsum.photos/150"
+                              ? `${process.env.NEXT_PUBLIC_API_URL_PRODUCTION}/${profile.image}`
+                              : profile.gender === "Male"
+                              ? "/default-boy.jpg"
+                              : profile.gender === "Female"
+                              ? "/default-girl.jpg"
+                              : "/default-boy.jpg"
                           }
-                          // src="https://picsum.photos/150"
                           alt={profile.pname}
                           className="h-[200px] w-full md:h-[250px] lg:h-[220px] rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
                         />

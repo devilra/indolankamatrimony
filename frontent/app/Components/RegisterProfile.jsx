@@ -231,7 +231,7 @@ const RegisterProfile = () => {
     weight: "",
     color: "",
     maritalstatus: "",
-    gender: "",
+    gender: "Male",
     education: [], // ✅ multi-select
     occupation: "",
     annualincome: "",
