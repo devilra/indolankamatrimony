@@ -276,7 +276,7 @@ export default function RegisterProfile() {
 
         <form
           onSubmit={handleSubmit} // grid-cols-1 added for mobile/default view
-          className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
+          className="md:grid   flex flex-col md:grid-cols-2 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
         >
           {fieldOrder.map((field, index) => {
             const fieldName = dropdownFieldMap[field.label] || field.name; // 0. HEADING FIELD (New Logic)

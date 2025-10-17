@@ -1,0 +1,147 @@
+"use client";
+
+import React, { useEffect, useState } from "react"; // ✅ useState added
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProfiles } from "../redux/profileSlice";
+import { useRouter } from "next/navigation";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_PRODUCTION;
+
+const ProfileGallery = () => {
+  const dispatch = useDispatch();
+  const { profiles, loading, error } = useSelector((state) => state.profile);
+  const router = useRouter();
+
+  // ✅ New State: Initial load mudinjirucha nu therinjukka
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
+
+  // ✅ Initial data fetch logic
+  useEffect(() => {
+    // 1. Initial Load-la, oru thadavai API call pannunga
+    if (profiles.length === 0 && !error && !isInitialLoadComplete) {
+      dispatch(getAllProfiles());
+    }
+  }, [dispatch, profiles.length, error, isInitialLoadComplete]);
+
+  // ✅ New useEffect: Loading mudinja udane InitialLoadComplete- true set pannunga.
+  useEffect(() => {
+    // Loading mudinjadhum (success/failure) isInitialLoadComplete true aagum
+    if (!loading && !isInitialLoadComplete) {
+      setIsInitialLoadComplete(true);
+    }
+  }, [loading, isInitialLoadComplete]);
+  // 💡 Note: Indha logic, profiles.length == 0 aanaalum, API call-uku appuram dhaan true aagum.
+
+  // Handle click on a profile card
+  const handleProfileClick = (id) => {
+    router.push(`/profile/${id}`);
+  };
+
+  const skeletonArray = Array.from({ length: 8 });
+
+  // --- UI Content Logic ---
+  let content;
+
+  // 1. Loading State (Initial load aagum bodhum, data varum bodhum Skeleton kaatanum)
+  // isInitialLoadComplete mudhal murai false-a irundha, loading kaatanum
+  if (loading || !isInitialLoadComplete) {
+    content = skeletonArray.map((_, index) => (
+      <div key={index} className="p-2">
+        <Card className="shadow-md border border-gray-200 rounded-lg h-full">
+          <CardContent className="flex flex-col items-center p-4">
+            <Skeleton className="h-48 w-full rounded-md mb-4" />
+            <Skeleton className="h-5 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-2/3 mb-1" />
+            <Skeleton className="h-3 w-1/2" />
+          </CardContent>
+        </Card>
+      </div>
+    ));
+  } else if (error) {
+    // 2. Error State (API call fail aanaal)
+    content = (
+      <div className="col-span-full text-center py-16">
+        <h3 className="text-2xl font-bold text-red-600 mb-2">
+          Data Fetch Error
+        </h3>
+        <p className="text-gray-600">{error} - Please try again later.</p>
+      </div>
+    );
+  } else if (profiles.length === 0 && isInitialLoadComplete) {
+    // 3. ✅ FIX: No Profiles Found State
+    // Initial load mudinjadhuku apuram, profiles zero-va irundha mattum kaatanum.
+    content = (
+      <div className="col-span-full text-center py-16">
+        <h3 className="text-2xl font-bold text-neutral-600 mb-2">
+          No Profiles Available
+        </h3>
+        <p className="text-gray-500">
+          It looks like no profiles have been registered yet.
+        </p>
+      </div>
+    );
+  } else {
+    // 4. Data Found State (Profile Cards)
+    content = profiles.map((profile) => (
+      <div key={profile.id} className="p-2">
+        <Card
+          className="shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 border border-gray-200 rounded-lg h-full"
+          onClick={() => handleProfileClick(profile.id)}
+        >
+          <CardContent className="flex flex-col p-4">
+            {/* Image Section */}
+            <div className="h-48 w-full mb-4">
+              <img
+                src={
+                  profile.image
+                    ? `${API_BASE_URL}/${profile.image}`
+                    : profile.gender === "Female"
+                    ? "/default-girl.jpg"
+                    : "/default-boy.jpg"
+                }
+                alt={profile.pname}
+                className="h-full w-full rounded-md object-contain border-4 border-gray-100 shadow-sm"
+              />
+            </div>
+
+            {/* Profile Details */}
+            <h3 className="text-lg font-semibold text-gray-800 truncate">
+              <strong className="text-black font-bold">ID: </strong>
+              {profile.id}
+            </h3>
+            <h3 className="text-lg font-semibold text-gray-800 truncate">
+              <strong className="text-black font-bold">Name: </strong>
+              {profile.pname}
+            </h3>
+            <p className="text-sm py-1 text-gray-600 truncate">
+              <strong className="font-bold text-black">Education: </strong>
+              <span className="text-[12px]">{profile.education}</span>
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              <strong className="text-black font-bold">Joined: </strong>
+              {profile.created_day}-{profile.created_month}-
+              {profile.created_year}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    ));
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <h2 className="text-4xl font-extrabold text-center mb-10 text-gray-900">
+        Matrimony Profiles
+      </h2>
+
+      {/* Responsive Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {content}
+      </div>
+    </div>
+  );
+};
+
+export default ProfileGallery;

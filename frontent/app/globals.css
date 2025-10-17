@@ -169,3 +169,18 @@
 .vibrate {
   animation: vibrate 0.3s linear infinite;
 }
+
+.marquee-bg {
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  animation: marquee-scroll 90s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -2000px 0;
+  }
+}

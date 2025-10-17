@@ -1,17 +1,21 @@
 import React from "react";
 
-// Tailwind-ல் ஹோவர் எஃபெக்டுக்கு class
 const imageHoverClass =
   "transition-transform duration-500 ease-in-out group-hover:scale-105";
 
-// 20 Picsum images-க்கான data-வை உருவாக்குவது
 const createPicsumData = () => {
   const data = [];
 
   // 20 random IDs-ஐ தேர்ந்தெடுக்கவும் (உங்கள் இமேஜ் மாற்றங்களுக்கு)
   const picsumIds = [
-    1018, 1015, 1019, 1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028,
-    1029, 1030, 1031, 1032, 1033, 1034, 1035, 1036,
+    "/service/s1.webp",
+    "/service/s2.webp",
+    "/service/s3.webp",
+    "/service/s4.webp",
+    "/service/s5.webp",
+    "/service/s6.webp",
+    "/service/s7.webp",
+    "/service/s8.webp",
   ];
 
   picsumIds.forEach((id, index) => {
@@ -35,10 +39,10 @@ const createPicsumData = () => {
     }
 
     data.push({
-      id: id,
-      // Picsum URL: /id/{id}/{width}/{height}
-      url: `https://picsum.photos/id/${id}/600/400`,
-      alt: `Picsum Image ${id}`,
+      id: index,
+      URL: id,
+      url: id,
+      alt: `Image ${index}`,
       caption: caption,
       gridClass: gridClass,
     });
@@ -48,6 +52,8 @@ const createPicsumData = () => {
 };
 
 const service_items = createPicsumData();
+
+console.log(service_items);
 
 function ImageGridSection() {
   return (
