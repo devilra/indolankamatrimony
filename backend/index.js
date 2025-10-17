@@ -4,6 +4,7 @@ const sequelize = require("./config/db");
 // const { fileURLToPath } = require("url");
 require("dotenv").config();
 const profileRoutes = require("./routes/profileRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 const path = require("path");
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 })();
 
 app.use("/api/profile", profileRoutes);
+app.use("./api/contact", contactRoutes);
 
 const PORT = process.env.PORT;
 

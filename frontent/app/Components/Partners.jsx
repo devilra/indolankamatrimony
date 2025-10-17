@@ -154,11 +154,7 @@ const Partners = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto py-10">
-      <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        Matrimony Profiles
-      </h2>
-
+    <div className="max-w-6xl mx-auto pb-10">
       {/* Search Input with Loader */}
       <div className="mb-8 max-w-xl mx-auto">
         <InputGroup>

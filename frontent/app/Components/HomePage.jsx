@@ -4,6 +4,7 @@ import Services from "./Services";
 import StatsSection from "./StatsSection";
 import Parterns from "./Partners";
 import Partners from "./Partners";
+import BannerCarousel from "./BannerCarosel";
 
 const images = ["/banner/b1.webp", "/banner/b2.webp"];
 
@@ -18,9 +19,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
-      <div className="h-[200px] md:h-[400px] lg:h-[530px] overflow-hidden relative ">
-        {/* Background images loop */}
+    <div className="mt-[116px]">
+      {/* <div className="h-[200px] md:h-[400px] lg:h-[530px] overflow-hidden relative ">
+        
         {images.map((img, index) => (
           <div
             key={index}
@@ -36,6 +37,9 @@ const HomePage = () => {
             }}
           ></div>
         ))}
+      </div> */}
+      <div>
+        <BannerCarousel />
       </div>
 
       {/* section-----------------------2 */}
