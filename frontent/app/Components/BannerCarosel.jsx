@@ -9,6 +9,7 @@ const image_data = [
   { id: 1, url: "/banner/b1.webp", alt: "Image 1" },
   { id: 2, url: "/banner/b5.jpg", alt: "Image 2" },
   { id: 3, url: "/banner/b6.jpg", alt: "Image 3" },
+  { id: 4, url: "/banner/b4.jpg", alt: "Image 3" },
 ];
 
 function BannerCarousel() {
@@ -30,7 +31,7 @@ function BannerCarousel() {
             <img
               src={image.url}
               alt={image.alt}
-              className="carousel-image object-cover object-top"
+              className="carousel-image object-cover object-top-shifted "
             />
           </div>
         ))}

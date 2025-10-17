@@ -19,7 +19,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="mt-[116px]">
+    <div className="md:mt-[116px] mt-[80px]">
       {/* <div className="h-[200px] md:h-[400px] lg:h-[530px] overflow-hidden relative ">
         
         {images.map((img, index) => (

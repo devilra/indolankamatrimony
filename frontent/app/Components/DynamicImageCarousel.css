@@ -38,3 +38,7 @@ h2 {
 .slick-dots li.slick-active button:before {
   color: #0056b3 !important;
 }
+
+.object-top-shifted {
+  object-position: center 30%;
+}
