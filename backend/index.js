@@ -27,7 +27,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
   try {
     await sequelize.authenticate();
     console.log("✅ MySQL connected successfully!");
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     console.log("✅ Tables synced successfully!");
   } catch (error) {
     console.error("❌ DB Error:", error);

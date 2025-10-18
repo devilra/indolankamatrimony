@@ -1,4 +1,5 @@
 backend/node_modules
+backend/config/MailgunEmail
 backend/.env
 frontent/node_modules
 frontent/.env
