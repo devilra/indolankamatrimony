@@ -5,11 +5,14 @@ const {
   getAllProfiles,
   getProfileById,
 } = require("../controllers/profileController");
+const cloudinaryUpload = require("../middleware/cloudinaryUploads");
 
 const router = express.Router();
 
 // Register profile
-router.post("/register", upload.single("image"), registerProfile);
+//router.post("/register", upload.single("image"), registerProfile);
+
+router.post("/register", cloudinaryUpload.single("image"), registerProfile);
 
 // Get all profiles
 router.get("/all", getAllProfiles);

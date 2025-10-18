@@ -33,13 +33,10 @@ const Partners = () => {
 
   // 3. Effect to handle initial load and debounced search
   useEffect(() => {
-    // Search Term இருந்தால் Search API-ஐ அழைக்கவும்.
     if (debouncedSearchTerm && debouncedSearchTerm.trim() !== "") {
       console.log("Debounce Api call start");
       dispatch(searchProfiles(debouncedSearchTerm));
-    }
-    // Search Term காலியாக இருந்தால், முழு லிஸ்ட்டையும் அழைக்கவும்.
-    else if (debouncedSearchTerm === "") {
+    } else if (debouncedSearchTerm === "") {
       // profiles.length == 0 என்பதை மட்டும் ஆரம்ப லோடுக்கு செக் செய்யலாம்
       dispatch(getAllProfiles());
     }
@@ -124,7 +121,7 @@ const Partners = () => {
               <img
                 src={
                   profile.image
-                    ? `${process.env.NEXT_PUBLIC_API_URL_PRODUCTION}/${profile.image}`
+                    ? `${profile.image}`
                     : profile.gender === "Female"
                     ? "/default-girl.jpg"
                     : "/default-boy.jpg"

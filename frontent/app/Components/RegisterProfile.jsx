@@ -163,7 +163,7 @@ export default function RegisterProfile() {
     weight: "",
     color: "",
     maritalstatus: "",
-    gender: "",
+    gender: "Male",
     education: [],
     occupation: "",
     annualincome: "",

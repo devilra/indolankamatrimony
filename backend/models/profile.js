@@ -306,7 +306,7 @@ const Profile = sequelize.define(
     whatsappno: {
       type: DataTypes.STRING(255),
       allowNull: false,
-    }, // ❌ unique: true - ஐ இங்கே நீக்கிவிட்டு, indexes: [] - க்கு மாற்றி உள்ளோம்
+    }, // ❌ unique: true - remove , indexes: [] - index change
     email: {
       type: DataTypes.STRING(200),
       allowNull: false,
@@ -317,11 +317,18 @@ const Profile = sequelize.define(
     addressdetails: {
       type: DataTypes.TEXT,
       allowNull: false,
-    }, // ❌ unique: true - ஐ இங்கே நீக்கிவிட்டு, indexes: [] - க்கு மாற்றி உள்ளோம்
+    }, // ❌ unique: true - remove , indexes: [] - index change
+
     phonenumber: {
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+
+    imagePublicId: {
+      type: DataTypes.STRING(255), // String is enough for the Public ID
+      allowNull: true, // Not required if image is not uploaded
+    },
+
     image: {
       type: DataTypes.TEXT,
       allowNull: true,
@@ -348,6 +355,8 @@ const Profile = sequelize.define(
     collate: "utf8mb4_unicode_ci",
 
     indexes: [
+      // ... (Your existing unique and search indexes)
+
       {
         name: "unique_email",
         unique: true,

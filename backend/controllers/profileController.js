@@ -3,9 +3,16 @@ const { Op } = require("sequelize");
 const nodemailer = require("nodemailer");
 
 exports.registerProfile = async (req, res) => {
+  //console.log(req.file);
   try {
     // multer upload file path
-    const imagePath = req.file ? req.file.path : null;
+    // const imagePath = req.file ? req.file.path : null;
+
+    // ✅ Cloudinary-la ulla image data extract pannanum
+    const imagePath = req.file ? req.file.path : null; // Full Cloudinary URL
+    const publicId = req.file ? req.file.public_id : null; // Unique ID for management
+
+    console.log(imagePath);
 
     let {
       mprofile,
@@ -54,7 +61,7 @@ exports.registerProfile = async (req, res) => {
 
     //console.log(imagePath);
 
-    console.log(req.body);
+    //console.log(req.body);
 
     // ✅ Check if email or phone number already exists
 
@@ -121,7 +128,11 @@ exports.registerProfile = async (req, res) => {
       email,
       addressdetails,
       phonenumber,
-      image: imagePath ? imagePath.replace(/\\/g, "/") : null, // multer store  path
+      //image: imagePath ? imagePath.replace(/\\/g, "/") : null, // multer store  path
+      // Cloudinary URL Image
+      image: imagePath,
+      // Cloudinary Public_id
+      imagePublicId: publicId,
       created_day,
       created_month,
       created_year,
@@ -131,50 +142,66 @@ exports.registerProfile = async (req, res) => {
     // 🔥 Nodemailer Setup
     // ----------------------------
 
-    // const transporter = nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     user: process.env.EMAIL_USER,
-    //     pass: process.env.EMAIL_PASS,
-    //   },
-    // });
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
     // Email to registered user
 
-    // const userMailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: email,
-    //   subject: "Profile Registration Successful ✅",
-    //   html: `<h3>Hello ${pname},</h3>
-    //          <p>Your matrimony profile has been successfully registered.</p>
-    //          <p>We will contact to soon.</p>
-    //          <p>Thank you for registering!</p>`,
-    // };
+    const userMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Profile Registration Successful ✅",
+      html: `<h3>Hello ${pname},</h3>
+             <p>Your matrimony profile has been successfully registered.</p>
+             <p>We will contact to soon.</p>
+             <p>Thank you for registering!</p>`,
+    };
 
     // Email to admin
-    // const adminMailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: "jkraja089@gmail.com",
-    //   subject: "New Profile Registered ✅",
-    //   html: `<h3>New Profile Registered</h3>
-    //          <p>Name: ${pname}</p>
-    //          <p>Email: ${email}</p>
-    //          <p>Phone: ${phonenumber}</p>
-    //          <p>Profile Type: ${mprofile}</p>`,
-    // };
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: "jkraja089@gmail.com",
+      subject: "New Profile Registered ✅",
+      html: `<h3>New Profile Registered</h3>
+             <p>Name: ${pname}</p>
+             <p>Email: ${email}</p>
+             <p>Phone: ${phonenumber}</p>
+             <p>Profile Type: ${mprofile}</p>`,
+    };
 
     // Send emails
-    // await transporter.sendMail(userMailOptions);
-    // await transporter.sendMail(adminMailOptions);
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
 
     res.status(201).json({
       success: true,
       message: "Profile registered successfully ✅",
+      // Response Cloudinary URL
+      imageUrl: imagePath,
       data: newProfile,
     });
     //console.log("Register success");
   } catch (error) {
-    console.error(error);
+    //console.error("Registration Error:", error);
+
+    // // 🔥 Multer/Size/File Type error handling
+    if (error instanceof multer.MulterError) {
+      let message = "Image upload failed.";
+      if (error.code === "LIMIT_FILE_SIZE") {
+        message = "Image size exceeds the 500 KB limit! 😞";
+      }
+      return res.status(400).json({ success: false, message });
+    }
+    // File Filter error handling
+    if (error.message.includes("Only image files are allowed")) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+
     // Handle Sequelize unique constraint error just in case
     if (error.name === "SequelizeUniqueConstraintError") {
       const field = error.errors[0].path; // email or phonenumber
@@ -313,7 +340,7 @@ exports.getProfileById = async (req, res) => {
       data: profile,
     });
   } catch (error) {
-    console.error("❌ Error fetching profile by ID:", error);
+    //console.error("❌ Error fetching profile by ID:", error);
     res.status(500).json({
       success: false,
       message: "Something went wrong while fetching profile details ❌",
