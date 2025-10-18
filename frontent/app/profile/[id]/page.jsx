@@ -153,7 +153,7 @@ const page = () => {
 
   const formatImageUrl = (imagePath) => {
     return imagePath
-      ? `${process.env.NEXT_PUBLIC_API_URL_PRODUCTION}/${imagePath}`
+      ? imagePath
       : p.gender === "Female"
       ? "/default-girl.jpg"
       : "/default-boy.jpg";

@@ -96,7 +96,7 @@ const ProfileGallery = () => {
           <CardContent className="flex flex-col p-4">
             {/* Image Section */}
             <div className="h-48 w-full mb-4">
-              {console.log(`${API_BASE_URL}/${profile.image}`)}
+              {console.log(profile.image)}
               <img
                 src={
                   profile.image
