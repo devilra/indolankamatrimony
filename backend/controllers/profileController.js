@@ -138,46 +138,6 @@ exports.registerProfile = async (req, res) => {
       created_year,
     });
 
-    // ----------------------------
-    // 🔥 Nodemailer Setup
-    // ----------------------------
-
-    // const transporter = nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     user: process.env.EMAIL_USER,
-    //     pass: process.env.EMAIL_PASS,
-    //   },
-    // });
-
-    // Email to registered user
-
-    // const userMailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: email,
-    //   subject: "Profile Registration Successful ✅",
-    //   html: `<h3>Hello ${pname},</h3>
-    //          <p>Your matrimony profile has been successfully registered.</p>
-    //          <p>We will contact to soon.</p>
-    //          <p>Thank you for registering!</p>`,
-    // };
-
-    // Email to admin
-    // const adminMailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: process.env.ADMIN_EMAIL,
-    //   subject: "New Profile Registered ✅",
-    //   html: `<h3>New Profile Registered</h3>
-    //          <p>Name: ${pname}</p>
-    //          <p>Email: ${email}</p>
-    //          <p>Phone: ${phonenumber}</p>
-    //          <p>Profile Type: ${mprofile}</p>`,
-    // };
-
-    // Send emails
-    // await transporter.sendMail(userMailOptions);
-    // await transporter.sendMail(adminMailOptions);
-
     res.status(201).json({
       success: true,
       message: "Profile registered successfully ✅",
@@ -185,7 +145,65 @@ exports.registerProfile = async (req, res) => {
       imageUrl: imagePath,
       data: newProfile,
     });
-    //console.log("Register success");
+
+    try {
+      // 🔥 Nodemailer Setup
+      // ----------------------------
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      // Email to registered user
+
+      const userMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Profile Registration Successful ✅",
+        html: `<h3>Hello ${pname},</h3>
+             <p>Your matrimony profile has been successfully registered.</p>
+             <p>We will contact to soon.</p>
+             <p>Thank you for registering!</p>`,
+      };
+
+      // Email to admin
+      const adminMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.ADMIN_EMAIL,
+        subject: "New Profile Registered ✅",
+        html: `<h3>New Profile Registered</h3>
+             <p>Name: ${pname}</p>
+             <p>Email: ${email}</p>
+             <p>Phone: ${phonenumber}</p>
+             <p>Profile Type: ${mprofile}</p>`,
+      };
+
+      // Send emails (FIRE AND FORGET - NO AWAIT)
+      // The promise will resolve/reject in the background, not blocking the main thread.
+
+      // Send emails
+      transporter
+        .sendMail(userMailOptions)
+        .then(() => console.log(`SUCCESS: User email sent to ${email}`))
+        .catch((err) =>
+          console.log('ERROR: Failed to send admin email.", err')
+        );
+      transporter
+        .sendMail(adminMailOptions)
+        .then(() => console.log("SUCCESS: Admin email sent."))
+        .catch((err) =>
+          console.error("ERROR: Failed to send admin email.", err)
+        );
+    } catch (emailError) {
+      console.error(
+        "CRITICAL ERROR: Email setup failed, emails not sent.",
+        emailError
+      );
+    }
   } catch (error) {
     //console.error("Registration Error:", error);
 
