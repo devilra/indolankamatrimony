@@ -8,6 +8,7 @@ import "./globals.css";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import ReduxProvider from "./ReduxProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,18 @@ export default function RootLayout({ children }) {
           <Navbar />
           {children}
           <Footer />
+          <Toaster
+            toastOptions={{
+              className: "rounded-2xl border shadow-lg",
+              style: {
+                //background: "#1e1e1e",
+                // color: "#fff",
+                fontSize: "16px",
+                //color: "white",
+                borderLeft: "10px solid ",
+              },
+            }}
+          />
         </ReduxProvider>
       </body>
     </html>

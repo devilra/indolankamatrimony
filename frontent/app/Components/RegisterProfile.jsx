@@ -5,6 +5,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { TiTick } from "react-icons/ti";
+
 import {
   Popover,
   PopoverContent,
@@ -17,13 +19,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon, Check, Loader2, X } from "lucide-react";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerProfile } from "../redux/profileSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+const REQUIRED_FIELDS = [
+  "phonenumber",
+  "gender",
+  "mprofile", // "Matrimony Profile for"
+  "email",
+  "whatsappno",
+  "pname",
+];
 
 // 🧾 Dropdown data (First code base-la update aagirukku)
 const dropdownData = {
@@ -168,6 +179,16 @@ export default function RegisterProfile() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading } = useSelector((state) => state.profile);
+  // Error Tracking State
+  const [validation, setValidation] = useState({});
+  // ✅ NEW: Regex for Validation
+  const PHONE_NUMBER_REGEX = /^[0-9]{10}/;
+  // Standard email format: user@domain.tld, allows letters, numbers, dots, and hyphens.
+  const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // ✅ NEW: Max file size (500 KB in bytes)
+  const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB * 1024 bytes/KB
+
+  console.log(validation);
 
   const [formData, setFormData] = useState({
     mprofile: "",
@@ -183,7 +204,7 @@ export default function RegisterProfile() {
     weight: "",
     color: "",
     maritalstatus: "",
-    gender: "Male",
+    gender: "",
     education: [],
     occupation: "",
     annualincome: "",
@@ -212,6 +233,40 @@ export default function RegisterProfile() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    // Validation error Clear state
+    if (validation[name]) {
+      setValidation((prev) => ({ ...prev, [name]: false }));
+    }
+  };
+
+  // ✅ NEW: Image file handle function
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    // Reset Image validation error state
+    if (validation.image) {
+      setValidation((prev) => ({ ...prev, image: undefined }));
+    }
+
+    if (file) {
+      if (file.size > MAX_IMAGE_SIZE) {
+        // Error: File size exceeds 500KB
+        setImage(null);
+        setValidation((prev) => ({
+          ...prev,
+          image: "Image size must be less than 500KB.",
+        }));
+        e.target.value = ""; // Clear the file input field
+      } else {
+        // Success: Set the file and clear any previous image error
+        setImage(file);
+        setValidation((prev) => ({ ...prev, image: undefined }));
+      }
+    } else {
+      // No file selected (e.g., user cancels)
+      setImage(null);
+    }
   };
 
   const handleSelectChange = (name, value) => {
@@ -225,6 +280,11 @@ export default function RegisterProfile() {
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    // Validation error Clear state
+    if (validation[name]) {
+      setValidation((prev) => ({ ...prev, [name]: false }));
     }
   };
 
@@ -243,8 +303,75 @@ export default function RegisterProfile() {
     setIsCalendarOpen(false);
   };
 
+  // 🔴 CORE UPDATE: Validation Logic
+  const validateForm = () => {
+    let isValid = true;
+    const newValidation = {};
+
+    REQUIRED_FIELDS.forEach((field) => {
+      const value = formData[field];
+      const isMissing =
+        !value ||
+        (Array.isArray(value) && value.length === 0) ||
+        (typeof value === "string" && value.trim() === "");
+
+      if (isMissing) {
+        newValidation[field] = "This field is required.";
+        isValid = false;
+        return;
+      }
+
+      // ✅ NEW: Phone Number & Whatsapp Number Validation (10 Digits Only)
+      if (field === "phonenumber" || field === "whatsappno") {
+        if (!PHONE_NUMBER_REGEX.test(value)) {
+          newValidation[field] = "Must be exactly 10 digits (numbers only).";
+          isValid = false;
+        }
+      }
+
+      // ✅ NEW: Email Validation (Using Regex)
+      if (field === "email") {
+        if (!EMAIL_REGEX.test(value)) {
+          newValidation[field] =
+            "Please enter a valid email address (e.g., user@gmail.com).";
+          isValid = false;
+        }
+      }
+    });
+    setValidation(newValidation);
+    return isValid;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🔴 Validation
+
+    if (!validateForm()) {
+      toast.error("Some required fields are mandatory.", {
+        icon: <X className="text-red-600 bg-red-200 rounded p-0.5" size={18} />,
+        //description: "Please fill the highlighted fields.",
+        duration: 4000,
+        classNames: {
+          title: "text-red-900 font-bold",
+          description: "text-red-800 font-medium",
+        },
+        style: {
+          "--sonner-progress-bar": "rgb(239 68 68)", // Red-500
+        },
+        className: "bg-red-50 border border-red-400 shadow-lg",
+      });
+      return; // Validation failed, stop submission
+    }
+
+    if (validation.image) {
+      toast.error(validation.image, {
+        // Show the specific image error message
+        icon: <X className="text-red-600 bg-red-200 rounded p-0.5" size={18} />,
+        duration: 4000, // ... (rest of the toast settings)
+      });
+      return; // 🛑 Stop submission immediately if there is an image size error
+    }
 
     const updated = { ...formData };
     for (let key in updated) {
@@ -276,7 +403,17 @@ export default function RegisterProfile() {
     const result = await dispatch(registerProfile(form));
     if (registerProfile.fulfilled.match(result)) {
       const { data } = result.payload;
-      toast.success("Profile Registered Successfully ✅");
+      toast.success("Profile Registered Successfully", {
+        icon: (
+          <Check
+            className="text-green-500 bg-green-200 rounded p-1"
+            size={20}
+          />
+        ),
+        duration: 5000,
+        descriptionClassName: "text-green-700",
+        // description: "Please check your profile for details.",
+      });
       setFormData({
         // Reset form after success
         mprofile: "",
@@ -322,7 +459,11 @@ export default function RegisterProfile() {
       router.push("/success");
     } else {
       // Use result.payload?.message if available, otherwise a generic error
-      toast.error(result.payload?.message || "Something went wrong!");
+      toast.error(result.payload?.message || "Profile Registered Failed", {
+        icon: <X className="text-red-500 bg-red-200 rounded p-1" size={20} />,
+        duration: 5000,
+        // description: "Please check your profile for details.",
+      });
     }
   };
 
@@ -347,6 +488,8 @@ export default function RegisterProfile() {
         >
           {fieldOrder.map((field, index) => {
             const fieldName = dropdownFieldMap[field.label] || field.name; // 0. HEADING FIELD (New Logic)
+            // 🔴 Validation check for dynamic class
+            const isInValid = validation[fieldName];
 
             if (field.type === "heading") {
               return (
@@ -364,6 +507,8 @@ export default function RegisterProfile() {
               const options = dropdownData[field.label];
               if (!options) return null; // Special handling for multi-select Education
 
+              // Standard Select field (Includes mprofile, gender)
+
               if (fieldName === "education") {
                 return (
                   <div key={field.label} className="flex flex-col">
@@ -373,7 +518,8 @@ export default function RegisterProfile() {
                         handleSelectChange(fieldName, val)
                       }
                     >
-                      <SelectTrigger className="w-full py-5">
+                      {/* 🔴 Select Trigger Border Update */}
+                      <SelectTrigger className={`w-full py-5   `}>
                         <div className="flex flex-wrap gap-1">
                           {formData.education.length === 0
                             ? "Select Education"
@@ -425,7 +571,13 @@ export default function RegisterProfile() {
                     value={formData[fieldName]}
                     onValueChange={(val) => handleSelectChange(fieldName, val)}
                   >
-                    <SelectTrigger className="w-full py-5">
+                    <SelectTrigger
+                      className={`w-full py-5 ${
+                        isInValid
+                          ? "border-red-500 ring-red-500 focus:ring-red-500"
+                          : ""
+                      }`}
+                    >
                       <SelectValue placeholder={`Select ${field.label}`} />
                     </SelectTrigger>
 
@@ -437,6 +589,11 @@ export default function RegisterProfile() {
                       ))}
                     </SelectContent>
                   </Select>
+                  {isInValid && (
+                    <p className="text-red-500 text-xs mt-1">
+                      This field is required.
+                    </p>
+                  )}
                 </div>
               );
             } // 2. DATE PICKER (acts as an input field in the flow)
@@ -492,12 +649,23 @@ export default function RegisterProfile() {
               return (
                 <div key={field.name} className="flex flex-col">
                   <Label className="text-sm py-2">{field.label}</Label>
-
                   <Input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setImage(e.target.files?.[0] || null)}
+                    onChange={handleImageChange}
+                    className={`${
+                      validation.image
+                        ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }`}
                   />
+                  {/* 🔴 NEW: Display Image Size Error Message */}
+
+                  {validation.image && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {validation.image}
+                    </p>
+                  )}
                 </div>
               );
             } // 5. REGULAR TEXT INPUT
@@ -505,19 +673,43 @@ export default function RegisterProfile() {
             if (field.type === "input") {
               // Required Update: Age field is readOnly
               const isAgeField = field.name === "age";
+              const isPhoneNumberField =
+                fieldName === "phonenumber" || fieldName === "whatsappno";
+              const isEmailField = fieldName === "email";
+
               return (
                 <div key={field.name} className="flex flex-col">
                   <Label className="text-sm py-2">{field.label}</Label>
                   <Input
-                    type={isAgeField ? "number" : "text"}
+                    type={
+                      isAgeField
+                        ? "number"
+                        : isPhoneNumberField
+                        ? "tel"
+                        : isEmailField
+                        ? "email"
+                        : "text"
+                    }
                     name={fieldName}
                     value={formData[fieldName]}
                     onChange={handleChange}
                     placeholder={`Enter ${field.label}`}
                     readOnly={isAgeField}
                     disabled={isAgeField && formData.age === ""}
-                    className="py-5"
+                    // ✅ NEW: MaxLength for Phone/Whatsapp
+                    maxLength={isPhoneNumberField ? 10 : undefined}
+                    // 🔴 Input Border Update
+                    className={`py-5 ${
+                      isInValid
+                        ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }`}
                   />
+                  {isInValid && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {validation[fieldName]}
+                    </p>
+                  )}
                 </div>
               );
             }

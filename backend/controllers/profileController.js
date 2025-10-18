@@ -12,7 +12,7 @@ exports.registerProfile = async (req, res) => {
     const imagePath = req.file ? req.file.path : null; // Full Cloudinary URL
     const publicId = req.file ? req.file.public_id : null; // Unique ID for management
 
-    console.log(imagePath);
+    //console.log(imagePath);
 
     let {
       mprofile,
@@ -77,13 +77,14 @@ exports.registerProfile = async (req, res) => {
       let message = "";
       if (
         existingProfile.email === email &&
-        existingProfile.phonenumber === phonenumber
+        existingProfile.phonenumber === phonenumber &&
+        existingProfile.whatsappno === whatsappno
       ) {
-        message = "Email and phone number already exist ❌";
+        message = "Email and phone number already exist";
       } else if (existingProfile.email === email) {
-        message = "Email already exists ❌";
+        message = "Email already exists";
       } else {
-        message = "Phone number already exists ❌";
+        message = "Phone number already exists";
       }
 
       return res.status(400).json({
@@ -186,18 +187,21 @@ exports.registerProfile = async (req, res) => {
       // The promise will resolve/reject in the background, not blocking the main thread.
 
       // Send emails
+      //console.log("Email send Start");
       transporter
         .sendMail(userMailOptions)
         .then(() => console.log(`SUCCESS: User email sent to ${email}`))
         .catch((err) =>
           console.log('ERROR: Failed to send admin email.", err')
         );
+      //console.log("Email Send UserEmail");
       transporter
         .sendMail(adminMailOptions)
         .then(() => console.log("SUCCESS: Admin email sent."))
         .catch((err) =>
           console.error("ERROR: Failed to send admin email.", err)
         );
+      //console.log("Email Send End finish");
     } catch (emailError) {
       console.error(
         "CRITICAL ERROR: Email setup failed, emails not sent.",
