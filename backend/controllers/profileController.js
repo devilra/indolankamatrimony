@@ -165,7 +165,7 @@ exports.registerProfile = async (req, res) => {
     // Email to admin
     const adminMailOptions = {
       from: process.env.EMAIL_USER,
-      to: "jkraja089@gmail.com",
+      to: process.env.ADMIN_EMAIL,
       subject: "New Profile Registered ✅",
       html: `<h3>New Profile Registered</h3>
              <p>Name: ${pname}</p>
