@@ -254,6 +254,7 @@ exports.registerProfile = async (req, res) => {
 // ✅ Get Single Profile by ID
 
 exports.getAllProfiles = async (req, res) => {
+  console.log("Api called");
   try {
     const { query } = req;
     const search = query.search ? query.search.trim() : "";
@@ -340,7 +341,7 @@ exports.getProfileById = async (req, res) => {
       data: profile,
     });
   } catch (error) {
-    //console.error("❌ Error fetching profile by ID:", error);
+    console.error("❌ Error fetching profile by ID:", error);
     res.status(500).json({
       success: false,
       message: "Something went wrong while fetching profile details ❌",

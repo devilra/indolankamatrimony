@@ -14,12 +14,15 @@ const ProfileGallery = () => {
   const { profiles, loading, error } = useSelector((state) => state.profile);
   const router = useRouter();
 
+  //console.log(profiles);
+
   // ✅ New State: Initial load mudinjirucha nu therinjukka
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
 
   // ✅ Initial data fetch logic
   useEffect(() => {
     // 1. Initial Load-la, oru thadavai API call pannunga
+    console.log("API Called");
     if (profiles.length === 0 && !error && !isInitialLoadComplete) {
       dispatch(getAllProfiles());
     }
@@ -63,9 +66,9 @@ const ProfileGallery = () => {
     // 2. Error State (API call fail aanaal)
     content = (
       <div className="col-span-full text-center py-16">
-        <h3 className="text-2xl font-bold text-red-600 mb-2">
+        {/* <h3 className="text-2xl font-bold text-red-600 mb-2">
           Data Fetch Error
-        </h3>
+        </h3> */}
         <p className="text-gray-600">{error} - Please try again later.</p>
       </div>
     );

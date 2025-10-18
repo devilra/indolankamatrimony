@@ -144,6 +144,26 @@ const fieldOrder = [
   { label: "Profile Image", name: "image", type: "file" },
 ];
 
+const calculateAge = (dob) => {
+  if (!dob) return "";
+  const today = new Date();
+  console.log("Today", today);
+  const birthDate = new Date(dob);
+  console.log("birthDate", birthDate);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+
+  // Check if birthday has passed this year
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age >= 0 ? age.toString() : "";
+};
+
 export default function RegisterProfile() {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -153,7 +173,7 @@ export default function RegisterProfile() {
     mprofile: "",
     pname: "",
     dob: "",
-    age: "",
+    age: "", // auto-calculated
     pbrith: "",
     tbrith: "",
     rasi: "",
@@ -210,7 +230,16 @@ export default function RegisterProfile() {
 
   const handleDateSelect = (date) => {
     setDobDate(date); // Date format for backend (as per first code)
-    setFormData((prev) => ({ ...prev, dob: format(date, "yyyy-MM-dd") }));
+    const formattedDate = format(date, "yyyy-MM-dd");
+
+    // Calculate Age and update age in state (Required Update)
+    const calculatedAge = calculateAge(date);
+
+    setFormData((prev) => ({
+      ...prev,
+      dob: formattedDate,
+      age: calculatedAge, // Age updated automatically
+    }));
     setIsCalendarOpen(false);
   };
 
@@ -247,7 +276,45 @@ export default function RegisterProfile() {
     const result = await dispatch(registerProfile(form));
     if (registerProfile.fulfilled.match(result)) {
       const { data } = result.payload;
-      toast("Profile Registered Successfully ✅");
+      toast.success("Profile Registered Successfully ✅");
+      setFormData({
+        // Reset form after success
+        mprofile: "",
+        pname: "",
+        dob: "",
+        age: "",
+        pbrith: "",
+        tbrith: "",
+        rasi: "",
+        nakshatram: "",
+        laknam: "",
+        height: "",
+        weight: "",
+        color: "",
+        maritalstatus: "",
+        gender: "Male",
+        education: [],
+        occupation: "",
+        annualincome: "",
+        mothertongue: "",
+        religion: "",
+        caste: "",
+        subcaste: "",
+        fname: "",
+        foccupation: "",
+        mname: "",
+        moccupation: "",
+        sister: "",
+        brother: "",
+        children: "",
+        rplace: "",
+        whatsappno: "",
+        email: "",
+        addressdetails: "",
+        phonenumber: "",
+      });
+      setDobDate(null);
+      setImage(null);
       sessionStorage.setItem(
         "registrationSuccess",
         JSON.stringify({ id: data.id, name: data.pname })
@@ -436,15 +503,19 @@ export default function RegisterProfile() {
             } // 5. REGULAR TEXT INPUT
 
             if (field.type === "input") {
+              // Required Update: Age field is readOnly
+              const isAgeField = field.name === "age";
               return (
                 <div key={field.name} className="flex flex-col">
                   <Label className="text-sm py-2">{field.label}</Label>
                   <Input
-                    type="text"
+                    type={isAgeField ? "number" : "text"}
                     name={fieldName}
                     value={formData[fieldName]}
                     onChange={handleChange}
                     placeholder={`Enter ${field.label}`}
+                    readOnly={isAgeField}
+                    disabled={isAgeField && formData.age === ""}
                     className="py-5"
                   />
                 </div>
