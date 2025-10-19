@@ -1,6 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import API from "../api";
 
+// =========================================================
+// ASYNC THUNKS (API Calls)
+// =========================================================
+
 export const registerProfile = createAsyncThunk(
   "profile/registerProfile",
   async (formData, { rejectWithValue }) => {
@@ -21,6 +25,47 @@ export const registerProfile = createAsyncThunk(
 );
 
 // ✅ Get all profiles
+
+export const sendOtp = createAsyncThunk(
+  "profile/sendOtp",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await API.post("/profile/send-otp", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("OTP Send Response:", res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || {
+          message: "Failed to send OTP",
+        }
+      );
+    }
+  }
+);
+
+// (OTP Submit)
+
+export const verifyOtpAndRegister = createAsyncThunk(
+  "profile/verifyOtpAndRegister",
+  async (otpData, { rejectWithValue }) => {
+    try {
+      // { email: string, otp: string }
+      const res = await API.post("/profile/verify-and-register", otpData);
+      console.log("OTP Verify/Register Response:", res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "OTP verification failed" }
+      );
+    }
+  }
+);
+
 export const getAllProfiles = createAsyncThunk(
   "profile/getAllProfiles",
   async (_, { rejectWithValue }) => {
@@ -80,6 +125,9 @@ const profileSlice = createSlice({
     error: null,
     data: null,
     profiles: [], // for all profiles
+    // 🔥 OTP Verification State Fields
+    otpSent: false,
+    otpError: null,
   },
   reducers: {
     resetProfileState: (state) => {
@@ -87,6 +135,16 @@ const profileSlice = createSlice({
       state.success = false;
       state.error = null;
       state.data = null;
+      state.otpSent = false;
+      state.otpError = null;
+    },
+
+    // OTP sent state
+    resetOtpState: (state) => {
+      state.loading = false;
+      state.otpSent = false;
+      state.otpError = null;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -104,6 +162,55 @@ const profileSlice = createSlice({
       .addCase(registerProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
+      })
+
+      // ------------------------------------
+      // 🔥 1. sendOtp
+      // ------------------------------------
+
+      .addCase(sendOtp.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.error = null;
+        state.otpSent = false;
+        state.otpError = null;
+      })
+
+      .addCase(sendOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true; // Registration is not yet complete
+        state.otpSent = true;
+        state.data = action.payload; // OPTIONAL: Save response if needed
+      })
+
+      .addCase(sendOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.otpSent = false;
+        state.error = action.payload.message;
+        state.otpError = action.payload.message; // OTP-Specific error
+      })
+
+      // ------------------------------------
+      // 🔥 2. verifyOtpAndRegister (Final Step)
+      // ------------------------------------
+
+      .addCase(verifyOtpAndRegister.pending, (state) => {
+        state.loading = true;
+        state.success = false;
+        state.otpError = null;
+      })
+      .addCase(verifyOtpAndRegister.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.otpSent = false;
+        state.data = action.payload.data;
+      })
+
+      .addCase(verifyOtpAndRegister.rejected, (state, action) => {
+        state.loading = false;
+        state.success = false;
+        // This is crucial: OTP sent state remains true so user can try again with a new OTP.
+        state.otpError = action.payload.message; // Invalid OTP, Expired etc.
       })
 
       // 🟦 Get All Profiles

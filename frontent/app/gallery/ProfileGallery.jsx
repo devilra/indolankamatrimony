@@ -19,6 +19,26 @@ const ProfileGallery = () => {
   // ✅ New State: Initial load mudinjirucha nu therinjukka
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
 
+  const calculateAge = (dob) => {
+    if (!dob) return "";
+    const today = new Date();
+    console.log("Today", today);
+    const birthDate = new Date(dob);
+    console.log("birthDate", birthDate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    // Check if birthday has passed this year
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age >= 0 ? age.toString() : "";
+  };
+
   // ✅ Initial data fetch logic
   useEffect(() => {
     // 1. Initial Load-la, oru thadavai API call pannunga
@@ -88,12 +108,12 @@ const ProfileGallery = () => {
   } else {
     // 4. Data Found State (Profile Cards)
     content = profiles.map((profile) => (
-      <div key={profile.id} className="p-2">
+      <div key={profile.id} className="p-2 ">
         <Card
           className="shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 border border-gray-200 rounded-lg h-full"
           onClick={() => handleProfileClick(profile.id)}
         >
-          <CardContent className="flex flex-col p-4">
+          <CardContent className="flex flex-col">
             {/* Image Section */}
             <div className="h-48 w-full mb-4">
               {console.log(profile.image)}
@@ -106,28 +126,30 @@ const ProfileGallery = () => {
                     : "/default-boy.jpg"
                 }
                 alt={profile.pname}
-                className="h-full w-full rounded-md object-contain border-4 border-gray-100 shadow-sm"
+                className="h-full w-full rounded-md object-contain py-1 border-4 border-gray-100 shadow-sm"
               />
             </div>
 
-            {/* Profile Details */}
-            <h3 className="text-lg font-semibold text-gray-800 truncate">
-              <strong className="text-black font-bold">ID: </strong>
-              {profile.id}
-            </h3>
-            <h3 className="text-lg font-semibold text-gray-800 truncate">
-              <strong className="text-black font-bold">Name: </strong>
-              {profile.pname}
-            </h3>
-            <p className="text-sm py-1 text-gray-600 truncate">
-              <strong className="font-bold text-black">Education: </strong>
-              <span className="text-[12px]">{profile.education}</span>
-            </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <div className=" text-center md:text-center lg:text-start ">
+              {/* Profile Details */}
+              <h3 className="text-xl font-bold text-gray-800 truncate">
+                {profile.pname}
+              </h3>
+              <p className="text-lg font-semibold  py-1 text-gray-600">
+                <strong className="font-bold text-black">Education: </strong>
+                <span className="text-[12px]">{profile.education}</span>
+              </p>
+              <h3 className="text-lg font-semibold text-gray-800 truncate">
+                <strong className="text-black font-bold">ID: </strong>
+                {profile.id}
+              </h3>
+
+              {/* <p className="text-xs text-gray-500 mt-1">
               <strong className="text-black font-bold">Joined: </strong>
               {profile.created_day}-{profile.created_month}-
               {profile.created_year}
-            </p>
+            </p> */}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -135,7 +157,7 @@ const ProfileGallery = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto pt-10 px-4 mb-5 sm:px-6 lg:px-8">
       <h2 className="text-4xl font-extrabold text-center mb-10 text-gray-900">
         Matrimony Profiles
       </h2>

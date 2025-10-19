@@ -275,6 +275,272 @@ exports.registerProfile = async (req, res) => {
 
 // ✅ Get Single Profile by ID
 
+// { 'user@example.com': { otp: '123456', profileData: { ... }, timestamp: 1678886400000 } }
+
+const otpStorage = {};
+const OTP_EXPIRY_MINUTES = 5;
+
+// 🔥 Utility Functions
+
+const generateOTP = () => {
+  // 6-digit OTP
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const createMailTransporter = () => {
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+};
+// =========================================================
+// API 1: sendOtp - (Form Submit -> OTP Generate & Send)
+// =========================================================
+
+exports.sendOtp = async (req, res) => {
+  try {
+    // Image and Profile Data extraction
+    const imagePath = req.file ? req.file.path : null;
+    const publicId = req.file ? req.file.path : null;
+
+    let profileData = req.body;
+
+    let { email, phonenumber, pname } = profileData;
+
+    // --- Data Validation and Pre-processing ---
+    if (!email || !phonenumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and Phone number are required.",
+      });
+    }
+
+    // Handle array fields like 'education'
+    if (Array.isArray(profileData.education)) {
+      profileData.education = profileData.education.join(", ");
+    }
+
+    // Add calculated fields to the profileData object
+    const now = new Date();
+    profileData.created_day = now.getDate().toString().padStart(2, "0");
+    profileData.created_month = (now.getMonth() + 1)
+      .toString()
+      .padStart(2, "0");
+    profileData.created_year = now.getFullYear().toString();
+    profileData.image = imagePath;
+    profileData.imagePublicId = publicId;
+
+    // --- Check if email or phone number already exists in DB ---
+
+    const existingProfile = await Profile.findOne({
+      where: { [Op.or]: [{ email }, { phonenumber }] },
+    });
+
+    if (existingProfile) {
+      let message =
+        existingProfile.email === email
+          ? "Email already exists ❌"
+          : "Phone number already exists ❌";
+      return res.status(400).json({ success: false, message });
+    }
+
+    // --- Generate OTP and Save Data Temporarily ---
+    const otp = generateOTP();
+
+    otpStorage[email] = {
+      otp: otp,
+      profileData: profileData,
+      timestamp: Date.now(),
+    };
+
+    // ------5min Otp Expire--------
+
+    setTimeout(() => {
+      if (otpStorage[email] && otpStorage[email].otp === otp) {
+        delete otpStorage[email];
+        console.log(`INFO: OTP for ${email} expired and cleared.`);
+      }
+    }, OTP_EXPIRY_MINUTES * 60 * 1000);
+
+    // --- Send OTP Email ---
+
+    const transporter = createMailTransporter();
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your Profile Verification OTP",
+      html: `<h3>Hello ${pname},</h3>
+                   <p>Your one-time password (OTP) for profile confirmation is:</p>
+                   <h1 style="color: #4CAF50; font-size: 24px;">${otp}</h1>
+                   <p>This code will expire in ${OTP_EXPIRY_MINUTES} minutes.</p>
+                   <p>Do not share this OTP with anyone.</p>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`SUCCESS: OTP sent to ${email}`);
+
+    res.status(200).json({
+      success: true,
+      message:
+        "OTP sent to your email successfully. Please check and verify. ✅",
+      // Front-end- OTP verification form-
+      emailSent: true,
+    });
+  } catch (error) {
+    console.error("❌ Send OTP Error:", error);
+
+    // Multer/File error handling
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        success: false,
+        message: "Image size exceeds the 500 KB limit! 😞",
+      });
+    }
+    if (
+      error.message &&
+      error.message.includes("Only image files are allowed")
+    ) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to send OTP or server error. ❌",
+      error: error.message,
+    });
+  }
+};
+
+// =========================================================
+// API 2: verifyOtpAndRegister - (OTP Submit -> Verify & Save to DB)
+// =========================================================
+
+exports.verifyOtpAndRegister = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email && !otp) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email and OTP are required." });
+  }
+
+  const storedData = otpStorage[email];
+
+  // 1. Storage Data  (Expired or Not Sent)
+
+  if (!storedData) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Verification failed. OTP expired or not sent. Please resubmit profile form. ⏳",
+    });
+  }
+
+  const timeElapsed = Date.now() - storedData.timestamp;
+
+  if (timeElapsed > OTP_EXPIRY_MINUTES * 60 * 1000) {
+    delete otpStorage[email]; // Clear expired data
+    return res.status(400).json({
+      success: false,
+      message: "OTP has expired. Please resend the profile form. ⏳",
+    });
+  }
+
+  // OTP Verifications Profile
+
+  if (storedData.otp !== otp) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid OTP . Please try again." });
+  }
+
+  try {
+    const profileData = storedData.profileData;
+
+    // Final check to prevent duplicate submission just in case
+    const existingProfile = await Profile.findOne({
+      where: { email },
+    });
+
+    if (existingProfile) {
+      delete otpStorage[email];
+      return res.status(400).json({
+        success: false,
+        message: "Profile already exists in the indolankamatrimony",
+      });
+    }
+
+    const newProfile = await Profile.create(profileData);
+
+    delete otpStorage[email];
+
+    // --- Final Success Response ---
+    res.status(201).json({
+      success: true,
+      message: "Profile verified and registered successfully! ✅",
+      imageUrl: newProfile.image,
+      data: newProfile,
+    });
+
+    try {
+      // --- Admin/User Notification Email ---
+      const transporter = createMailTransporter();
+
+      // Email to registered user
+      const userMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Profile Registration Successful and Verified ✅",
+        html: `<h3>Hello ${profileData.pname},</h3>
+                    <p>Your matrimony profile has been successfully registered and verified.</p>
+                    <p>Thank you for registering!</p>`,
+      };
+
+      // Email to admin
+      const adminMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.ADMIN_EMAIL,
+        subject: "New Profile Registered and Verified ✅",
+        html: `<h3>New Profile Registered</h3>
+                     <p>Name: ${profileData.pname}</p>
+                     <p>Email: ${email}</p>
+                     <p>Phone: ${profileData.phonenumber}</p>
+                     <p>Profile Type: ${profileData.mprofile}</p>`,
+      };
+
+      // Send emails in the background
+      transporter
+        .sendMail(userMailOptions)
+        .then(() => console.log("Email Send SuccessFully"))
+        .catch((err) => console.error("User success email failed:", err));
+      transporter
+        .sendMail(adminMailOptions)
+        .then(() => console.log("Email Send SuccessFully"))
+        .catch((err) => console.error("Admin notification email failed:", err));
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).json({
+        message: "Email Send Faild",
+      });
+    }
+  } catch (error) {
+    console.error("❌ DB Registration Error:", dbError);
+
+    delete otpStorage[email];
+
+    res.status(500).json({
+      success: false,
+      message:
+        "OTP verified, but profile save failed due to database error ❌. Please contact support.",
+      error: dbError.message,
+    });
+  }
+};
+
 exports.getAllProfiles = async (req, res) => {
   console.log("Api called");
   try {

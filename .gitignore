@@ -1,4 +1,6 @@
 backend/node_modules
+backend/controllers/profileControllerBackup.js
+backend/routes/protectedRouteBackup.js
 backend/config/MailgunEmail
 backend/.env
 frontent/node_modules

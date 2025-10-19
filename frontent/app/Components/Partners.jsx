@@ -127,7 +127,7 @@ const Partners = () => {
                     : "/default-boy.jpg"
                 }
                 alt={profile.pname}
-                className="h-[200px] w-full md:h-[250px] lg:h-[220px] rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
+                className="h-[200px] w-full md:h-[250px] lg:h-[220px] p-2 rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
               />
               {/* ... Profile Details ... */}
               <h3 className="text-lg font-semibold text-gray-800">
@@ -138,11 +138,15 @@ const Partners = () => {
                 <strong className="font-bold text-black">Educations : </strong>
                 <span className=" text-[12px]">{profile.education}</span>
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              {/* <p className="text-xs text-gray-500 mt-1">
                 <strong className="text-black font-bold">Joined : </strong>{" "}
                 {profile.created_day}-{profile.created_month}-
                 {profile.created_year}
-              </p>
+              </p> */}
+              <h3 className="text-lg font-semibold text-gray-800 truncate">
+                <strong className="text-black font-bold">ID: </strong>
+                {profile.id}
+              </h3>
             </CardContent>
           </Card>
         </div>

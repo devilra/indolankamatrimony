@@ -20,6 +20,7 @@ sequelize
 module.exports = sequelize;
 
 // Heidisql connect code
+
 // const { Sequelize } = require("sequelize");
 // require("dotenv").config();
 

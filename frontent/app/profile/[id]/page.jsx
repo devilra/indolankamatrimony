@@ -28,16 +28,16 @@ const page = () => {
   // Helper function to format data display
   const formatValue = (value) => {
     if (Array.isArray(value)) {
-      return value.join(", ") || "--";
+      return value.join(", ") || "N/A";
     }
-    return value || "--";
+    return value || "N/A";
   };
 
   const DetailBox = ({ title, children }) => {
     return (
-      <div className=" p-6 rounded-lg  mb-8 border border-neutral-200">
+      <div className=" p-6 rounded-lg  mb-8 border border-neutral-300">
         {title && (
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 border-b border-dashed pb-2">
+          <h2 className="text-2xl font-bold text-start text-gray-800 mb-4 border-b border-dashed pb-2">
             {title}
           </h2>
         )}
@@ -163,7 +163,7 @@ const page = () => {
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
-        <DetailBox>
+        <div className="p-6 rounded-lg  mb-8">
           <div className="flex flex-col md:flex-row md:items-start pb-6">
             <div className="w-full md:w-1/3 lg:w-1/4 mb-4 md:mb-0 md:mr-6">
               <img
@@ -183,18 +183,22 @@ const page = () => {
               <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
                 Name : {formatValue(p.pname)}
               </h1>
-              <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
+              {/* <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
                 Age : {formatValue(p.age)}
-              </h1>
-              <div className="inline-block px-4 py-1 border-2 border-neutral-400 bg-neutral-900 text-white rounded-full text-2xl md:text-3xl lg:text-4xl my-1">
+              </h1> */}
+              {/* <div className="inline-block px-4 py-1 border-2 border-neutral-400 bg-neutral-900 text-white rounded-full text-2xl md:text-3xl lg:text-4xl my-1">
+                Profile Id :{" "}
+                <span className="font-bold">{p.profile_id || p.id}</span>
+              </div> */}
+              <div className="inline-block px-4 py-1 border-1 border-neutral-400  text-[#4a2f1c] font-bold  rounded-lg text-2xl md:text-3xl lg:text-3xl my-1">
                 Profile Id :{" "}
                 <span className="font-bold">{p.profile_id || p.id}</span>
               </div>
             </div>
           </div>
-        </DetailBox>
+        </div>
         {/* 2. Personal Details Section in a Box */}
-        <DetailBox title="Personal Details :">
+        <DetailBox title="Personal Details">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5">
             {personalDetails.map(({ label, value }) => (
               <div
@@ -204,7 +208,7 @@ const page = () => {
                 <span className="font-semibold text-gray-600 w-1/2">
                   {label}
                 </span>
-                <span className="text-gray-900 font-medium w-1/2 text-right border-b border-neutral-300 border-dashed">
+                <span className="text-gray-900 font-medium w-1/2 text-right b ">
                   {value}
                 </span>
               </div>
@@ -223,7 +227,7 @@ const page = () => {
                 <span className="font-semibold text-gray-600 w-1/2">
                   {label}
                 </span>
-                <span className="text-gray-900 font-medium w-1/2 text-right border-b border-neutral-300 border-dashed">
+                <span className="text-gray-900 font-medium w-1/2 text-right ">
                   {value}
                 </span>
               </div>
