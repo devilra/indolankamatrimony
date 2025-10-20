@@ -108,7 +108,7 @@ const ProfileGallery = () => {
   } else {
     // 4. Data Found State (Profile Cards)
     content = profiles.map((profile) => (
-      <div key={profile.id} className="p-2 ">
+      <div key={profile.id} className="">
         <Card
           className="shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 border border-gray-200 rounded-lg h-full"
           onClick={() => handleProfileClick(profile.id)}
@@ -126,21 +126,22 @@ const ProfileGallery = () => {
                     : "/default-boy.jpg"
                 }
                 alt={profile.pname}
-                className="h-full w-full rounded-md object-contain py-1 border-4 border-gray-100 shadow-sm"
+                //className="h-full w-full rounded-md object-contain py-1 border-4 border-gray-100 shadow-sm"
+                className="h-[200px] w-full md:h-[250px] lg:h-[220px] py-3 p-2 rounded-md object-cover mb-4 border-4"
               />
             </div>
 
-            <div className=" text-center md:text-center lg:text-start ">
+            <div className=" text-center py-3 md:pt-12 lg:pt-5 ">
               {/* Profile Details */}
-              <h3 className="text-xl font-bold text-gray-800 truncate">
+              <h3 className="text-xl font-bold  text-gray-800 truncate">
                 {profile.pname}
               </h3>
               <p className="text-lg font-semibold  py-1 text-gray-600">
-                <strong className="font-bold text-black">Education: </strong>
+                {/* <strong className="font-bold text-black">Education: </strong> */}
                 <span className="text-[12px]">{profile.education}</span>
               </p>
               <h3 className="text-lg font-semibold text-gray-800 truncate">
-                <strong className="text-black font-bold">ID: </strong>
+                {/* <strong className="text-black font-bold">ID: </strong> */}
                 {profile.id}
               </h3>
 
@@ -163,7 +164,7 @@ const ProfileGallery = () => {
       </h2>
 
       {/* Responsive Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {content}
       </div>
     </div>

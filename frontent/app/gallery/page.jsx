@@ -35,7 +35,7 @@ const Gallery = () => {
       </section>
 
       {/* ------------section-2--------- */}
-      <section>
+      <section className="bg-gradient-to-r from-amber-50/20 pb-20 md:pb-24 lg:pb-28 to-amber-100/30">
         <ProfileGallery />
       </section>
     </div>

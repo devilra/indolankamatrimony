@@ -29,10 +29,10 @@ router.get("/:id", getProfileById);
 
 // 1. Confirm Profile  with otp verification
 
-// router.post("/send-otp", cloudinaryUpload.single("image"), sendOtp);
+router.post("/send-otp", cloudinaryUpload.single("image"), sendOtp);
 
 // 2. OTP confirm and Verification
 
-// router.post("/verify-and-register", verifyOtpAndRegister);
+router.post("/verify-and-register", verifyOtpAndRegister);
 
 module.exports = router;

@@ -45,6 +45,555 @@ const REQUIRED_FIELDS = [
   "pname",
 ];
 
+const Occupations = [
+  "Software Professional",
+  "Teaching / Academician",
+  "Executive",
+  "Doctor",
+  "Manager",
+  "Professor / Lecturer",
+  "Officer",
+  "Human Resources Professional",
+  "Manager",
+  "Supervisor",
+  "Officer",
+  "Administrative Professional",
+  "Executive",
+  "Clerk",
+  "Human Resources Professional",
+  "Secretary / Front Office",
+  "Agriculture & Farming Professional",
+  "Horticulturist",
+  "Pilot",
+  "Air Hostess / Flight Attendant",
+  "Airline Professional",
+  "Architect",
+  "Interior Designer",
+  "Chartered Accountant",
+  "Company Secretary",
+  "Accounts / Finance Professional",
+  "Banking Professional",
+  "Auditor",
+  "Financial Accountant",
+  "Financial Analyst / Planning",
+  "Investment Professional",
+  "Fashion Designer",
+  "Beautician",
+  "Hair Stylist",
+  "Jewellery Designer",
+  "Designer (Others)",
+  "Makeup Artist",
+  "BPO / KPO / ITES Professional",
+  "Customer Service Professional",
+  "Civil Services (IAS / IPS / IRS / IES / IFS)",
+  "Analyst",
+  "Consultant",
+  "Corporate Communication",
+  "Corporate Planning",
+  "Marketing Professional",
+  "Operations Management",
+  "Sales Professional",
+  "Senior Manager / Manager",
+  "Subject Matter Expert",
+  "Business Development Professional",
+  "Content Writer",
+  "Army",
+  "Navy",
+  "Defence Services (Others)",
+  "Air Force",
+  "Paramilitary",
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager6",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+  "Law Enforcement Officer",
+  "Police",
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+  "Mariner / Merchant Navy",
+  "Sailor",
+  "Scientist / Researcher",
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+  "Others",
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+];
+
+const uniqueOccupations = [...new Set(Occupations)];
+
+const FatherOccupations = [
+  // Common occupations
+  "Software Professional",
+  "Teaching / Academician",
+  "Executive",
+  "Doctor",
+  "Manager",
+  "Professor / Lecturer",
+  "Officer",
+  "Human Resources Professional",
+
+  // ADMINISTRATION
+  "Manager",
+  "Supervisor",
+  "Officer",
+  "Administrative Professional",
+  "Executive",
+  "Clerk",
+  "Human Resources Professional",
+  "Secretary / Front Office",
+
+  // AGRICULTURE
+  "Agriculture & Farming Professional",
+  "Horticulturist",
+
+  // AIRLINE
+  "Pilot",
+  "Air Hostess / Flight Attendant",
+  "Airline Professional",
+
+  // ARCHITECTURE & DESIGN
+  "Architect",
+  "Interior Designer",
+
+  // BANKING & FINANCE
+  "Chartered Accountant",
+  "Company Secretary",
+  "Accounts / Finance Professional",
+  "Banking Professional",
+  "Auditor",
+  "Financial Accountant",
+  "Financial Analyst / Planning",
+  "Investment Professional",
+
+  // BEAUTY & FASHION
+  "Fashion Designer",
+  "Beautician",
+  "Hair Stylist",
+  "Jewellery Designer",
+  "Designer (Others)",
+  "Makeup Artist",
+  // BPO & CUSTOMER SERVICE
+  "BPO / KPO / ITES Professional",
+  "Customer Service Professional",
+
+  // CIVIL SERVICES
+  "Civil Services (IAS / IPS / IRS / IES / IFS)",
+
+  // CORPORATE PROFESSIONALS
+  "Analyst",
+  "Consultant",
+  "Corporate Communication",
+  "Corporate Planning",
+  "Marketing Professional",
+  "Operations Management",
+  "Sales Professional",
+  "Senior Manager / Manager",
+  "Subject Matter Expert",
+  "Business Development Professional",
+  "Content Writer",
+
+  // DEFENCE
+  "Army",
+  "Navy",
+  "Defence Services (Others)",
+  "Air Force",
+  "Paramilitary",
+
+  // EDUCATION & TRAINING
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+
+  // ENGINEERING
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+
+  // HOSPITALITY
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+  // IT & SOFTWARE
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+
+  // LEGAL
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+
+  // POLICE / LAW ENFORCEMENT
+  "Law Enforcement Officer",
+  "Police",
+
+  // MEDICAL & HEALTHCARE-OTHERS
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+
+  // MEDIA & ENTERTAINMENT
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+
+  // MERCHANT NAVY
+  "Mariner / Merchant Navy",
+  "Sailor",
+
+  // SCIENTIST
+  "Scientist / Researcher",
+
+  // SENIOR MANAGEMENT
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+  // OTHERS
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+  "Others",
+
+  // DOCTOR
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+];
+
+const uniqueFatherOccupations = [...new Set(FatherOccupations)];
+
+const MotherOccupations = [
+  "Software Professional",
+  "Teaching / Academician",
+  "Executive",
+  "Doctor",
+  "Manager",
+  "Professor / Lecturer",
+  "Officer",
+  "Human Resources Professional",
+
+  // ADMINISTRATION
+  "Manager",
+  "Supervisor",
+  "Officer",
+  "Administrative Professional",
+  "Executive",
+  "Clerk",
+  "Human Resources Professional",
+  "Secretary / Front Office",
+
+  // AGRICULTURE
+  "Agriculture & Farming Professional",
+  "Horticulturist",
+
+  // AIRLINE
+  "Pilot",
+  "Air Hostess / Flight Attendant",
+  "Airline Professional",
+
+  // ARCHITECTURE & DESIGN
+  "Architect",
+  "Interior Designer",
+
+  // BANKING & FINANCE
+  "Chartered Accountant",
+  "Company Secretary",
+  "Accounts / Finance Professional",
+  "Banking Professional",
+  "Auditor",
+  "Financial Accountant",
+  "Financial Analyst / Planning",
+  "Investment Professional",
+
+  // BEAUTY & FASHION
+  "Fashion Designer",
+  "Beautician",
+  "Hair Stylist",
+  "Jewellery Designer",
+  "Designer (Others)",
+  "Makeup Artist",
+
+  // BPO & CUSTOMER SERVICE
+  "BPO / KPO / ITES Professional",
+  "Customer Service Professional",
+
+  // CIVIL SERVICES
+  "Civil Services (IAS / IPS / IRS / IES / IFS)",
+
+  // CORPORATE PROFESSIONALS
+  "Analyst",
+  "Consultant",
+  "Corporate Communication",
+  "Corporate Planning",
+  "Marketing Professional",
+  "Operations Management",
+  "Sales Professional",
+  "Senior Manager / Manager",
+  "Subject Matter Expert",
+  "Business Development Professional",
+  "Content Writer",
+  // DEFENCE
+  "Army",
+  "Navy",
+  "Defence Services (Others)",
+  "Air Force",
+  "Paramilitary",
+
+  // EDUCATION & TRAINING
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+
+  // ENGINEERING
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+
+  // HOSPITALITY
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+
+  // IT & SOFTWARE
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+
+  // LEGAL
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+
+  // POLICE / LAW ENFORCEMENT
+  "Law Enforcement Officer",
+  "Police",
+
+  // MEDICAL & HEALTHCARE-OTHERS
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+
+  // MERCHANT NAVY
+  "Mariner / Merchant Navy",
+  "Sailor",
+
+  // SCIENTIST
+  "Scientist / Researcher",
+
+  // SENIOR MANAGEMENT
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+
+  // OTHERS
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+  "Others",
+
+  // DOCTOR
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+];
+
+const uniqueMotherOccupations = [...new Set(MotherOccupations)];
+
 // 🧾 Dropdown data (First code base-la update aagirukku)
 const dropdownData = {
   "Matrimony Profile for": ["Bride", "Groom", "Relative", "Friend", "Self"],
@@ -62,15 +611,52 @@ const dropdownData = {
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
   ],
+
   Nakshatram: [
-    "அஸ்வினி",
-    "பரணி",
-    "கார்த்திகை",
-    "ரோகிணி",
-    "மிருகசீரிடம்",
-    "திருவாதிரை",
+    "அஸ்வினி (Ashwini)",
+    "பரணி (Bharani)",
+    "கார்த்திகை (Krittika)",
+    "ரோகிணி (Rohini)",
+    "மிருகசீரிடம் (Mrigashira)",
+    "திருவாதிரை (Ardra)",
+    "புனர்பூசம் (Punarvasu)",
+    "பூசம் (Pushya)",
+    "ஆயில்யம் (Ashlesha)",
+    "மகம் (Magha)",
+    "பூரம் (Purva Phalguni)",
+    "உத்திரம் (Uttara Phalguni)",
+    "அஸ்தம் (Hasta)",
+    "சித்திரை (Chitra)",
+    "சுவாதி (Swati)",
+    "விசாகம் (Vishakha)",
+    "அனுசம் (Anuradha)",
+    "கேட்டை (Jyeshtha)",
+    "மூலம் (Moola)",
+    "பூராடம் (Purva Ashadha)",
+    "உத்திராடம் (Uttara Ashadha)",
+    "திருவோணம் (Shravana)",
+    "அவிட்டம் (Dhanishta)",
+    "சதயம் (Shatabhisha)",
+    "பூரட்டாதி (Purva Bhadrapada)",
+    "உத்திரட்டாதி (Uttara Bhadrapada)",
+    "ரேவதி (Revati)",
+  ],
+
+  Laknam: [
+    "மேஷம் (Aries)",
+    "ரிஷபம் (Taurus)",
+    "மிதுனம் (Gemini)",
+    "கடகம் (Cancer)",
+    "சிம்மம் (Leo)",
+    "கன்னி (Virgo)",
+    "துலாம் (Libra)",
+    "விருச்சிகம் (Scorpio)",
+    "தனுசு (Sagittarius)",
+    "மகரம் (Capricorn)",
+    "கும்பம் (Aquarius)",
+    "மீனம் (Pisces)",
   ], // Note: First code-la irundha short list
-  Laknam: ["மேஷம்", "ரிஷபம்", "மிதுனம்", "கடகம்", "சிம்மம்", "கன்னி"], // Note: First code-la irundha short list
+
   Color: ["Fair", "Black", "White", "Very Fair"],
   "Marital Status": [
     "UnMarried",
@@ -78,28 +664,380 @@ const dropdownData = {
     "Widowed",
     "Separated",
     "Married",
+    "Annulled",
   ],
+
   Gender: ["Male", "Female"],
-  Education: ["SSLC", "12th", "B.E", "B.Tech", "MBA", "MCA"], // Note: First code-la irundha short list
-  Occupation: ["Engineer", "Doctor", "Teacher", "Business", "Student"],
-  "Annual Income": ["<5L", "5L-10L", "10L-20L", "20L-50L", ">50L"],
-  "Mother Tongue": ["Tamil", "Telugu", "Malayalam", "Kannada", "Hindi"],
-  Religion: ["Hindu", "Christian", "Muslim", "Others"],
-  Caste: ["Nadar", "Vellalar", "Naidu", "Mudaliar", "Others"],
-  "Father's Occupation": [
-    "Retired",
-    "Business",
-    "Farmer",
-    "Engineer",
-    "Teacher",
+  Education: [
+    "SSLC",
+    "12th Higher Education",
+    "Aeronautical Engineering",
+    "B.Arch",
+    "BCA",
+    "BE",
+    "B.Plan",
+    "B.Sc IT/ Computer Science",
+    "B.Tech.",
+    "Other Bachelor Degree in Engineering / Computers",
+    "B.S.(Engineering)",
+    "M.Arch.",
+    "MCA",
+    "ME",
+    "M.Sc. IT / Computer Science",
+    "M.S.(Engg.)",
+    "M.Tech.",
+    "PGDCA",
+    "Aviation Degree",
+    "B.A.",
+    "B.Com.",
+    "B.Ed.",
+    "BFA",
+    "BFT",
+    "BLIS",
+    "B.M.M.",
+    "B.Sc.",
+    "B.S.W",
+    "B.Phil.",
+    "M.A.",
+    "MCom",
+    "M.Ed.",
+    "MFA",
+    "MLIS",
+    "M.Sc.",
+    "MSW",
+    "M.Phil.",
+    "BBA",
+    "BFM (Financial Management)",
+    "BHM (Hotel Management)",
+    "Other Bachelor Degree in Management",
+    "BHA / BHM (Hospital Administration)",
+    "MBA",
+    "MFM (Financial Management)",
+    "MHM (Hotel Management)",
+    "MHRM (Human Resource Management)",
+    "PGDM",
+    "Other Master Degree in Management",
+    "MHA / MHM (Hospital Administration)",
+    "B.A.M.S.",
+    "BDS",
+    "BHMS",
+    "BSMS",
+    "BUMS",
+    "BVSc",
+    "MBBS",
+    "MDS",
+    "MD / MS (Medical)",
+    "MVSc",
+    "MCh",
+    "DNB",
+    "BPharm",
+    "BPT",
+    "B.Sc. Nursing",
+    "Other Bachelor Degree in Medicine",
+    "M.Pharm",
+    "MPT",
+    "Other Master Degree in Medicine",
+    "BGL",
+    "B.L.",
+    "LL.B.",
+    "Other Bachelor Degree in Legal",
+    "LL.M.",
+    "M.L.",
+    "Other Master Degree in Legal",
+    "CA",
+    "CFA (Chartered Financial Analyst)",
+    "CS",
+    "ICWA",
+    "Other Degree in Finance",
+    "IAS",
+    "IES",
+    "IFS",
+    "IRS",
+    "IPS",
+    "Other Degree in Service",
+    "Ph.D.",
+    "DM",
+    "Postdoctoral fellow",
+    "Fellow of National Board (FNB)",
+    "Diploma",
+    "Polytechnic",
+    "Trade School",
+    "Others in Diploma",
+    "Higher Secondary School / High School",
+  ], // Note: First code-la irundha short list
+
+  Occupation: uniqueOccupations,
+
+  "Annual Income": [
+    "0 - 1 Lakh",
+    "1 - 2 Lakhs",
+    "2 - 3 Lakhs",
+    "3 - 4 Lakhs",
+    "4 - 5 Lakhs",
+    "5 - 6 Lakhs",
+    "6 - 7 Lakhs",
+    "7 - 8 Lakhs",
+    "8 - 9 Lakhs",
+    "9 - 10 Lakhs",
+    "10 - 12 Lakhs",
+    "12 - 14 Lakhs",
+    "14 - 16 Lakhs",
+    "16 - 18 Lakhs",
+    "18 - 20 Lakhs",
+    "20 - 25 Lakhs",
+    "25 - 30 Lakhs",
+    "30 - 35 Lakhs",
+    "35 - 40 Lakhs",
+    "40 - 45 Lakhs",
+    "45 - 50 Lakhs",
+    "50 - 60 Lakhs",
+    "60 - 70 Lakhs",
+    "70 - 80 Lakhs",
+    "80 - 90 Lakhs",
+    "90 Lakhs - 1 Crore",
+    "1 Crore & Above",
   ],
-  "Mother's Occupation": [
-    "Homemaker",
-    "Teacher",
-    "Doctor",
-    "Retired",
-    "Business",
+
+  "Mother Tongue": [
+    "Tamil",
+    "Telugu",
+    "Malayalam",
+    "Kannada",
+    "Hindi",
+    "Marathi",
+    "Bengali",
+    "Gujarati",
+    "Marwari",
+    "Oriya",
+    "Punjabi",
+    "Sindhi",
+    "Urdu",
+    "Arunachali",
+    "Assamese",
+    "Awadhi",
+    "Bhojpuri",
+    "Brij",
+    "Bihari",
+    "Badaga",
+    "Chatisgarhi",
+    "Dogri",
+    "English",
+    "French",
+    "Garhwali",
+    "Garo",
+    "Haryanvi",
+    "Himachali/Pahari",
+    "Kanauji",
+    "Kashmiri",
+    "Khandesi",
+    "Khasi",
+    "Konkani",
+    "Koshali",
+    "Kumaoni",
+    "Kutchi",
+    "Lepcha",
+    "Ladacki",
+    "Magahi",
+    "Maithili",
+    "Manipuri",
+    "Miji",
+    "Mizo",
+    "Monpa",
+    "Nicobarese",
+    "Nepali",
+    "Rajasthani",
+    "Sanskrit",
+    "Santhali",
+    "Sourashtra",
+    "Tripuri",
+    "Tulu",
+    "Angika",
+    "Bagri Rajasthani",
+    "Dhundhari/Jaipuri",
+    "Gujari/Gojari",
+    "Harauti",
+    "Lambadi",
+    "Malvi",
+    "Mewari",
+    "Mewati/Ahirwati",
+    "Nimadi",
+    "Shekhawati",
+    "Wagdi",
   ],
+
+  Religion: [
+    "Hindu",
+    "Christian",
+    "Muslim",
+    "Sikh",
+    "Jain - Digambar",
+    "Jain - Shwetambar",
+    "Jain - Others",
+    "Parsi",
+    "Buddhis",
+    "Inter-Religion",
+    "Others",
+  ],
+
+  Caste: [
+    "24 Manai Telugu Chettiar",
+    "Aaru Nattu Vellala",
+    "Achirapakkam Chettiar",
+    "Adi Dravidar",
+    "Agamudayar / Arcot / Thuluva Vellala",
+    "Agaram Vellan Chettiar",
+    "Ahirwar",
+    "Arunthathiyar",
+    "Ayira Vysya",
+    "Badaga",
+    "Bairwa",
+    "Balai",
+    "Beri Chettiar",
+    "Boyar",
+    "Brahmin - Anaviln Desai",
+    "Brahmin - Baidhiki/Vaidhiki",
+    "Brahmin - Bardai",
+    "Brahmin - Bhargav",
+    "Brahmin - Gurukkal",
+    "Brahmin - Iyengar",
+    "Brahmin - Iyer",
+    "Brahmin - Khadayata",
+    "Brahmin - Khedaval",
+    "Brahmin - Mevada",
+    "Brahmin - Others",
+    "Brahmin - Rajgor",
+    "Brahmin - Rarhi/Radhi",
+    "Brahmin - Sarua",
+    "Brahmin - Shri Gaud",
+    "Brahmin - Tapodhan",
+    "Brahmin - Valam",
+    "Brahmin - Zalora",
+    "Chattada Sri Vaishnava",
+    "Cherakula Vellalar",
+    "Chettiar",
+    "Dasapalanjika / Kannada Saineegar",
+    "Desikar",
+    "Desikar Thanjavur",
+    "Devandra Kula Vellalar",
+    "Devanga Chettiar",
+    "Devar/Thevar/Mukkulathor",
+    "Dhanak",
+    "Elur Chetty",
+    "Gandla / Ganiga",
+    "Gounder",
+    "Gounder - Kongu Vellala Gounder",
+    "Gounder - Nattu Gounder",
+    "Gounder - Others",
+    "Gounder - Urali Gounder",
+    "Gounder - Vanniya Kula Kshatriyar",
+    "Gounder - Vettuva Gounder",
+    "Gramani",
+    "Gurukkal Brahmin",
+    "Illaththu Pillai",
+    "Intercaste",
+    "Isai Vellalar",
+    "Iyengar Brahmin",
+    "Iyer Brahmin",
+    "Julaha",
+    "Kamma Naidu",
+    "Kanakkan Padanna",
+    "Kandara",
+    "Karkathar",
+    "Karuneegar",
+    "Kasukara",
+    "Kerala Mudali",
+    "Khatik",
+    "Kodikal Pillai",
+    "Kongu Chettiar",
+    "Kongu Nadar",
+    "Kongu Vellala Gounder",
+    "Kori/Koli",
+    "Krishnavaka",
+    "Kshatriya Raju",
+    "Kulalar",
+    "Kuravan",
+    "Kuruhini Chetty",
+    "Kurumbar",
+    "Kuruva",
+    "Manjapudur Chettiar",
+    "Mannan / Velan / Vannan",
+    "Maruthuvar",
+    "Meenavar",
+    "Meghwal",
+    "Mudaliyar",
+    "Mukkulathor",
+    "Muthuraja / Mutharaiyar",
+    "Nadar",
+    "Naicker",
+    "Naicker - Others",
+    "Naicker - Vanniya Kula Kshatriyar",
+    "Naidu",
+    "Nanjil Mudali",
+    "Nanjil Nattu Vellalar",
+    "Nanjil Vellalar",
+    "Nanjil pillai",
+    "Nankudi Vellalar",
+    "Nattu Gounder",
+    "Nattukottai Chettiar",
+    "Othuvaar",
+    "Padmashali",
+    "Pallan / Devandra Kula Vellalan",
+    "Panan",
+    "Pandaram",
+    "Pandiya Vellalar",
+    "Pannirandam Chettiar",
+    "Paravan / Bharatar",
+    "Parkavakulam / Udayar",
+    "Parvatha Rajakulam",
+    "Paswan / Dusadh",
+    "Pattinavar",
+    "Pattusali",
+    "Pillai",
+    "Poundra",
+    "Pulaya / Cheruman",
+    "Reddy",
+    "Rohit / Chamar",
+    "SC",
+    "ST",
+    "Sadhu Chetty",
+    "Saiva Pillai Thanjavur",
+    "Saiva Pillai Tirunelveli",
+    "Saiva Vellan chettiar",
+    "Saliyar",
+    "Samagar",
+    "Sambava",
+    "Satnami",
+    "Senai Thalaivar",
+    "Senguntha Mudaliyar",
+    "Sengunthar/Kaikolar",
+    "Shilpkar",
+    "Sonkar",
+    "Sourashtra",
+    "Sozhia Chetty",
+    "Sozhiya Vellalar",
+    "Telugupatti",
+    "Thandan",
+    "Thondai Mandala Vellalar",
+    "Urali Gounder",
+    "Vadambar",
+    "Vadugan",
+    "Valluvan",
+    "Vaniya Chettiar",
+    "Vannar",
+    "Vannia Kula Kshatriyar",
+    "Veera Saivam",
+    "Veerakodi Vellala",
+    "Vellalar",
+    "Vellan Chettiars",
+    "Vettuva Gounder",
+    "Vishwakarma",
+    "Vokkaliga",
+    "Yadav",
+    "Yadava Naidu",
+  ],
+
+  "Father's Occupation": uniqueFatherOccupations,
+  "Mother's Occupation": uniqueMotherOccupations,
 };
 
 // 🔁 Dropdown field mapping (First code base-la update aagirukku)
@@ -477,24 +1415,27 @@ export default function RegisterProfile() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto pt-10 md:pt-15 lg:pt-15 shadow-lg rounded-2xl p-6 md:p-10">
+    <div className="max-w-8xl mx-auto pt-10 md:pt-15 lg:pt-15 shadow-lg rounded-2xl p-6 md:p-10">
       <h1 className="text-3xl font-bold text-center mb-10 text-[#4a2f1c]">
         Matrimony Profile Registration
       </h1>
 
-      <div className="lg:max-w-4xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pt-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pt-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
         <div className="hidden md:hidden lg:block">
           <img
             src="/register/r1.jpg"
             alt="Love"
-            className="h-[400px] lg:pt-5"
+            className="h-[300px] lg:pt-5"
           />
         </div>
 
         <form
           onSubmit={handleSubmit} // grid-cols-1 added for mobile/default view
-          className="md:grid   flex flex-col md:grid-cols-2 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[370px] lg:grid-cols-1 gap-2 md:gap-6 lg:gap-2"
+          className="md:grid  flex flex-col md:grid-cols-2 lg:flex  lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[670px] lg:grid-cols-1 gap-2 md:gap-3 lg:gap-2"
         >
+          <h1 className="bg-neutral-600/70 col-span-1 font-semibold md:col-span-2 py-3 px-2 text-2xl text-white">
+            Profile details
+          </h1>
           {fieldOrder.map((field, index) => {
             const fieldName = dropdownFieldMap[field.label] || field.name; // 0. HEADING FIELD (New Logic)
             // 🔴 Validation check for dynamic class
@@ -505,7 +1446,7 @@ export default function RegisterProfile() {
                 // col-span-full is used to make the heading span the full width (1 column on mobile, 2 on MD)
                 <h2
                   key={field.label}
-                  className="col-span-full text-center font-semibold mt-4 mb-2 text-2xl border-b pb-1"
+                  className="col-span-full bg-neutral-600/70  font-semibold md:col-span-2 py-3 px-2 text-2xl text-white"
                 >
                   {field.label}
                 </h2>
@@ -521,40 +1462,38 @@ export default function RegisterProfile() {
               if (fieldName === "education") {
                 return (
                   <div key={field.label} className="flex flex-col">
-                    <Label className="text-sm py-2">{field.label}</Label>
-                    <Select
-                      onValueChange={(val) =>
-                        handleSelectChange(fieldName, val)
-                      }
-                    >
-                      {/* 🔴 Select Trigger Border Update */}
-                      <SelectTrigger className={`w-full py-5   `}>
-                        <div className="flex flex-wrap gap-1">
-                          {formData.education.length === 0
-                            ? "Select Education"
-                            : formData.education.map((item) => (
-                                <span
-                                  key={item}
-                                  className="bg-gray-200 px-2 py-1 rounded-full text-xs"
-                                >
-                                  {item}
-                                </span>
-                              ))}
-                        </div>
-                      </SelectTrigger>
-                      <SelectContent>
-                        {options.map((opt) => (
-                          <SelectItem key={opt} value={opt}>
-                            {opt}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                      <div className="w-full">
+                        <Label className="text-sm py-2">{field.label}</Label>
+                      </div>
+                      <div className="lg:w-[900px]">
+                        <Select
+                          className=""
+                          onValueChange={(val) =>
+                            handleSelectChange(fieldName, val)
+                          }
+                        >
+                          {/* 🔴 Select Trigger Border Update */}
+                          <SelectTrigger className="w-full py-[15px]">
+                            <SelectValue
+                              placeholder={`Select ${field.label}`}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {options.map((opt, index) => (
+                              <SelectItem key={`${opt}-${index}`} value={opt}>
+                                {opt}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {formData.education.length > 0 &&
-                        formData.education.map((item) => (
+                        formData.education.map((item, index) => (
                           <span
-                            key={`chip-${item}`}
+                            key={index}
                             className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
                           >
                             {item}
@@ -574,30 +1513,38 @@ export default function RegisterProfile() {
               } // Standard Select field
 
               return (
-                <div key={field.label} className="flex flex-col">
-                  <Label className="text-sm py-2">{field.label}</Label>{" "}
-                  <Select
-                    value={formData[fieldName]}
-                    onValueChange={(val) => handleSelectChange(fieldName, val)}
-                  >
-                    <SelectTrigger
-                      className={`w-full py-5 ${
-                        isInValid
-                          ? "border-red-500 ring-red-500 focus:ring-red-500"
-                          : ""
-                      }`}
-                    >
-                      <SelectValue placeholder={`Select ${field.label}`} />
-                    </SelectTrigger>
+                <div key={field.label} className="flex flex-col  ">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Select
+                        value={formData[fieldName]}
+                        onValueChange={(val) =>
+                          handleSelectChange(fieldName, val)
+                        }
+                      >
+                        <SelectTrigger
+                          className={`w-full py-[15px]  ${
+                            isInValid
+                              ? "border-red-500 ring-red-500 focus:ring-red-500"
+                              : ""
+                          }`}
+                        >
+                          <SelectValue placeholder={`Select ${field.label}`} />
+                        </SelectTrigger>
 
-                    <SelectContent>
-                      {options.map((opt) => (
-                        <SelectItem key={opt} value={opt}>
-                          {opt}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        <SelectContent>
+                          {options.map((opt, index) => (
+                            <SelectItem key={`${opt}-${index}`} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                   {isInValid && (
                     <p className="text-red-500 text-xs mt-1">
                       This field is required.
@@ -609,32 +1556,42 @@ export default function RegisterProfile() {
 
             if (field.type === "date") {
               return (
-                <div key={field.label} className="flex flex-col">
-                  <Label className="text-sm py-2">{field.label}</Label>
-                  <Popover
-                    open={isCalendarOpen}
-                    onOpenChange={setIsCalendarOpen}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="justify-start py-5">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {dobDate
-                          ? format(dobDate, "PPP")
-                          : "Select Date of Birth"}
-                      </Button>
-                    </PopoverTrigger>
+                <div key={field.label} className="flex flex-col lg:flex-row">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Popover
+                        open={isCalendarOpen}
+                        onOpenChange={setIsCalendarOpen}
+                        className=""
+                      >
+                        <PopoverTrigger className="w-full" asChild>
+                          <Button
+                            variant="outline"
+                            className="justify-start py-[15px]"
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {dobDate
+                              ? format(dobDate, "PPP")
+                              : "Select Date of Birth"}
+                          </Button>
+                        </PopoverTrigger>
 
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        selected={dobDate}
-                        onSelect={handleDateSelect}
-                        mode="single"
-                        captionLayout="dropdown"
-                        fromYear={1950}
-                        toYear={2025}
-                      />
-                    </PopoverContent>
-                  </Popover>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            selected={dobDate}
+                            onSelect={handleDateSelect}
+                            mode="single"
+                            captionLayout="dropdown"
+                            fromYear={1950}
+                            toYear={2025}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
                 </div>
               );
             } // 3. TEXTAREA (a type of input)
@@ -643,13 +1600,19 @@ export default function RegisterProfile() {
               return (
                 // col-span-full makes the textarea span 2 columns on medium screens
                 <div key={field.name} className="flex flex-col md:col-span-2">
-                  <Label className="text-sm py-2">{field.label}</Label>
-                  <Textarea
-                    name={fieldName}
-                    value={formData[fieldName]}
-                    placeholder={`Enter ${field.label}`}
-                    onChange={handleChange}
-                  />
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Textarea
+                        name={fieldName}
+                        value={formData[fieldName]}
+                        placeholder={`Enter ${field.label}`}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
                 </div>
               );
             } // 4. FILE INPUT
@@ -657,30 +1620,24 @@ export default function RegisterProfile() {
             if (field.type === "file") {
               return (
                 <div key={field.name} className="flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-sm py-2">{field.label}</Label>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          {/* AlertCircle: '!' icon-க்கு */}
-                          <AlertCircle className="h-4 w-4 text-gray-500 cursor-pointer" />
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-white p-2 text-xs">
-                          <p>Image size must be less than 500KB.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+
+                    <div className="lg:w-[900px]">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className={`py-[8px] ${
+                          validation.image
+                            ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                            : ""
+                        }`}
+                      />
+                    </div>
                   </div>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className={`${
-                      validation.image
-                        ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
-                        : ""
-                    }`}
-                  />
                   {/* 🔴 NEW: Display Image Size Error Message */}
 
                   {validation.image && (
@@ -701,32 +1658,38 @@ export default function RegisterProfile() {
 
               return (
                 <div key={field.name} className="flex flex-col">
-                  <Label className="text-sm py-2">{field.label}</Label>
-                  <Input
-                    type={
-                      isAgeField
-                        ? "number"
-                        : isPhoneNumberField
-                        ? "tel"
-                        : isEmailField
-                        ? "email"
-                        : "text"
-                    }
-                    name={fieldName}
-                    value={formData[fieldName]}
-                    onChange={handleChange}
-                    placeholder={`Enter ${field.label}`}
-                    readOnly={isAgeField}
-                    disabled={isAgeField && formData.age === ""}
-                    // ✅ NEW: MaxLength for Phone/Whatsapp
-                    maxLength={isPhoneNumberField ? 10 : undefined}
-                    // 🔴 Input Border Update
-                    className={`py-5 ${
-                      isInValid
-                        ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
-                        : ""
-                    }`}
-                  />
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Input
+                        type={
+                          isAgeField
+                            ? "number"
+                            : isPhoneNumberField
+                            ? "tel"
+                            : isEmailField
+                            ? "email"
+                            : "text"
+                        }
+                        name={fieldName}
+                        value={formData[fieldName]}
+                        onChange={handleChange}
+                        placeholder={`Enter ${field.label}`}
+                        readOnly={isAgeField}
+                        disabled={isAgeField && formData.age === ""}
+                        // ✅ NEW: MaxLength for Phone/Whatsapp
+                        maxLength={isPhoneNumberField ? 10 : undefined}
+                        // 🔴 Input Border Update
+                        className={`h-[32px] ${
+                          isInValid
+                            ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                            : ""
+                        }`}
+                      />
+                    </div>
+                  </div>
                   {isInValid && (
                     <p className="text-red-500 text-xs mt-1">
                       {validation[fieldName]}

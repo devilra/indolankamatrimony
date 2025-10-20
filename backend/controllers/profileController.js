@@ -296,6 +296,7 @@ const createMailTransporter = () => {
     },
   });
 };
+
 // =========================================================
 // API 1: sendOtp - (Form Submit -> OTP Generate & Send)
 // =========================================================
@@ -385,19 +386,18 @@ exports.sendOtp = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message:
-        "OTP sent to your email successfully. Please check and verify. ✅",
+      message: "OTP sent to your email successfully. Please check and verify.",
       // Front-end- OTP verification form-
       emailSent: true,
     });
   } catch (error) {
-    console.error("❌ Send OTP Error:", error);
+    console.error("Send OTP Error:", error);
 
     // Multer/File error handling
     if (error.code === "LIMIT_FILE_SIZE") {
       return res.status(400).json({
         success: false,
-        message: "Image size exceeds the 500 KB limit! 😞",
+        message: "Image size exceeds the 500 KB limit!",
       });
     }
     if (
@@ -409,7 +409,7 @@ exports.sendOtp = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Failed to send OTP or server error. ❌",
+      message: "Failed to send OTP or server error.",
       error: error.message,
     });
   }
@@ -436,7 +436,7 @@ exports.verifyOtpAndRegister = async (req, res) => {
     return res.status(400).json({
       success: false,
       message:
-        "Verification failed. OTP expired or not sent. Please resubmit profile form. ⏳",
+        "Verification failed. OTP expired or not sent. Please resubmit profile form.",
     });
   }
 
@@ -446,7 +446,7 @@ exports.verifyOtpAndRegister = async (req, res) => {
     delete otpStorage[email]; // Clear expired data
     return res.status(400).json({
       success: false,
-      message: "OTP has expired. Please resend the profile form. ⏳",
+      message: "OTP has expired. Please resend the profile form.",
     });
   }
 
@@ -481,10 +481,12 @@ exports.verifyOtpAndRegister = async (req, res) => {
     // --- Final Success Response ---
     res.status(201).json({
       success: true,
-      message: "Profile verified and registered successfully! ✅",
+      message: "Profile verified and registered successfully!",
       imageUrl: newProfile.image,
       data: newProfile,
     });
+
+    console.log("Successful Registered");
 
     try {
       // --- Admin/User Notification Email ---
@@ -528,7 +530,7 @@ exports.verifyOtpAndRegister = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("❌ DB Registration Error:", dbError);
+    console.error("❌ DB Registration Error:", error);
 
     delete otpStorage[email];
 
@@ -536,7 +538,7 @@ exports.verifyOtpAndRegister = async (req, res) => {
       success: false,
       message:
         "OTP verified, but profile save failed due to database error ❌. Please contact support.",
-      error: dbError.message,
+      error: error.message,
     });
   }
 };
