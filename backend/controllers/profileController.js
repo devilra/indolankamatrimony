@@ -10,7 +10,9 @@ exports.registerProfile = async (req, res) => {
 
     // ✅ Cloudinary-la ulla image data extract pannanum
     const imagePath = req.file ? req.file.path : null; // Full Cloudinary URL
-    const publicId = req.file ? req.file.public_id : null; // Unique ID for management
+    const publicId = req.file ? req.file.filename : null; // Unique ID for management
+
+    console.log(publicId);
 
     //console.log(imagePath);
 

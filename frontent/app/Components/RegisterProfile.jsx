@@ -2254,6 +2254,8 @@ const Occupations = [
   "Dentist",
   "Surgeon",
   "Veterinary Doctor",
+  "Courier",
+  "bluedart",
 ];
 
 const uniqueOccupations = [...new Set(Occupations)];
