@@ -302,6 +302,7 @@ const createMailTransporter = () => {
 // =========================================================
 
 exports.sendOtp = async (req, res) => {
+  console.log("SERVER OTP START");
   try {
     // Image and Profile Data extraction
     const imagePath = req.file ? req.file.path : null;
@@ -339,6 +340,8 @@ exports.sendOtp = async (req, res) => {
     const existingProfile = await Profile.findOne({
       where: { [Op.or]: [{ email }, { phonenumber }] },
     });
+
+    console.log(profileData);
 
     if (existingProfile) {
       let message =
@@ -380,6 +383,8 @@ exports.sendOtp = async (req, res) => {
                    <p>This code will expire in ${OTP_EXPIRY_MINUTES} minutes.</p>
                    <p>Do not share this OTP with anyone.</p>`,
     };
+
+    console.log("Mail Sending Started");
 
     await transporter.sendMail(mailOptions);
     console.log(`SUCCESS: OTP sent to ${email}`);

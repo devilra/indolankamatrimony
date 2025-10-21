@@ -131,11 +131,11 @@ const Partners = () => {
               />
               {/* ... Profile Details ... */}
               <h3 className="text-lg font-semibold text-gray-800">
-                <strong className="text-black font-bold">Name : </strong>
+                {/* <strong className="text-black font-bold">Name : </strong> */}
                 {profile.pname}
               </h3>
               <p className="text-sm py-2 text-gray-600">
-                <strong className="font-bold text-black">Educations : </strong>
+                {/* <strong className="font-bold text-black">Educations : </strong> */}
                 <span className=" text-[12px]">{profile.education}</span>
               </p>
               {/* <p className="text-xs text-gray-500 mt-1">
@@ -144,7 +144,7 @@ const Partners = () => {
                 {profile.created_year}
               </p> */}
               <h3 className="text-lg font-semibold text-gray-800 truncate">
-                <strong className="text-black font-bold">ID: </strong>
+                {/* <strong className="text-black font-bold">ID: </strong> */}
                 {profile.id}
               </h3>
             </CardContent>
