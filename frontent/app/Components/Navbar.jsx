@@ -303,7 +303,7 @@ const Navbar = () => {
             CONTACT
           </Link>
           <Link href="/register" className="hover:text-black transition">
-            REGISTRY FREE
+            REGISTRY
           </Link>
         </nav>
 
