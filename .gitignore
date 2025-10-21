@@ -3,5 +3,7 @@ backend/controllers/profileControllerBackup.js
 backend/routes/protectedRouteBackup.js
 backend/config/MailgunEmail
 backend/.env
+backend/seeder
 frontent/node_modules
 frontent/.env
+frontent/public/old

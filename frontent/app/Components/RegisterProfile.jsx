@@ -2655,7 +2655,7 @@ const uniqueMotherOccupations = [...new Set(MotherOccupations)];
 
 // 🧾 Dropdown data (First code base-la update aagirukku)
 const dropdownData = {
-  "Matrimony Profile for": ["Bride", "Groom", "Relative", "Friend", "Self"],
+  "Matrimony Profile for": ["Myself", "Son", "Daugther", "Brother", "Sister"],
   Rasi: [
     "மேஷம் (Aries)",
     "ரிஷபம் (Taurus)",
