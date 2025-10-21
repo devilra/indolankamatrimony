@@ -127,7 +127,7 @@ const Partners = () => {
                     : "/default-boy.jpg"
                 }
                 alt={profile.pname}
-                className="h-[200px] w-full md:h-[250px] lg:h-[220px] p-2 rounded-md object-cover mb-4 border-4 border-gray-100 shadow-sm"
+                className="h-[200px] w-full md:h-[250px] lg:h-[220px] p-2 rounded-md object-contain mb-4 border-4 border-gray-100 shadow-sm"
               />
               {/* ... Profile Details ... */}
               <h3 className="text-lg font-semibold text-gray-800">

@@ -2108,6 +2108,8 @@ const Occupations = [
   "Software Professional",
   "Teaching / Academician",
   "Executive",
+  "Automobile",
+  "own business",
   "Doctor",
   "Manager",
   "Professor / Lecturer",
@@ -2256,6 +2258,7 @@ const Occupations = [
   "Veterinary Doctor",
   "Courier",
   "bluedart",
+  "Diploma catering",
 ];
 
 const uniqueOccupations = [...new Set(Occupations)];
@@ -2825,6 +2828,7 @@ const dropdownData = {
     "Trade School",
     "Others in Diploma",
     "Higher Secondary School / High School",
+    "Diploma catering",
   ], // Note: First code-la irundha short list
 
   Occupation: uniqueOccupations,
@@ -3476,12 +3480,12 @@ export default function RegisterProfile() {
   };
 
   return (
-    <div className="max-w-8xl mx-auto pt-10 md:pt-15 lg:pt-15 shadow-lg rounded-2xl p-6 md:p-10">
-      <h1 className="text-3xl font-bold text-center mb-10 text-[#4a2f1c]">
+    <div className="max-w-8xl mx-auto   shadow-lg rounded-2xl ">
+      {/* <h1 className="text-3xl font-bold text-center mb-10 text-[#4a2f1c]">
         Matrimony Profile Registration
-      </h1>
+      </h1> */}
 
-      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pt-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3  lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
         <div className="hidden md:hidden lg:block">
           <img
             src="/register/r1.jpg"
@@ -3773,7 +3777,7 @@ export default function RegisterProfile() {
                   <Loader2 className="animate-spin" /> Please wait...
                 </div>
               ) : (
-                "Register Profile"
+                "Submit"
               )}
             </Button>
           </div>

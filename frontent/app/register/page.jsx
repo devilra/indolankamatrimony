@@ -4,13 +4,13 @@ import RegisterProfile from "../Components/RegisterProfile";
 const Register = () => {
   return (
     <div className="mt-16">
-      <section className="bg-gradient-to-r  from-gray-400 via-gray-600 to-gray-900 text-center pb-10 pt-28 ">
+      <section className="bg-gradient-to-r  from-gray-400 via-gray-600 to-gray-900 text-center pb-5 pt-23 ">
         <p className="text-yellow-400 text-lg font-semibold tracking-wide mb-4">
           WE ARE HERE TO ASSIST YOU.
         </p>
 
         <h1 className="text-5xl sm:text-6xl font-extrabold bg-gradient-to-r from-teal-400 via-cyan-400 to-sky-400 bg-clip-text text-transparent">
-          Registry Your Profile For Free
+          Registry Your Profile
         </h1>
 
         <p className="text-white/90 text-xl mt-6">

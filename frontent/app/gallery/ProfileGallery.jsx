@@ -115,7 +115,7 @@ const ProfileGallery = () => {
         >
           <CardContent className="flex flex-col">
             {/* Image Section */}
-            <div className="h-48 w-full mb-4">
+            <div className="h-64 w-full mb-4">
               {console.log(profile.image)}
               <img
                 src={
@@ -127,7 +127,7 @@ const ProfileGallery = () => {
                 }
                 alt={profile.pname}
                 //className="h-full w-full rounded-md object-contain py-1 border-4 border-gray-100 shadow-sm"
-                className="h-[200px] w-full md:h-[250px] lg:h-[220px] py-3 p-2 rounded-md object-cover mb-4 border-4"
+                className="h-full w-full  object-contain rounded-md py-1 shadow-sm border-gray-100/15 "
               />
             </div>
 
@@ -164,7 +164,7 @@ const ProfileGallery = () => {
       </h2>
 
       {/* Responsive Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-y-10 lg:gap-x-4">
         {content}
       </div>
     </div>
