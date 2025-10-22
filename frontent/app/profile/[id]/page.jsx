@@ -84,7 +84,7 @@ const page = () => {
     }
   }, [profiles, pathname, dispatch]);
 
-  console.log(profileData);
+  //console.log(profileData);
 
   if (isLoading) {
     return (
@@ -153,8 +153,8 @@ const page = () => {
     { label: "Residence Place", value: formatValue(p.rplace) },
   ];
   const formatImageUrl = (imagePath, gender) => {
-    console.log(gender);
-    console.log(typeof imagePath, imagePath);
+    // console.log(gender);
+    // console.log(typeof imagePath, imagePath);
     // If imagePath is missing, "null" (string), or empty, use default gender-based image
     if (!imagePath || imagePath === "null" || imagePath.trim() === "") {
       return gender === "Female" ? "/default-girl.jpg" : "/default-boy.jpg";

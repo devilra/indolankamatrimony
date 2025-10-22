@@ -14,7 +14,7 @@ export const registerProfile = createAsyncThunk(
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res.data);
+      //console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -36,7 +36,7 @@ export const sendOtp = createAsyncThunk(
         },
       });
 
-      console.log("OTP Send Response:", res.data);
+      //console.log("OTP Send Response:", res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -56,7 +56,7 @@ export const verifyOtpAndRegister = createAsyncThunk(
     try {
       // { email: string, otp: string }
       const res = await API.post("/profile/verify-and-register", otpData);
-      console.log("OTP Verify/Register Response:", res.data);
+      //console.log("OTP Verify/Register Response:", res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -71,7 +71,7 @@ export const getAllProfiles = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await API.get("/profile/all");
-      console.log(res.data);
+      //console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -87,7 +87,7 @@ export const getProfileById = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const res = await API.get(`/profile/${id}`);
-      console.log(res.data);
+      //console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -107,7 +107,7 @@ export const searchProfiles = createAsyncThunk(
         ? `/profile/all?search=${encodeURIComponent(search)}`
         : "/profile/all";
       const res = await API.get(endpoint);
-      console.log("🔍 Search result:", res.data);
+      //console.log("🔍 Search result:", res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(
