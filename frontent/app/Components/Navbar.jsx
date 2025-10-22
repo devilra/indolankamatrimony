@@ -303,7 +303,7 @@ const Navbar = () => {
             CONTACT
           </Link>
           <Link href="/register" className="hover:text-black transition">
-            REGISTRY
+            REGISTER
           </Link>
         </nav>
 
@@ -371,7 +371,7 @@ const Navbar = () => {
               className="border-b w-full pb-3"
               onClick={toggleMenu}
             >
-              Registry Free
+              Register
             </Link>
           </motion.nav>
         )}

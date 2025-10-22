@@ -84,6 +84,8 @@ const page = () => {
     }
   }, [profiles, pathname, dispatch]);
 
+  console.log(profileData);
+
   if (isLoading) {
     return (
       <div className="flex justify-center mt-28 items-center min-h-[85vh]">
@@ -150,14 +152,25 @@ const page = () => {
     { label: "Children", value: formatValue(p.children) },
     { label: "Residence Place", value: formatValue(p.rplace) },
   ];
+  const formatImageUrl = (imagePath, gender) => {
+    console.log(gender);
+    console.log(typeof imagePath, imagePath);
+    // If imagePath is missing, "null" (string), or empty, use default gender-based image
+    if (!imagePath || imagePath === "null" || imagePath.trim() === "") {
+      return gender === "Female" ? "/default-girl.jpg" : "/default-boy.jpg";
+    }
 
-  const formatImageUrl = (imagePath) => {
-    return imagePath
-      ? imagePath
-      : p.gender === "Female"
-      ? "/default-girl.jpg"
-      : "/default-boy.jpg";
+    // Otherwise, return actual backend image URL
+
+    return imagePath;
   };
+
+  // const imageSource =
+  //   p.image && p.image !== "null"
+  //     ? p.image // Actual remote URL (string)
+  //     : p.gender === "Female"
+  //     ? "default-girl.jpg"
+  //     : "default-boy.jpg";
 
   return (
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
@@ -167,7 +180,7 @@ const page = () => {
           <div className="flex flex-col md:flex-row md:items-start pb-6">
             <div className="w-full md:w-1/3 lg:w-1/4 mb-4 md:mb-0 md:mr-6">
               <img
-                src={formatImageUrl(p.image)}
+                src={formatImageUrl(p.image, p.gender)}
                 alt={p.name || "Profile Picture"}
                 style={{ objectFit: "cover" }}
                 className="w-full h-auto max-h-[300px] object-cover rounded-lg border-2 border-[#4a2f1c] "

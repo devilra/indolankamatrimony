@@ -14,7 +14,7 @@ const ProfileGallery = () => {
   const { profiles, loading, error } = useSelector((state) => state.profile);
   const router = useRouter();
 
-  //console.log(profiles);
+  console.log(profiles);
 
   // ✅ New State: Initial load mudinjirucha nu therinjukka
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
@@ -113,14 +113,18 @@ const ProfileGallery = () => {
           className="shadow-md hover:shadow-xl cursor-pointer transition-all duration-300 border border-gray-200 rounded-lg h-full"
           onClick={() => handleProfileClick(profile.id)}
         >
+          {console.log(profile.image)}
           <CardContent className="flex flex-col">
             {/* Image Section */}
             <div className="h-64 w-full mb-4">
-              {console.log(profile.image)}
               <img
                 src={
                   profile.image
-                    ? profile.image
+                    ? profile.image === "null"
+                      ? profile.gender === "Female"
+                        ? "/default-girl.jpg"
+                        : "/default-boy.jpg"
+                      : `${profile.image}`
                     : profile.gender === "Female"
                     ? "/default-girl.jpg"
                     : "/default-boy.jpg"
