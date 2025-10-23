@@ -19,6 +19,7 @@ app.use(
       "http://localhost:3000",
       "https://indolankamatrimony.vercel.app",
       "http://localhost:7000",
+      "https://indolankamatrimony-admin.vercel.app",
     ],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,

@@ -10,6 +10,7 @@ const initialState = {
   success: false,
   error: null,
   profiles: [], // All profiles list
+  profileCount: 0,
   singleProfile: null,
   deleteSuccess: false,
   updateSuccess: false,
@@ -22,12 +23,25 @@ const initialState = {
 // API 1: GET All Profiles (Admin)
 export const adminGetAllProfiles = createAsyncThunk(
   "admin/getAllProfiles",
-  async (search, { rejectWithValue }) => {
+  async (filters = {}, { rejectWithValue }) => {
     try {
       // Search parameter irundhaa, adha query-la anuppalaam
-      const endpoint = search
-        ? `/admin/profiles?search=${encodeURIComponent(search)}`
-        : "/admin/profiles";
+
+      const { search, gender, maritalStatus } = filters;
+
+      const params = new URLSearchParams();
+
+      if (search) params.append("search", search);
+      if (gender && gender !== "All") params.append("gender", gender);
+      if (maritalStatus && maritalStatus !== "All")
+        params.append("maritalStatus", maritalStatus);
+
+      //   const endpoint = search
+      //     ? `/admin/profiles?search=${encodeURIComponent(search)}`
+      //     : "/admin/profiles";
+
+      const endpoint = `/admin/profiles?${params.toString()}`;
+
       const res = await API.get(endpoint);
 
       // Backend response structure: { data: profiles[] }
@@ -129,12 +143,14 @@ const adminSlice = createSlice({
       .addCase(adminGetAllProfiles.fulfilled, (state, action) => {
         state.loading = false;
         state.profiles = action.payload.data || [];
+        state.profileCount = action.payload.count || action.payload.data.length; // Count update
         state.success = true;
       })
       .addCase(adminGetAllProfiles.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
         state.profiles = []; // Clear profiles on error (e.g., No profiles found)
+        state.profileCount = 0; // Count reset
       })
 
       // ------------------------------------
