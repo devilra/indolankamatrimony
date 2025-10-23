@@ -172,7 +172,7 @@ const Partners = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto pb-10">
+    <div className="max-w-6xl mx-auto pb-11">
       {/* Search Input with Loader */}
       <div className="mb-8 max-w-xl mx-auto">
         <InputGroup>
