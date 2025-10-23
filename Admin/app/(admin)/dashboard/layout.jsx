@@ -3,7 +3,7 @@ import Sidebar from "./Components/Sidebar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
         <Sidebar />
 
@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }) => {
                    lg:ml-64 
                    w-full"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl overflow-x-hidden mx-auto">
             {children} {/* 👈 Active route-oda content inga render aagum */}
           </div>
         </main>

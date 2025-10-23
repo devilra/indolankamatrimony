@@ -75,7 +75,7 @@ const AllProfiles = () => {
   }, [searchTerm, filterGender, filterMaritalStatus, fetchProfiles]);
 
   return (
-    <div>
+    <div className="lg:pr-[250px]">
       <h1 className="text-3xl font-bold mb-6 text-gray-900">
         👥 Profiles List
       </h1>
@@ -88,7 +88,7 @@ const AllProfiles = () => {
         <div className="flex rounded-md shadow-sm">
           <input
             type="text"
-            className="w-full flex-1 min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="w-full md:w-1/2 lg:w-1/2 flex-1 min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             placeholder="Start typing to search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -179,7 +179,7 @@ const AllProfiles = () => {
           ) : (
             <div className="relative  w-full  overflow-x-auto rounded-lg border border-gray-200">
               <div className="max-h-[600px] overflow-y-auto">
-                <table className=" divide-y  divide-gray-200">
+                <table className="min-w-[5000px] divide-y  divide-gray-200">
                   <thead className="bg-gray-100 sticky top-0 z-10">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
@@ -200,7 +200,7 @@ const AllProfiles = () => {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Age
                       </th>
-                      {/* <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Place of Birth
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
@@ -290,7 +290,10 @@ const AllProfiles = () => {
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Profile Image
-                      </th> */}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                        actions
+                      </th>
                     </tr>
                   </thead>
 
@@ -304,37 +307,130 @@ const AllProfiles = () => {
                           {profile.id}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-900">
+                          {profile.mprofile}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
                           {profile.pname}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          ({profile.dob})
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.age}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.pbrith}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.tbrith}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.rasi}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.nakshatram}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.laknam}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.height}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.weight}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.color}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.maritalstatus}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">
                           {profile.gender}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.age} ({profile.dob})
+                          {profile.education}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.maritalstatus}
+                          {profile.occupation}
                         </td>
-                        <td className="px-4 py-3 text-sm text-gray-500 max-w-xs overflow-hidden text-ellipsis">
-                          {profile.education}
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.annualincome}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.mothertongue}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.religion}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.caste}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.subcaste}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.fname}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.foccupation}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.mname}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.moccupation}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.sister}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.brother}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.children}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.rplace}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.rplace}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.whatsappno}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.email}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">
                           {profile.phonenumber}
                         </td>
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {profile.image ? (
+                            <img
+                              src={profile.image}
+                              alt={profile.name}
+                              className="h-10 w-10 rounded-md"
+                            />
+                          ) : (
+                            "N/A"
+                          )}
+                        </td>
+
                         <td className="px-4 py-3 text-sm font-medium">
                           <button
                             onClick={() => handleEdit(profile.id)}
                             className="text-indigo-600 hover:text-indigo-900 mr-3 p-1"
                             title="Edit Profile"
                           >
-                            <FaEdit className="w-5 h-5" />
+                            <FaEdit className="w-3 h-3" />
                           </button>
                           <button
                             onClick={() => handleDelete(profile.id)}
                             className="text-red-600 hover:text-red-900 p-1"
                             title="Delete Profile"
                           >
-                            <FaTrashAlt className="w-5 h-5" />
+                            <FaTrashAlt className="w-3 h-3" />
                           </button>
                         </td>
                       </tr>
