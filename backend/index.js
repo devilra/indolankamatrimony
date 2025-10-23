@@ -5,6 +5,7 @@ const sequelize = require("./config/db");
 require("dotenv").config();
 const profileRoutes = require("./routes/profileRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const path = require("path");
 
 const app = express();
@@ -14,7 +15,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://indolankamatrimony.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://indolankamatrimony.vercel.app",
+      "http://localhost:7000",
+    ],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true,
   })
@@ -36,6 +41,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/profile", profileRoutes);
 app.use("./api/contact", contactRoutes);
+app.use("/api/admin", adminRoutes); // Base path /api/admin
 
 const PORT = process.env.PORT;
 
