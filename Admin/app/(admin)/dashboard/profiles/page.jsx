@@ -179,7 +179,7 @@ const AllProfiles = () => {
           ) : (
             <div className="relative  w-full  overflow-x-auto rounded-lg border border-gray-200">
               <div className="max-h-[600px] overflow-y-auto">
-                <table className="min-w-[5000px] divide-y  divide-gray-200">
+                <table className="min-w-[6000px] divide-y  divide-gray-200">
                   <thead className="bg-gray-100 sticky top-0 z-10">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
@@ -406,7 +406,7 @@ const AllProfiles = () => {
                           {profile.phonenumber}
                         </td>
                         <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.image ? (
+                          {/* {profile.image ?  (
                             <img
                               src={profile.image}
                               alt={profile.name}
@@ -414,6 +414,16 @@ const AllProfiles = () => {
                             />
                           ) : (
                             "N/A"
+                          )} */}
+                          {(profile.image && profile.image === "null") ||
+                          !profile.image ? (
+                            "N/A"
+                          ) : (
+                            <img
+                              src={profile.image}
+                              alt={profile.name}
+                              className="h-10 w-10 rounded-md"
+                            />
                           )}
                         </td>
 
