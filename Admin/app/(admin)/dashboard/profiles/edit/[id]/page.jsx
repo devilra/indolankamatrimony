@@ -1,7 +1,10 @@
 "use client";
 
-import { adminGetProfileById } from "@/app/redux/Slices/adminSlice";
-import { useParams } from "next/navigation";
+import {
+  adminGetProfileById,
+  adminUpdateProfile,
+} from "@/app/redux/Slices/adminSlice";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
@@ -21,11 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon, Loader2, X } from "lucide-react";
 import { format } from "date-fns";
 // import { toast } from "sonner"; // Not used in the provided logic, keeping it commented
 // import { useRouter } from "next/navigation"; // Not used in the provided logic, keeping it commented
 import Image from "next/image"; // 🏞️ NEW: Import Image component for displaying the profile image
+import { toast } from "sonner";
 
 // 📅 Helper function to calculate age from DOB
 const calculateAge = (dob) => {
@@ -47,6 +51,10 @@ const EditProfile = () => {
   // 🏞️ State to hold the profile image file or URL for display
   const [profileImage, setProfileImage] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const router = useRouter();
 
   // singleProfile state-la irukkaa nu paakaam
   const { singleProfile, loading, error } = useSelector((state) => state.admin);
@@ -343,12 +351,18 @@ const EditProfile = () => {
     const file = e.target.files[0];
     if (file) {
       // Set the file object for potential upload
-      setProfileImage(file);
+      setProfileImageFile(file);
       // Create a local URL to display the newly selected image immediately
       const localImageUrl = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, image: localImageUrl }));
+      setProfileImageUrl(localImageUrl);
+      // setFormData((prev) => ({ ...prev, image: localImageUrl }));
       // 🔴 NOTE: In a real scenario, you'd typically handle image upload (e.g., to Cloudinary)
       // in a separate step and store the resulting URL in formData.
+    } else {
+      setProfileImageFile(null);
+      if (!e.target.value) {
+        setProfileImageUrl(singleProfile?.profileImage || null);
+      }
     }
   };
 
@@ -429,11 +443,63 @@ const EditProfile = () => {
     }
   }, [singleProfile]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 🚀 TODO: Add form submission logic (e.g., API call to update profile)
-    console.log("Updated FormData:", formData);
-    // console.log("New/Updated Image File:", profileImage);
+    setIsSubmitting(true);
+
+    // 1. Prepare data for backend
+    const dataToSubmit = new FormData();
+
+    // 2. Iterate through formData and append to FormData object
+    for (const key in formData) {
+      let value = formData[key];
+
+      // a. Handle Education array: convert to comma-separated string
+      if (key === "education" && Array.isArray(value)) {
+        value = value.join(", ");
+      }
+
+      // b. Handle N/A logic: if value is empty/null, send "N/A" (or another desired placeholder)
+      if (
+        value === "" ||
+        value === null ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        value = "N/A";
+      }
+
+      // c. Append to FormData
+      dataToSubmit.append(key, value);
+    }
+
+    // 3. Handle the image file separately
+    if (profileImageFile) {
+      // Append the actual file object. The backend will handle the upload.
+      dataToSubmit.append("image", profileImageFile);
+    }
+
+    // 3. Handle the image file separately
+    try {
+      const resultAction = await dispatch(
+        adminUpdateProfile({ id: profileId, updateData: dataToSubmit })
+      );
+
+      if (adminUpdateProfile.fulfilled.match(resultAction)) {
+        toast.success("Profile updated successfully!");
+        router.push("/dashboard/profiles");
+      } else {
+        // Handle error from the thunk
+        const errorPayload = resultAction.payload;
+        const errorMessage =
+          errorPayload.message || "An unknown error occurred.";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("Failed to submit profile update.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ---------------------------------------------------------------------------------------------------
@@ -524,6 +590,13 @@ const EditProfile = () => {
                             className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
                           >
                             {item}
+                            <X
+                              className="cursor-pointer h-3 w-3 text-neutral-600 hover:text-red-500" // சின்ன சைஸ் h-3 w-3
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectChange(fieldName, item); // Toggles/removes the item
+                              }}
+                            />
                           </span>
                         ))}
                     </div>
@@ -666,10 +739,10 @@ const EditProfile = () => {
           <div className="col-span-2 flex justify-center mt-6">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={loading || isSubmitting}
               className="px-8 py-5 text-lg"
             >
-              {loading ? (
+              {isSubmitting ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="animate-spin" /> Please wait...
                 </div>

@@ -77,12 +77,12 @@ const AllProfiles = () => {
     // key: profile ஆப்ஜெக்ட்டில் உள்ள key-ஐ குறிக்கிறது
     // header: தலைப்பு (TH)
     // render: (Optional) சிக்கலான உள்ளடக்கத்தை (Image, Custom Formatting) ரெண்டர் செய்ய பயன்படுத்தலாம்.
-    { key: "index", header: "S.No", widthClass: "min-w-[60px]" },
-    { key: "id", header: "ID", widthClass: "min-w-[150px]" },
+    { key: "index", header: "Joining", widthClass: "min-w-[60px]" },
+    { key: "id", header: "ID", widthClass: "min-w-[100px]" },
     {
       key: "mprofile",
       header: "Matrimony Profile",
-      widthClass: "min-w-[150px]",
+      widthClass: "min-w-[100px]",
     },
     { key: "pname", header: "Name", widthClass: "min-w-[120px]" },
     { key: "dob", header: "DOB", widthClass: "min-w-[100px]" },
@@ -342,7 +342,7 @@ const AllProfiles = () => {
                                 key={col.key}
                                 className="px-4 py-3 text-sm text-gray-500"
                               >
-                                {index + 1}
+                                {`${profile.created_year}-${profile.created_month}-${profile.created_day}`}
                               </td>
                             );
                           }

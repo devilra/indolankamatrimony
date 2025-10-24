@@ -320,6 +320,8 @@ exports.updateProfile = async (req, res) => {
 
     const updateData = req.body;
 
+    //console.log(updateData);
+
     const profile = await Profile.findByPk(id);
 
     if (!profile) {
@@ -413,6 +415,8 @@ exports.updateProfile = async (req, res) => {
     if (Array.isArray(updatedProfile.education)) {
       updatedProfile.education = updatedProfile.education.join(", ");
     }
+
+    console.log(updatedProfile);
 
     res.status(200).json({
       success: true,
