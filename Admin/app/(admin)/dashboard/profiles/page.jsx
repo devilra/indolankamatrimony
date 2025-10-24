@@ -157,7 +157,11 @@ const AllProfiles = () => {
       widthClass: "min-w-[120px]",
     },
     { key: "email", header: "Email", widthClass: "min-w-[200px]" },
-    { key: "address", header: "Address Details", widthClass: "min-w-[200px]" }, // உங்கள் கோடில் address key இல்லை, profile.phonenumber-ஐ இங்கே காண்பித்துள்ளீர்கள். நான் அதை address என்றே வைத்திருக்கிறேன்.
+    {
+      key: "addressdetails",
+      header: "Address Details",
+      widthClass: "min-w-[200px]",
+    }, // உங்கள் கோடில் address key இல்லை, profile.phonenumber-ஐ இங்கே காண்பித்துள்ளீர்கள். நான் அதை address என்றே வைத்திருக்கிறேன்.
     { key: "phonenumber", header: "Phone Number", widthClass: "min-w-[120px]" },
 
     // Custom Render Function உள்ள Header
