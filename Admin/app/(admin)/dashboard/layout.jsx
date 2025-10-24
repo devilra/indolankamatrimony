@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "./Components/Sidebar";
+import { Toaster } from "sonner";
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -16,6 +17,18 @@ const DashboardLayout = ({ children }) => {
         >
           <div className="max-w-7xl overflow-x-hidden mx-auto">
             {children} {/* 👈 Active route-oda content inga render aagum */}
+            <Toaster
+              toastOptions={{
+                className: "rounded-2xl border shadow-lg",
+                style: {
+                  //background: "#1e1e1e",
+                  // color: "#fff",
+                  fontSize: "16px",
+                  //color: "white",
+                  borderLeft: "10px solid ",
+                },
+              }}
+            />
           </div>
         </main>
       </div>

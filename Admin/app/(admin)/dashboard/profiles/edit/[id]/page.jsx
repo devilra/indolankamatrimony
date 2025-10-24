@@ -52,7 +52,8 @@ const EditProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  // 🖼️ NEW: State to hold the URL for the displayed image (Backend URL or Local File Preview)
+  const [displayImageUrl, setDisplayImageUrl] = useState(null);
   const [profileImageFile, setProfileImageFile] = useState(null);
   const router = useRouter();
 
@@ -354,14 +355,18 @@ const EditProfile = () => {
       setProfileImageFile(file);
       // Create a local URL to display the newly selected image immediately
       const localImageUrl = URL.createObjectURL(file);
-      setProfileImageUrl(localImageUrl);
+      setDisplayImageUrl(localImageUrl);
       // setFormData((prev) => ({ ...prev, image: localImageUrl }));
       // 🔴 NOTE: In a real scenario, you'd typically handle image upload (e.g., to Cloudinary)
       // in a separate step and store the resulting URL in formData.
     } else {
       setProfileImageFile(null);
       if (!e.target.value) {
-        setProfileImageUrl(singleProfile?.profileImage || null);
+        const originalImageUrl =
+          singleProfile?.profileImage && singleProfile.profileImage !== "N/A"
+            ? singleProfile.profileImage
+            : null;
+        setDisplayImageUrl(originalImageUrl);
       }
     }
   };
@@ -437,8 +442,10 @@ const EditProfile = () => {
       // 🏞️ Set the Cloudinary URL for display
       // Assuming singleProfile.profileImage holds the Cloudinary URL (or a field like it)
       const imageUrl = mapValue(singleProfile.profileImage); // Use a new field from the backend
-      if (imageUrl) {
-        setProfileImage(imageUrl);
+      if (imageUrl && imageUrl !== "N/A") {
+        setDisplayImageUrl(imageUrl); // <--- ✅ Use the displayImageUrl state
+      } else {
+        setDisplayImageUrl(null);
       }
     }
   }, [singleProfile]);
@@ -688,7 +695,9 @@ const EditProfile = () => {
                       />
 
                       {/* 🏞️ NEW: Display the image from backend/newly selected file */}
-                      {profileImage && <ImageDisplay imageUrl={profileImage} />}
+                      {displayImageUrl && (
+                        <ImageDisplay imageUrl={profileImage} />
+                      )}
                     </div>
                   </div>
                 </div>

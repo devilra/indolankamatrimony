@@ -1,11 +1,16 @@
 "use client";
 
-import { adminGetAllProfiles } from "@/app/redux/Slices/adminSlice";
+import {
+  adminDeleteProfile,
+  adminGetAllProfiles,
+  resetAdminState,
+} from "@/app/redux/Slices/adminSlice";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEdit, FaTrashAlt, FaSearch } from "react-icons/fa";
 import ProfileTableSkeleton from "../Components/ProfileTableSkeleton";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 // ----------------------------------------------------
 // Dummy Data for Filter Options
@@ -32,9 +37,7 @@ const AllProfiles = () => {
 
   // Dummy Handlers (Uncomment the actual logic when implemented)
 
-  const handleDelete = (id) => console.log("Delete:", id);
-
-  const { profiles, loading, error, profileCount } = useSelector(
+  const { profiles, loading, error, profileCount, deleteSuccess } = useSelector(
     (state) => state.admin
   );
 
@@ -72,6 +75,22 @@ const AllProfiles = () => {
   const handleEdit = (id) => {
     router.push(`/dashboard/profiles/edit/${id}`);
   };
+
+  const handleDelete = (id) => {
+    const isConfirmed = window.confirm(
+      `Are you sure you want to permanently delete profile ID: ${id}? This action cannot be undone.`
+    );
+    if (isConfirmed) {
+      dispatch(adminDeleteProfile(id));
+    }
+  };
+
+  useEffect(() => {
+    if (deleteSuccess) {
+      toast.success("Profile deleted successfully!");
+      dispatch(resetAdminState());
+    }
+  }, [deleteSuccess, dispatch]);
 
   const TABLE_HEADERS = [
     // key: profile ஆப்ஜெக்ட்டில் உள்ள key-ஐ குறிக்கிறது
@@ -187,7 +206,7 @@ const AllProfiles = () => {
             />
           </button>
           <button
-            // onClick={() => handleDelete(profile.id)} // Function is missing, uncomment when implemented
+            onClick={() => handleDelete(profile.id)} // Function is missing, uncomment when implemented
             className="text-red-600 hover:text-red-900 p-1"
             title="Delete Profile"
           >

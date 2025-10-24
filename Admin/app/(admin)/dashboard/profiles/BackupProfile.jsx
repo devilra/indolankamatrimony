@@ -1,459 +1,760 @@
 "use client";
 
-import { adminGetAllProfiles } from "@/app/redux/Slices/adminSlice";
-import React, { useCallback, useEffect, useState } from "react";
+import {
+  adminGetProfileById,
+  adminUpdateProfile,
+} from "@/app/redux/Slices/adminSlice";
+import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaEdit, FaTrashAlt, FaSearch, FaFilter } from "react-icons/fa";
-import ProfileTableSkeleton from "../Components/ProfileTableSkeleton";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CalendarIcon, Loader2, X } from "lucide-react";
+import { format } from "date-fns";
+// import { toast } from "sonner"; // Not used in the provided logic, keeping it commented
+// import { useRouter } from "next/navigation"; // Not used in the provided logic, keeping it commented
+import Image from "next/image"; // 🏞️ NEW: Import Image component for displaying the profile image
+import { toast } from "sonner";
 
-// ----------------------------------------------------
-// Dummy Data for Filter Options (Backend data-va base panni maathikonga)
-// ----------------------------------------------------
-const MARITAL_STATUS_OPTIONS = [
-  "All",
-  "Single",
-  "Married",
-  "Divorced",
-  "Widowed",
-];
-const GENDER_OPTIONS = ["All", "Male", "Female"];
+// 📅 Helper function to calculate age from DOB
+const calculateAge = (dob) => {
+  if (!dob) return "";
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age.toString();
+};
 
-const AllProfiles = () => {
+const EditProfile = () => {
   const dispatch = useDispatch();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterMaritalStatus, setFilterMaritalStatus] = useState("All");
-  const [filterGender, setFilterGender] = useState("All");
-  // const [loading] = useState(true);
+  // 📅 State for the calendar picker
+  const [dobDate, setDobDate] = useState(null);
+  // 🏞️ State to hold the profile image file or URL for display
+  const [profileImage, setProfileImage] = useState(null);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const router = useRouter();
 
-  const { profiles, loading, error, profileCount } = useSelector(
-    (state) => state.admin
-  );
+  // singleProfile state-la irukkaa nu paakaam
+  const { singleProfile, loading, error } = useSelector((state) => state.admin);
 
-  // ----------------------------------------------------
-  // 1. Data Fetching
-  // ----------------------------------------------------
-  //   useEffect(() => {
-  //     // Initial data load
-  //     dispatch(adminGetAllProfiles());
-  //   }, [dispatch]);
+  const [formData, setFormData] = useState({
+    mprofile: "",
+    pname: "",
+    dob: "",
+    age: "", // auto-calculated
+    pbrith: "",
+    tbrith: "",
+    rasi: "",
+    nakshatram: "",
+    laknam: "",
+    height: "",
+    weight: "",
+    color: "",
+    maritalstatus: "",
+    gender: "",
+    education: [],
+    occupation: "",
+    annualincome: "",
+    mothertongue: "",
+    religion: "",
+    caste: "",
+    subcaste: "",
+    fname: "",
+    foccupation: "",
+    mname: "",
+    moccupation: "",
+    sister: "",
+    brother: "",
+    children: "",
+    rplace: "",
+    whatsappno: "",
+    email: "",
+    addressdetails: "",
+    phonenumber: "",
+  });
 
-  // API Call function-a useCallback-la wrap pannuvom
+  // console.log(formData);
 
-  const fetchProfiles = useCallback(
-    (filters) => {
-      dispatch(adminGetAllProfiles(filters));
-    },
-    [dispatch]
-  );
+  const params = useParams();
+  const profileId = params.id; // Edit page route: dashboard/profiles/edit/[id]
 
-  // Effect for initial load
+  // ... (Occupations, FatherOccupations, MotherOccupations, dropdownFieldMap, dropdownData, and fieldOrder remain the same)
+  // 📚 NOTE: The provided dropdown data and fieldOrder are long, I'm keeping the original ones in the final code but removing them here for brevity to focus on the changes.
+
+  const Occupations = [
+    "Software Professional",
+    "Teaching / Academician",
+    "Executive",
+    "Automobile",
+    "own business",
+    "Doctor",
+  ];
+
+  const uniqueOccupations = [...new Set(Occupations)];
+
+  const FatherOccupations = [
+    // Common occupations
+    "Software Professional",
+    "Teaching / Academician",
+    "Executive",
+    "Doctor",
+    "Manager",
+  ];
+
+  const uniqueFatherOccupations = [...new Set(FatherOccupations)];
+
+  const MotherOccupations = [
+    "Software Professional",
+    "Teaching / Academician",
+    "Executive",
+    "Doctor",
+    "Manager",
+    "Professor / Lecturer",
+  ];
+
+  const uniqueMotherOccupations = [...new Set(MotherOccupations)];
+
+  const dropdownFieldMap = {
+    "Matrimony Profile for": "mprofile",
+    Rasi: "rasi",
+    Nakshatram: "nakshatram",
+    Laknam: "laknam",
+    Color: "color",
+    "Marital Status": "maritalstatus",
+    Gender: "gender",
+    Education: "education",
+    Occupation: "occupation",
+    "Annual Income": "annualincome",
+    "Mother Tongue": "mothertongue",
+    Religion: "religion",
+    Caste: "caste",
+    "Father's Occupation": "foccupation",
+    "Mother's Occupation": "moccupation",
+  };
+
+  const dropdownData = {
+    "Matrimony Profile for": [
+      "Myself",
+      "Son",
+      "Daugther",
+      "Brother",
+      "Sister",
+      "Friends",
+      "Relative",
+    ],
+    Rasi: [
+      "மேஷம் (Aries)",
+      "ரிஷபம் (Taurus)",
+      "மிதுனம் (Gemini)",
+      "கடகம் (Cancer)",
+    ],
+
+    Nakshatram: [
+      "அஸ்வினி (Ashwini)",
+      "பரணி (Bharani)",
+      "கார்த்திகை (Krittika)",
+      "ரோகிணி (Rohini)",
+      "மிருகசீரிடம் (Mrigashira)",
+      "திருவாதிரை (Ardra)",
+    ],
+
+    Laknam: [
+      "மேஷம் (Aries)",
+      "ரிஷபம் (Taurus)",
+      "மிதுனம் (Gemini)",
+      "கடகம் (Cancer)",
+    ], // Note: First code-la irundha short list
+
+    Color: ["Fair", "Black", "White", "Very Fair"],
+    "Marital Status": [
+      "UnMarried",
+      "Divorced",
+      "Widowed",
+      "Separated",
+      "Married",
+      "Annulled",
+    ],
+
+    Gender: ["Male", "Female"],
+    Education: [
+      "SSLC",
+      "12th Higher Education",
+      "Aeronautical Engineering",
+      "B.Arch",
+      "BCA",
+    ], // Note: First code-la irundha short list
+
+    Occupation: uniqueOccupations,
+
+    "Annual Income": [
+      "0 - 1 Lakh",
+      "1 - 2 Lakhs",
+      "2 - 3 Lakhs",
+      "3 - 4 Lakhs",
+      "4 - 5 Lakhs",
+      "5 - 6 Lakhs",
+    ],
+
+    "Mother Tongue": ["Tamil", "Telugu", "Malayalam", "Kannada", "Hindi"],
+
+    Religion: ["Hindu", "Christian", "Muslim", "Sikh"],
+
+    Caste: [
+      "24 Manai Telugu Chettiar",
+      "Aaru Nattu Vellala",
+      "Achirapakkam Chettiar",
+      "Adi Dravidar",
+      "Agamudayar / Arcot / Thuluva Vellala",
+      "Agaram Vellan Chettiar",
+      "Ahirwar",
+      "Arunthathiyar",
+    ],
+
+    "Father's Occupation": uniqueFatherOccupations,
+    "Mother's Occupation": uniqueMotherOccupations,
+  };
+
+  const fieldOrder = [
+    { label: "Matrimony Profile for", type: "select" },
+    { label: "Name", name: "pname", type: "input" },
+    { label: "Date of Birth", name: "dob", type: "date" },
+    { label: "Age", name: "age", type: "input" },
+    { label: "Place of Birth", name: "pbrith", type: "input" },
+    { label: "Time of Birth", name: "tbrith", type: "input" },
+    { label: "Rasi", type: "select" },
+    { label: "Nakshatram", type: "select" },
+    { label: "Laknam", type: "select" },
+    { label: "Height", name: "height", type: "input" },
+    { label: "Weight", name: "weight", type: "input" },
+    { label: "Color", type: "select" },
+    { label: "Marital Status", type: "select" },
+    { label: "Gender", type: "select" },
+    { label: "Education", type: "select" },
+    { label: "Occupation", type: "select" },
+    { label: "Annual Income", type: "select" },
+    { label: "Mother Tongue", type: "select" },
+    { label: "Religion", type: "select" },
+    { label: "Caste", type: "select" },
+    { label: "Subcaste", name: "subcaste", type: "input" }, // --- FAMILY DETAILS HEADING ADDED ---
+
+    { label: "Family Details", type: "heading" },
+
+    { label: "Father's Name", name: "fname", type: "input" },
+    { label: "Father's Occupation", type: "select" },
+    { label: "Mother's Name", name: "mname", type: "input" },
+    { label: "Mother's Occupation", type: "select" },
+    { label: "Sister", name: "sister", type: "input" },
+    { label: "Brother", name: "brother", type: "input" },
+    { label: "Children", name: "children", type: "input" },
+    { label: "Residing Place", name: "rplace", type: "input" }, // --- CONTACT DETAILS HEADING ADDED ---
+    { label: "Contact Details", type: "heading" },
+
+    { label: "Whatsapp Number", name: "whatsappno", type: "input" }, // Order changed
+    { label: "Email", name: "email", type: "input" },
+    { label: "Address Details", name: "addressdetails", type: "textarea" },
+    { label: "Phone Number", name: "phonenumber", type: "input" },
+    { label: "Profile Image", name: "image", type: "file" },
+  ];
+  // ---------------------------------------------------------------------------------------------------
+
+  // 📝 Universal Change Handler for Input and Textarea fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    let newFormData = { ...formData, [name]: value };
+
+    // 📅 Age Auto-Calculation: If DOB changes, recalculate age
+    if (name === "dob") {
+      newFormData.age = calculateAge(value);
+    }
+
+    // 📞 Phone/Whatsapp: Allow only numbers (optional, but good practice for 'tel' type fields)
+    if (name === "phonenumber" || name === "whatsappno") {
+      const cleanedValue = value.replace(/\D/g, ""); // Remove all non-digit characters
+      newFormData[name] = cleanedValue.slice(0, 10); // Limit to 10 characters
+    }
+
+    setFormData(newFormData);
+  };
+
+  // ⬇️ Universal Change Handler for Select fields (Shadcn/ui Select)
+  const handleSelectChange = (name, value) => {
+    if (name === "education") {
+      // 🟢 Logic for multi-select (add/remove value from array)
+      setFormData((prev) => ({
+        ...prev,
+        education: prev.education.includes(value)
+          ? prev.education.filter((v) => v !== value) // Remove if already exists
+          : [...prev.education, value], // Add if it doesn't exist
+      }));
+    } else {
+      // Logic for standard single-select fields
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    // 🔴 Validation error Clear state (Uncomment if you add the validation state)
+    // if (validation[name]) {
+    //   setValidation((prev) => ({ ...prev, [name]: false }));
+    // }
+  };
+
+  // 📅 Date Select Handler
+  const handleDateSelect = (date) => {
+    if (date) {
+      // 1. Update calendar state
+      setDobDate(date);
+      // 2. Format date for backend (ISO string is robust, or you can use "yyyy-MM-dd")
+      const formattedDate = format(date, "yyyy-MM-dd");
+
+      // 3. Update formData
+      setFormData((prev) => ({
+        ...prev,
+        dob: formattedDate,
+        // 4. Update age field automatically
+        age: calculateAge(formattedDate),
+      }));
+      // 5. Close the calendar
+      setIsCalendarOpen(false);
+    } else {
+      setDobDate(null);
+      setFormData((prev) => ({
+        ...prev,
+        dob: "",
+        age: "",
+      }));
+    }
+  };
+
+  // 🏞️ Image Upload Handler
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Set the file object for potential upload
+      setProfileImageFile(file);
+      // Create a local URL to display the newly selected image immediately
+      const localImageUrl = URL.createObjectURL(file);
+      setProfileImageUrl(localImageUrl);
+      // setFormData((prev) => ({ ...prev, image: localImageUrl }));
+      // 🔴 NOTE: In a real scenario, you'd typically handle image upload (e.g., to Cloudinary)
+      // in a separate step and store the resulting URL in formData.
+    } else {
+      setProfileImageFile(null);
+      if (!e.target.value) {
+        setProfileImageUrl(singleProfile?.profileImage || null);
+      }
+    }
+  };
+
+  // 🔄 Initial Data Fetch Effect (Unchanged)
   useEffect(() => {
-    fetchProfiles({
-      search: searchTerm,
-      gender: filterGender,
-      maritalStatus: filterMaritalStatus,
-    });
-    // Empty dependency array-ku badhila, filters-a use pannalaam, aana adhu infinite loop-la vidalaam.
-    // Naam filters change aana API call panna logic-a below useEffect-la serththirukkom.
-    // Search term-a initial load-la vechchu call pannurathu correct
-  }, []);
+    if (profileId) {
+      dispatch(adminGetProfileById(profileId));
+    }
+  }, [profileId, dispatch]);
 
+  // ⚙️ Populate Form Data Effect when singleProfile is available
   useEffect(() => {
-    // API call-a delay panna, debounce use pannanum.
-    // Ippo simple-a, filter change aana immediate-a API call panna vendum.
+    if (singleProfile) {
+      const mapValue = (value, type) => {
+        if (value === "N/A" || value === null || value === undefined) {
+          if (type === "array") return [];
+          if (type === "date") return "";
+          return "";
+        }
+        return value;
+      };
 
-    // Search input-la type pannum pothu API call aaganum.
-    // Filter dropdown-a maathum pothum API call aaganum.
+      const initialFormData = {
+        mprofile: mapValue(singleProfile.mprofile),
+        pname: mapValue(singleProfile.pname),
+        dob: mapValue(singleProfile.dob, "date"),
+        age: mapValue(singleProfile.age),
+        pbrith: mapValue(singleProfile.pbrith),
+        tbrith: mapValue(singleProfile.tbrith),
+        rasi: mapValue(singleProfile.rasi),
+        nakshatram: mapValue(singleProfile.nakshatram),
+        laknam: mapValue(singleProfile.laknam),
+        height: mapValue(singleProfile.height),
+        weight: mapValue(singleProfile.weight),
+        color: mapValue(singleProfile.color),
+        maritalstatus: mapValue(singleProfile.maritalstatus),
+        gender: mapValue(singleProfile.gender),
+        education:
+          singleProfile.education && singleProfile.education !== "N/A"
+            ? singleProfile.education.split(",").map((e) => e.trim())
+            : [],
+        occupation: mapValue(singleProfile.occupation),
+        annualincome: mapValue(singleProfile.annualincome),
+        mothertongue: mapValue(singleProfile.mothertongue),
+        religion: mapValue(singleProfile.religion),
+        caste: mapValue(singleProfile.caste),
+        subcaste: mapValue(singleProfile.subcaste),
+        fname: mapValue(singleProfile.fname),
+        foccupation: mapValue(singleProfile.foccupation),
+        mname: mapValue(singleProfile.mname),
+        moccupation: mapValue(singleProfile.moccupation),
+        sister: mapValue(singleProfile.sister),
+        brother: mapValue(singleProfile.brother),
+        children: mapValue(singleProfile.children),
+        rplace: mapValue(singleProfile.rplace),
+        whatsappno: mapValue(singleProfile.whatsappno),
+        email: mapValue(singleProfile.email),
+        addressdetails: mapValue(singleProfile.addressdetails),
+        phonenumber: mapValue(singleProfile.phonenumber),
+      };
 
-    const delayDebounceFn = setTimeout(() => {
-      fetchProfiles({
-        search: searchTerm,
-        gender: filterGender,
-        maritalStatus: filterMaritalStatus,
-      });
-    }, 500); // 500ms delay for search input
-  }, [searchTerm, filterGender, filterMaritalStatus, fetchProfiles]);
+      setFormData(initialFormData);
+
+      // 📅 Set calendar date if valid
+      if (initialFormData.dob) {
+        // Ensure the dob string is in a format Date constructor understands (e.g., "YYYY-MM-DD")
+        setDobDate(new Date(initialFormData.dob));
+      } else {
+        setDobDate(null);
+      }
+
+      // 🏞️ Set the Cloudinary URL for display
+      // Assuming singleProfile.profileImage holds the Cloudinary URL (or a field like it)
+      const imageUrl = mapValue(singleProfile.profileImage); // Use a new field from the backend
+      if (imageUrl) {
+        setProfileImage(imageUrl);
+      }
+    }
+  }, [singleProfile]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // 1. Prepare data for backend
+    const dataToSubmit = new FormData();
+
+    // 2. Iterate through formData and append to FormData object
+    for (const key in formData) {
+      let value = formData[key];
+
+      // a. Handle Education array: convert to comma-separated string
+      if (key === "education" && Array.isArray(value)) {
+        value = value.join(", ");
+      }
+
+      // b. Handle N/A logic: if value is empty/null, send "N/A" (or another desired placeholder)
+      if (
+        value === "" ||
+        value === null ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        value = "N/A";
+      }
+
+      // c. Append to FormData
+      dataToSubmit.append(key, value);
+    }
+
+    // 3. Handle the image file separately
+    if (profileImageFile) {
+      // Append the actual file object. The backend will handle the upload.
+      dataToSubmit.append("image", profileImageFile);
+    }
+
+    // 3. Handle the image file separately
+    try {
+      const resultAction = await dispatch(
+        adminUpdateProfile({ id: profileId, updateData: dataToSubmit })
+      );
+
+      if (adminUpdateProfile.fulfilled.match(resultAction)) {
+        toast.success("Profile updated successfully!");
+        router.push("/dashboard/profiles");
+      } else {
+        // Handle error from the thunk
+        const errorPayload = resultAction.payload;
+        const errorMessage =
+          errorPayload.message || "An unknown error occurred.";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast.error("Failed to submit profile update.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ---------------------------------------------------------------------------------------------------
+  // 🖼️ Helper component to render the image
+  const ImageDisplay = ({ imageUrl }) => {
+    if (!imageUrl) return null;
+    return (
+      <div className="mt-2 w-20 h-20 rounded-full overflow-hidden border border-gray-300">
+        <Image
+          src={imageUrl}
+          alt="Profile"
+          width={80} // Small size for view
+          height={80} // Small size for view
+          objectFit="cover"
+          className="w-full h-full"
+        />
+      </div>
+    );
+  };
+  // ---------------------------------------------------------------------------------------------------
 
   return (
-    <div className="lg:pr-[250px]">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">
-        👥 Profiles List
-      </h1>
-
-      {/* Search Input */}
-      <div className="flex-1 min-w-[200px]">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Search (ID, Name, Email)
-        </label>
-        <div className="flex rounded-md shadow-sm">
-          <input
-            type="text"
-            className="w-full md:w-1/2 lg:w-1/2 flex-1 min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Start typing to search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none flex items-center">
-            <FaSearch className="mr-1" /> Search
-          </button>
-        </div>
-      </div>
-
-      {/* Marital Status Filter */}
-      <div className="min-w-[150px] mt-5 ">
-        <label
-          htmlFor="marital-status"
-          className="block text-sm font-medium text-gray-700 mb-1"
+    <div className="max-w-8xl mx-auto shadow-lg rounded-2xl">
+      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+        <form
+          onSubmit={handleSubmit}
+          className="md:grid flex flex-col md:grid-cols-2 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[670px] lg:grid-cols-1 gap-2 md:gap-3 lg:gap-2"
         >
-          Marital Status
-        </label>
-        <select
-          id="marital-status"
-          value={filterMaritalStatus}
-          onChange={(e) => setFilterMaritalStatus(e.target.value)}
-          className="block w-full md:w-1/2 lg:w-1/4  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          {MARITAL_STATUS_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
+          <h1 className="bg-neutral-600/70 col-span-1 font-semibold md:col-span-2 py-3 px-2 text-2xl text-white">
+            Profile details
+          </h1>
+          {fieldOrder.map((field, index) => {
+            const fieldName = dropdownFieldMap[field.label] || field.name;
 
-      {/* Gender Filter */}
-      <div className="min-w-[150px] mt-5">
-        <label
-          htmlFor="gender"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Gender
-        </label>
-        <select className="block w-full md:w-1/2 lg:w-1/4  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          {GENDER_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
+            if (field.type === "heading") {
+              return (
+                <h2
+                  key={field.label}
+                  className="col-span-full bg-neutral-600/70 font-semibold md:col-span-2 py-3 px-2 text-2xl text-white"
+                >
+                  {field.label}
+                </h2>
+              );
+            }
 
-      {/* Profile Counts Section */}
-      <div className="mb-4 text-sm font-medium mt-5 text-gray-700">
-        {loading ? (
-          <span className="text-indigo-600">Fetching results...</span>
-        ) : (
-          <>
-            Total Profiles Found:
-            <span className="text-indigo-600 font-bold">{profileCount}</span>
-            {searchTerm ||
-            filterGender !== "All" ||
-            filterMaritalStatus !== "All" ? (
-              <span className="ml-4 text-gray-500">
-                (Showing filtered results)
-              </span>
-            ) : (
-              <span className="ml-4 text-gray-500">(Total profiles in DB)</span>
-            )}
-          </>
-        )}
-      </div>
+            // 1. SELECT FIELD (UPDATED with value and onChange)
+            if (field.type === "select") {
+              const options = dropdownData[field.label];
+              if (!options) return null;
 
-      {/* Loading and Error States */}
-      {loading && <ProfileTableSkeleton rows={10} />}
+              const currentValue = Array.isArray(formData[fieldName])
+                ? formData[fieldName][0] || "" // Handle multi-select value for display
+                : formData[fieldName] || "";
 
-      {error && !loading && (
-        <p className="p-4 text-red-500 bg-red-100 border border-red-400 rounded-lg">
-          Error: {error}
-        </p>
-      )}
-
-      {/* Profiles Data Table */}
-
-      {!loading && !error && (
-        <div className="bg-white shadow rounded-lg w-full mt-6">
-          {profiles.length === 0 ? (
-            <p className="p-4 text-center text-gray-500">
-              No profiles found matching the criteria. 🔎
-            </p>
-          ) : (
-            <div className="relative  w-full  overflow-x-auto rounded-lg border border-gray-200">
-              <div className="max-h-[600px] overflow-y-auto">
-                <table className="min-w-[6000px] divide-y  divide-gray-200">
-                  <thead className="bg-gray-100 sticky top-0 z-10">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        S.No
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        ID
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Matrimony Profile
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        DOB
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Age
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Place of Birth
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Time of Birth
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Rasi
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Nakshatram
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Laknam
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Height
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Weight
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Color
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Marital Status
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Gender
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Education
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Occupation
-                      </th>
-
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Annual Income
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Mother Tongue
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Religion
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Caste
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Subcaste
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Father's Name
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Father's Occupation
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Mother's Name
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Mother's Occupation
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Sister
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Brother
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Children
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Residing Place
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Whatsapp Number
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Email
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Address Details
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Phone Number
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        Profile Image
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                        actions
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {profiles.map((profile, index) => (
-                      <tr key={profile.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {index + 1}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-indigo-600 font-medium">
-                          {profile.id}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-900">
-                          {profile.mprofile}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.pname}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          ({profile.dob})
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.age}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.pbrith}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.tbrith}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.rasi}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.nakshatram}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.laknam}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.height}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.weight}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.color}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.maritalstatus}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.gender}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.education}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.occupation}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.annualincome}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.mothertongue}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.religion}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.caste}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.subcaste}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.fname}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.foccupation}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.mname}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.moccupation}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.sister}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.brother}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.children}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.rplace}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.rplace}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.whatsappno}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.email}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {profile.phonenumber}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {/* {profile.image ?  (
-                            <img
-                              src={profile.image}
-                              alt={profile.name}
-                              className="h-10 w-10 rounded-md"
-                            />
-                          ) : (
-                            "N/A"
-                          )} */}
-                          {(profile.image && profile.image === "null") ||
-                          !profile.image ? (
-                            "N/A"
-                          ) : (
-                            <img
-                              src={profile.image}
-                              alt={profile.name}
-                              className="h-10 w-10 rounded-md"
-                            />
-                          )}
-                        </td>
-
-                        <td className="px-4 py-3 text-sm font-medium">
-                          <button
-                            onClick={() => handleEdit(profile.id)}
-                            className="text-indigo-600 hover:text-indigo-900 mr-3 p-1"
-                            title="Edit Profile"
+              return (
+                <div key={field.label} className="flex flex-col">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Select
+                        value={currentValue}
+                        onValueChange={(val) =>
+                          handleSelectChange(fieldName, val)
+                        }
+                      >
+                        <SelectTrigger className="w-full py-[15px]">
+                          <SelectValue placeholder={`Select ${field.label}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {options.map((opt, index) => (
+                            <SelectItem key={`${opt}-${index}`} value={opt}>
+                              {opt}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  {/* ... Existing multi-select display logic for education (kept for structure) */}
+                  {fieldName === "education" && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {formData.education.length > 0 &&
+                        formData.education.map((item, index) => (
+                          <span
+                            key={index}
+                            className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
                           >
-                            <FaEdit className="w-3 h-3" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(profile.id)}
-                            className="text-red-600 hover:text-red-900 p-1"
-                            title="Delete Profile"
+                            {item}
+                            <X
+                              className="cursor-pointer h-3 w-3 text-neutral-600 hover:text-red-500" // சின்ன சைஸ் h-3 w-3
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectChange(fieldName, item); // Toggles/removes the item
+                              }}
+                            />
+                          </span>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            // 2. DATE PICKER (UPDATED with value and onChange)
+            if (field.type === "date") {
+              return (
+                <div key={field.label} className="flex flex-col lg:flex-row">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Popover
+                        open={isCalendarOpen}
+                        onOpenChange={setIsCalendarOpen} // Toggle calendar open state
+                        className=""
+                      >
+                        <PopoverTrigger className="w-full" asChild>
+                          <Button
+                            variant="outline"
+                            className="justify-start py-[15px]"
                           >
-                            <FaTrashAlt className="w-3 h-3" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {/* 📅 Display selected/backend date */}
+                            {dobDate
+                              ? format(dobDate, "PPP")
+                              : "Select Date of Birth"}
+                          </Button>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            selected={dobDate} // Pass current date
+                            onSelect={handleDateSelect} // Handle date selection
+                            mode="single"
+                            captionLayout="dropdown"
+                            fromYear={1950}
+                            toYear={new Date().getFullYear()} // Set to current year
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // 3. TEXTAREA (UPDATED with value and onChange)
+            if (field.type === "textarea") {
+              return (
+                <div key={field.name} className="flex flex-col md:col-span-2">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Textarea
+                        name={fieldName}
+                        value={formData[fieldName] || ""}
+                        placeholder={`Enter ${field.label}`}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // 4. FILE INPUT (UPDATED with onChange and NEW Image Display)
+            if (field.type === "file") {
+              return (
+                <div key={field.name} className="flex flex-col">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+
+                    <div className="lg:w-[900px]">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className={`py-[8px]`}
+                      />
+
+                      {/* 🏞️ NEW: Display the image from backend/newly selected file */}
+                      {profileImage && <ImageDisplay imageUrl={profileImage} />}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            // 5. REGULAR TEXT INPUT (UPDATED with value and onChange)
+            if (field.type === "input") {
+              const isAgeField = field.name === "age";
+              const isPhoneNumberField =
+                fieldName === "phonenumber" || fieldName === "whatsappno";
+              const isEmailField = fieldName === "email";
+
+              return (
+                <div key={field.name} className="flex flex-col">
+                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+                    <div className="w-full">
+                      <Label className="text-sm py-2">{field.label}</Label>
+                    </div>
+                    <div className="lg:w-[900px]">
+                      <Input
+                        type={
+                          isAgeField
+                            ? "number"
+                            : isPhoneNumberField
+                            ? "tel"
+                            : isEmailField
+                            ? "email"
+                            : "text"
+                        }
+                        name={fieldName}
+                        value={formData[fieldName] || ""}
+                        onChange={handleChange}
+                        placeholder={`Enter ${field.label}`}
+                        readOnly={isAgeField}
+                        disabled={isAgeField && formData.age === ""}
+                        maxLength={isPhoneNumberField ? 10 : undefined}
+                        className={`h-[32px]`}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
+            return null; // For safety
+          })}
+          <div className="col-span-2 flex justify-center mt-6">
+            <Button
+              type="submit"
+              disabled={loading || isSubmitting}
+              className="px-8 py-5 text-lg"
+            >
+              {isSubmitting ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" /> Please wait...
+                </div>
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default AllProfiles;
+export default EditProfile;
