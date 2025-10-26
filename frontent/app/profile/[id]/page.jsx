@@ -183,7 +183,7 @@ const page = () => {
                 src={formatImageUrl(p.image, p.gender)}
                 alt={p.name || "Profile Picture"}
                 style={{ objectFit: "cover" }}
-                className="w-full h-auto max-h-[300px] object-cover rounded-lg border-2 border-[#4a2f1c] "
+                className="w-full h-[500px] md:h-[300px] object-contain rounded-lg border-2 border-[#4a2f1c] "
                 //className="rounded-lg border-2 border-[#4a2f1c]"
                 // sizes="(max-width: 768px) 100vw, 33vw"
                 //width={50}
