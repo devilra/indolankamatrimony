@@ -212,7 +212,7 @@ exports.registerProfile = async (req, res) => {
       );
     }
   } catch (error) {
-    //console.error("Registration Error:", error);
+    console.error("Registration Error:", error.messafe);
 
     // // 🔥 Multer/Size/File Type error handling
     if (error instanceof multer.MulterError) {

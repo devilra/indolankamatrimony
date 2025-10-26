@@ -34,7 +34,7 @@ const Partners = () => {
   // 3. Effect to handle initial load and debounced search
   useEffect(() => {
     if (debouncedSearchTerm && debouncedSearchTerm.trim() !== "") {
-      console.log("Debounce Api call start");
+      //console.log("Debounce Api call start");
       dispatch(searchProfiles(debouncedSearchTerm));
     } else if (debouncedSearchTerm === "") {
       // profiles.length == 0 என்பதை மட்டும் ஆரம்ப லோடுக்கு செக் செய்யலாம்
