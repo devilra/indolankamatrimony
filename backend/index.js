@@ -41,8 +41,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 })();
 
 app.use("/api/profile", profileRoutes);
-app.use("./api/contact", contactRoutes);
+app.use("/api/contact", contactRoutes);
 app.use("/api/admin", adminRoutes); // Base path /api/admin
+
+// only Cpanel hosting purpose using steps
 
 const PORT = process.env.PORT;
 

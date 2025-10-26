@@ -12,9 +12,10 @@ exports.registerProfile = async (req, res) => {
     const imagePath = req.file ? req.file.path : null; // Full Cloudinary URL
     const publicId = req.file ? req.file.filename : null; // Unique ID for management
 
-    console.log(publicId);
+    //console.log(publicId);
 
-    //console.log(imagePath);
+    console.log(imagePath);
+    console.log(req.body);
 
     let {
       mprofile,
