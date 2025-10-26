@@ -9,6 +9,7 @@ import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import ReduxProvider from "./ReduxProvider";
 import { Toaster } from "@/components/ui/sonner";
+import RevealProvider from "./Components/RevealProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
