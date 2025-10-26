@@ -45,21 +45,23 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${playfairDisplay.variable} antialiased`}
       >
         <ReduxProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster
-            toastOptions={{
-              className: "rounded-2xl border shadow-lg",
-              style: {
-                //background: "#1e1e1e",
-                // color: "#fff",
-                fontSize: "16px",
-                //color: "white",
-                borderLeft: "10px solid ",
-              },
-            }}
-          />
+          <RevealProvider>
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster
+              toastOptions={{
+                className: "rounded-2xl border shadow-lg",
+                style: {
+                  //background: "#1e1e1e",
+                  // color: "#fff",
+                  fontSize: "16px",
+                  //color: "white",
+                  borderLeft: "10px solid ",
+                },
+              }}
+            />
+          </RevealProvider>
         </ReduxProvider>
       </body>
     </html>

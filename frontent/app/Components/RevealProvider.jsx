@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react";
 
 // The target reveal date and time: Monday, October 27, 2025 at 10:00:00 AM IST (GMT+5:30)
 // Please double-check this date and time!
-const REVEAL_DATE_TIMESTAMP = new Date("2025-10-27T10:00:00+05:30").getTime();
+const REVEAL_DATE_TIMESTAMP = new Date("2025-10-27T09:30:00+05:30").getTime();
+//const REVEAL_DATE_TIMESTAMP = new Date("2025-10-26T21:10:00+05:30").getTime();
 
 // Helper function to format time difference
 const formatTime = (timeInMs) => {
