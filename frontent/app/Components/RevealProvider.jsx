@@ -121,7 +121,7 @@ import { Loader2 } from "lucide-react";
 
 // 1. REVEAL DATE DEFINITION (நாளை காலை 9:30 AM IST)
 // The target reveal date and time: Monday, October 27, 2025 at 09:30:00 AM IST (GMT+5:30)
-const REVEAL_DATE_TIMESTAMP = new Date("2025-10-27T09:30:00+05:30").getTime();
+const REVEAL_DATE_TIMESTAMP = new Date("2025-10-27T06:15:00+05:30").getTime();
 //const REVEAL_DATE_TIMESTAMP = new Date("2025-10-26T21:22:00+05:30").getTime();
 
 // KEY for storing the revealed state in the browser's storage
@@ -233,7 +233,7 @@ export default function RevealProvider({ children }) {
           Website Launching Soon!
         </h1>
         <p className="font-geist-sans text-lg sm:text-xl text-gray-400 mb-12">
-          Get ready for the big reveal on Monday, October 27th at 09:30 AM IST.
+          Get ready for the big reveal on Monday, October 27th at 06:15 AM IST.
         </p>
 
         {/* Countdown Timer Display */}
