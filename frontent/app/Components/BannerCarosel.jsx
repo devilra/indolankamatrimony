@@ -6,12 +6,13 @@ import "slick-carousel/slick/slick-theme.css";
 import "./DynamicImageCarousel.css";
 
 const image_data = [
+  { id: 4, url: "/banner/b8.jpg", alt: "Image 1" },
+  { id: 1, url: "/banner/b7.jpg", alt: "Image 2" },
   { id: 3, url: "/banner/b5.jpg", alt: "Image 3" },
-  { id: 1, url: "/banner/b1.webp", alt: "Image 1" },
 
   //{ id: 2, url: "/banner/b4.jpg", alt: "Image 2" },
 
-  { id: 4, url: "/banner/b6.jpg", alt: "Image 4" },
+  // { id: 4, url: "/banner/b6.jpg", alt: "Image 4" },
 ];
 
 function BannerCarousel() {
