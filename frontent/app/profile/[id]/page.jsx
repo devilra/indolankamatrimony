@@ -177,7 +177,7 @@ const page = () => {
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
         <div className="p-6 rounded-lg  mb-8">
-          <div className="flex flex-col md:flex-row md:items-start pb-6">
+          <div className="flex flex-col  md:items-start pb-6">
             <div className="w-full md:w-1/3 lg:w-1/4 mb-4 md:mb-0 md:mr-6">
               <img
                 src={formatImageUrl(p.image, p.gender)}
@@ -193,8 +193,8 @@ const page = () => {
               />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
-                Name : {formatValue(p.pname)}
+              <h1 className="text-sm md:text-base pt-5 font-bold text-[#4a2f1c] mb-2">
+                {formatValue(p.pname)}
               </h1>
               {/* <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
                 Age : {formatValue(p.age)}
@@ -203,7 +203,10 @@ const page = () => {
                 Profile Id :{" "}
                 <span className="font-bold">{p.profile_id || p.id}</span>
               </div> */}
-              <div className="inline-block px-4 py-1 border-1 border-neutral-400  text-[#4a2f1c] font-bold  rounded-lg text-2xl md:text-3xl lg:text-3xl my-1">
+              <h1 className="text-sm md:text-base font-bold text-[#4a2f1c] mb-2">
+                {formatValue(p.education)}
+              </h1>
+              <div className="inline-block px-4 py-1 border-1 border-neutral-400  text-[#4a2f1c] font-bold  rounded-lg text-2lg  my-1">
                 Profile Id :{" "}
                 <span className="font-bold">{p.profile_id || p.id}</span>
               </div>

@@ -196,6 +196,124 @@ const Contact = () => {
         </div>
       </section>
 
+      <section>
+        <div className="flex   max-w-4xl mx-auto my-12  px-5 md:px-5 lg:px-0 shadow-xl  rounded-lg overflow-hidden flex-col md:flex-col lg:flex-row">
+          {/* Left Panel - UI Design (Golden/Yellow Background) */}
+          <div
+            // bg-yellow-100 (FFEBCC) / p-10 / flex-1 / text-center / flex-col / justify-center
+            className=" p-10 flex relative flex-col justify-center rounded-md items-center bg-[#fff1b5] md:justify-center lg:justify-start lg:items-start md:items-center   md:flex-1"
+            // Illustration image-a background-kku set panrom
+          >
+            <p className="text-2xl py-2 font-serif text-[#877525] mb-0">Now</p>
+            <h1 className="text-4xl lg:text-6xl  lg:py-2 md:text-4xl font-extrabold lg:w-[150px] text-[#665611] mb-2 mt-0 font-serif">
+              Contact to us
+            </h1>
+            <h2 className="text-2xl py-2 font-serif text-[#877525] pb-5 font-medium">
+              Easy and fast.
+            </h2>
+            <img
+              src="/contact/c1.webp"
+              alt="Contact Image"
+              className="h-[250px] pb-5 hidden md:hidden lg:block "
+            />
+
+            <div className="absolute bottom-0 left-0 w-full pt-16 h-32 md:h-36 overflow-hidden">
+              <div
+                className="w-full h-full marquee-bg" // <-- Custom CSS class for animation
+                style={marqueeStyle} // <-- Background image URL
+              />
+            </div>
+
+            {/* Image Component-a inga pottu, background image-a remove pannalaam */}
+            {/* <img src="/path/to/illustration.png" alt="Couple Illustration" className="w-full mt-6" /> */}
+          </div>
+
+          <div className="p-8 bg-white flex-1">
+            <p className="text-red-400 font-semibold tracking-widest text-sm mb-1">
+              LET'S TALK
+            </p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+              Send your enquiry now
+            </h2>
+
+            {alert.message && (
+              <div
+                // Success: bg-green-100 text-green-700 | Error: bg-red-100 text-red-700
+                className={`p-3 rounded-md mb-4 font-medium ${
+                  alert.type === "success"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                }`}
+              >
+                {alert.message}
+              </div>
+            )}
+
+            <form>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  //value={formData.name}
+                  //onChange={handleChange}
+                  placeholder="Enter your full name"
+                  required
+                  // Input Styles: w-full, p-3, border-gray-300, rounded-md, focus ring
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  //value={formData.email}
+                  //onChange={handleChange}
+                  placeholder="Enter email"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">
+                  Phone:
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  //value={formData.phone}
+                  //onChange={handleChange}
+                  placeholder="Enter phone number"
+                  required
+                  minLength="10"
+                  maxLength="10"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-600 mb-1">
+                  Message:
+                </label>
+                <textarea
+                  name="message"
+                  //value={formData.message}
+                  //onChange={handleChange}
+                  placeholder="Enter message"
+                  required
+                  rows="4" // 4 lines height
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
       {/* 2. Cards Section */}
       <section className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -206,125 +324,6 @@ const Contact = () => {
             ))}
           </div>
         </div>
-        <section>
-          <div className="flex   max-w-4xl mx-auto my-12  px-5 md:px-5 lg:px-0 shadow-xl  rounded-lg overflow-hidden flex-col md:flex-col lg:flex-row">
-            {/* Left Panel - UI Design (Golden/Yellow Background) */}
-            <div
-              // bg-yellow-100 (FFEBCC) / p-10 / flex-1 / text-center / flex-col / justify-center
-              className=" p-10 flex relative flex-col justify-center rounded-md items-center bg-[#fff1b5] md:justify-center lg:justify-start lg:items-start md:items-center   md:flex-1"
-              // Illustration image-a background-kku set panrom
-            >
-              <p className="text-2xl py-2 font-serif text-[#877525] mb-0">
-                Now
-              </p>
-              <h1 className="text-4xl lg:text-6xl  lg:py-2 md:text-4xl font-extrabold lg:w-[150px] text-[#665611] mb-2 mt-0 font-serif">
-                Contact to us
-              </h1>
-              <h2 className="text-2xl py-2 font-serif text-[#877525] pb-5 font-medium">
-                Easy and fast.
-              </h2>
-              <img
-                src="/contact/c1.webp"
-                alt="Contact Image"
-                className="h-[250px] pb-5 hidden md:hidden lg:block "
-              />
-
-              <div className="absolute bottom-0 left-0 w-full pt-16 h-32 md:h-36 overflow-hidden">
-                <div
-                  className="w-full h-full marquee-bg" // <-- Custom CSS class for animation
-                  style={marqueeStyle} // <-- Background image URL
-                />
-              </div>
-
-              {/* Image Component-a inga pottu, background image-a remove pannalaam */}
-              {/* <img src="/path/to/illustration.png" alt="Couple Illustration" className="w-full mt-6" /> */}
-            </div>
-
-            <div className="p-8 bg-white flex-1">
-              <p className="text-red-400 font-semibold tracking-widest text-sm mb-1">
-                LET'S TALK
-              </p>
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">
-                Send your enquiry now
-              </h2>
-
-              {alert.message && (
-                <div
-                  // Success: bg-green-100 text-green-700 | Error: bg-red-100 text-red-700
-                  className={`p-3 rounded-md mb-4 font-medium ${
-                    alert.type === "success"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {alert.message}
-                </div>
-              )}
-
-              <form>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Name:
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    //value={formData.name}
-                    //onChange={handleChange}
-                    placeholder="Enter your full name"
-                    required
-                    // Input Styles: w-full, p-3, border-gray-300, rounded-md, focus ring
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    //value={formData.email}
-                    //onChange={handleChange}
-                    placeholder="Enter email"
-                    required
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Phone:
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    //value={formData.phone}
-                    //onChange={handleChange}
-                    placeholder="Enter phone number"
-                    required
-                    minLength="10"
-                    maxLength="10"
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-600 mb-1">
-                    Message:
-                  </label>
-                  <textarea
-                    name="message"
-                    //value={formData.message}
-                    //onChange={handleChange}
-                    placeholder="Enter message"
-                    required
-                    rows="4" // 4 lines height
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
-        </section>
       </section>
     </div>
   );
