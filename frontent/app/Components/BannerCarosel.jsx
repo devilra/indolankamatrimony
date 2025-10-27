@@ -6,10 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 import "./DynamicImageCarousel.css";
 
 const image_data = [
+  { id: 3, url: "/banner/b5.jpg", alt: "Image 3" },
   { id: 1, url: "/banner/b1.webp", alt: "Image 1" },
 
-  { id: 2, url: "/banner/b4.jpg", alt: "Image 2" },
-  { id: 3, url: "/banner/b5.jpg", alt: "Image 3" },
+  //{ id: 2, url: "/banner/b4.jpg", alt: "Image 2" },
+
   { id: 4, url: "/banner/b6.jpg", alt: "Image 4" },
 ];
 
@@ -28,11 +29,11 @@ function BannerCarousel() {
     <div className="carousel-container">
       <Slider {...settings}>
         {image_data.map((image) => (
-          <div key={image.id} className="slide-item-wrapper">
+          <div key={image.id} className="slide-item-wrapper rounded-2xl">
             <img
               src={image.url}
               alt={image.alt}
-              className="carousel-image object-cover object-top-shifted "
+              className="carousel-image object-cover  object-[40%_0%] "
             />
           </div>
         ))}

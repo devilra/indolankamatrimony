@@ -193,7 +193,7 @@ const page = () => {
               />
             </div>
             <div>
-              <h1 className="text-sm md:text-base pt-5 font-bold text-[#4a2f1c] mb-2">
+              <h1 className="text-sm md:text-base pt-5  text-[#4a2f1c] mb-2">
                 {formatValue(p.pname)}
               </h1>
               {/* <h1 className="text-3xl font-bold text-[#4a2f1c] mb-2">
@@ -203,12 +203,11 @@ const page = () => {
                 Profile Id :{" "}
                 <span className="font-bold">{p.profile_id || p.id}</span>
               </div> */}
-              <h1 className="text-sm md:text-base font-bold text-[#4a2f1c] mb-2">
+              <h1 className="text-sm md:text-base text-[#4a2f1c] mb-2">
                 {formatValue(p.education)}
               </h1>
-              <div className="inline-block px-4 py-1 border-1 border-neutral-400  text-[#4a2f1c] font-bold  rounded-lg text-2lg  my-1">
-                Profile Id :{" "}
-                <span className="font-bold">{p.profile_id || p.id}</span>
+              <div className="inline-block px-4 py-1 border-1 border-neutral-400  text-[#4a2f1c]  rounded-lg text-2lg  my-1">
+                Profile Id : <span className="">{p.profile_id || p.id}</span>
               </div>
             </div>
           </div>

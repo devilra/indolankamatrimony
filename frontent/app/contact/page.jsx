@@ -5,6 +5,7 @@ import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa"; // Our 
 import { FaHandshakeSimple } from "react-icons/fa6"; // Customer Relations Icon
 import { RiWhatsappFill } from "react-icons/ri";
 import { IoTimerOutline } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 
 // ⚙️ Card Data Array
 const contactData = [
@@ -229,7 +230,7 @@ const Contact = () => {
           </div>
 
           <div className="p-8 bg-white flex-1">
-            <p className="text-red-400 font-semibold tracking-widest text-sm mb-1">
+            <p className="text-red-400 pl-8 md:pl-0 lg:pl-5 font-semibold tracking-widest text-sm mb-1">
               LET'S TALK
             </p>
             <h2 className="text-3xl font-bold text-gray-800 mb-6">
@@ -308,6 +309,9 @@ const Contact = () => {
                   rows="4" // 4 lines height
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
                 />
+              </div>
+              <div className="py-5">
+                <Button>Submit</Button>
               </div>
             </form>
           </div>
