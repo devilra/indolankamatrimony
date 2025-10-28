@@ -48,7 +48,7 @@ const navItems = [
   },
 ];
 
-const Sidebar = () => {
+const DashboardNavbar = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
@@ -192,4 +192,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default DashboardNavbar;

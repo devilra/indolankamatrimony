@@ -57,11 +57,9 @@ export const logoutAdmin = createAsyncThunk(
       return response.data?.message || "Logout successful";
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
+        error?.response?.data?.message || // from backend
+        error?.message || // from axios / network
+        "Something went wrong during login"; // fallback
       return thunkAPI.rejectWithValue(message);
     }
   }
