@@ -173,6 +173,21 @@ const Partners = () => {
 
   return (
     <div className="max-w-6xl mx-auto pb-11">
+      <div className="pt-5">
+        <h1 className="cinzel_font text-center font-semibold text-2xl md:text-3xl lg:text-2xl text-[#C48C46]">
+          Looking for Partner
+        </h1>
+        <div className="flex justify-center items-center space-x-2  relative">
+          <img
+            src="/leaf/l1.webp"
+            className="w-30 h-30 object-contain rotate-180 animate-leaffly "
+          />
+          <img
+            src="/leaf/l1.webp"
+            className="w-30 h-30 object-contain animate-leaffly "
+          />
+        </div>
+      </div>
       {/* Search Input with Loader */}
       <div className="mb-8 max-w-xl mx-auto">
         <InputGroup>

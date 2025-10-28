@@ -42,6 +42,10 @@ const HomePage = () => {
         <BannerCarousel />
       </div>
 
+      <div>
+        <Partners />
+      </div>
+
       {/* section-----------------------2 */}
 
       <div>
@@ -49,9 +53,6 @@ const HomePage = () => {
       </div>
       <div className="bg-gradient-to-r from-amber-50/50 to-amber-100/40">
         <StatsSection />
-        <div>
-          <Partners />
-        </div>
       </div>
     </div>
   );

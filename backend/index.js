@@ -6,6 +6,8 @@ require("dotenv").config();
 const profileRoutes = require("./routes/profileRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const adminAuthRoutes = require("./routes/AdminUserRoutes");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 
 const app = express();
@@ -26,6 +28,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 // static folder -> frontend access for uploaded images
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -43,6 +46,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/profile", profileRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/admin", adminRoutes); // Base path /api/admin
+app.use("/api/adminAuth", adminAuthRoutes);
 
 // only Cpanel hosting purpose using steps
 
