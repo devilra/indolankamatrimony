@@ -120,3 +120,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+.metal_mania {
+  font-family: var(--font-metal-mania);
+  letter-spacing: 4px;
+}
+
+.audio-wide {
+  font-family: var(--font-audiowide);
+  letter-spacing: 4px;
+}

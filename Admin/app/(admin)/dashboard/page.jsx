@@ -1,7 +1,11 @@
 import React from "react";
 
 const page = () => {
-  return <div>Hello Dashboard layout</div>;
+  return (
+    <div className="h-screen flex justify-center items-center">
+      Hello Dashboard layout
+    </div>
+  );
 };
 
 export default page;

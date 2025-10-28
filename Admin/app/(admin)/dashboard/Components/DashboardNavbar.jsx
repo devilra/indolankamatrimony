@@ -111,47 +111,58 @@ const DashboardNavbar = () => {
       {/* ======================================================= */}
 
       <aside
-        className={`w-64 bg-gray-800 text-white min-h-screen p-4 shadow-2xl fixed top-0 left-0 z-30 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`bg-gray-800 text-white h-screen lg:h-[100px] lg:flex lg:justify-between lg:items-center p-4 shadow-2xl fixed lg:relative top-0 left-0 z-30 lg:z-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } `}
       >
-        <h2 className="text-3xl font-extrabold  mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
-          Admin Panel
+        <h2 className="text-3xl audio-wide font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-neutral-200 to-purple-500">
+          INDOLANKAMATRIMONY
         </h2>
 
-        <nav>
-          <ul>
-            {navItems.map((item) => {
-              const IconComponent = item.icon;
-              const active = isActive(item.href);
+        <div className="lg:flex lg:items-center">
+          <nav>
+            <ul className="lg:flex">
+              {navItems.map((item) => {
+                const IconComponent = item.icon;
+                const active = isActive(item.href);
 
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center p-3 rounded-xl transition duration-200 ${
-                      active
-                        ? "bg-gray-200 text-gray-900 shadow-md font-semibold"
-                        : "hover:bg-gray-700 hover:text-indigo-300 text-gray-300"
-                    }`}
-                  >
-                    <IconComponent size={20} className="mr-3" />
-                    <span className="font-medium">{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-        {/* Logout Button */}
-        <div className="absolute bottom-0 left-0 w-full p-4">
-          <button
-            onClick={() => setIsLogoutDialogOpen(true)}
-            className="w-full p-3 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-xl transition shadow-lg"
-          >
-            <LogOut size={20} className="mr-2" />
-            <span className="font-semibold">Logout</span>
-          </button>
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className={`flex items-center p-3 rounded-xl transition duration-200 ${
+                        active
+                          ? "bg-gray-200 text-gray-900 shadow-md font-semibold"
+                          : "hover:bg-gray-700 hover:text-indigo-300 text-gray-300"
+                      }`}
+                    >
+                      <IconComponent size={20} className="mr-3" />
+                      <span className="font-medium">{item.label}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="absolute lg:hidden  bottom-0 left-0 w-full p-4">
+            <button
+              onClick={() => setIsLogoutDialogOpen(true)}
+              className="w-full p-3 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-xl transition shadow-lg"
+            >
+              <LogOut size={20} className="mr-2" />
+              <span className="font-semibold">Logout</span>
+            </button>
+          </div>
+          <div className="hidden md:hidden lg:block  p-4">
+            <button
+              onClick={() => setIsLogoutDialogOpen(true)}
+              className="w-full p-3 flex items-center justify-center bg-red-600 hover:bg-red-700 rounded-xl transition shadow-lg"
+            >
+              <LogOut size={20} className="mr-2" />
+              <span className="font-semibold">Logout</span>
+            </button>
+          </div>
         </div>
       </aside>
 

@@ -222,7 +222,7 @@ const AllProfiles = () => {
   ];
 
   return (
-    <div className="lg:pr-[250px]">
+    <div className="lg:p-5">
       <h1 className="text-3xl font-bold mb-6 text-gray-900">
         👥 Profiles List
       </h1>
