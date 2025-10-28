@@ -3,11 +3,14 @@ const {
   register,
   login,
   logout,
+  getMe,
 } = require("../controllers/AdminUserController");
+const { protectAdminRoute } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
+router.get("/getMe", protectAdminRoute, getMe);
 
 module.exports = router;

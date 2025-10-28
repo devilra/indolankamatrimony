@@ -24,7 +24,21 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReduxProvider>{children}</ReduxProvider>
+        <ReduxProvider>
+          {children}
+          <Toaster
+            toastOptions={{
+              className: "rounded-2xl border shadow-lg",
+              style: {
+                //background: "#1e1e1e",
+                // color: "#fff",
+                fontSize: "16px",
+                //color: "white",
+                borderLeft: "10px solid ",
+              },
+            }}
+          />
+        </ReduxProvider>
       </body>
     </html>
   );

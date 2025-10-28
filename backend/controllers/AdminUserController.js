@@ -42,6 +42,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  //console.log(req.body);
   try {
     const { email, password } = req.body;
     const admin = await Admin.findOne({ where: { email } });
@@ -67,7 +68,7 @@ exports.login = async (req, res) => {
 
     res.cookie("admin_auth_token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
@@ -83,10 +84,36 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.getMe = async (req, res) => {
+  //console.log("Get Me called");
+  try {
+    const admin = await Admin.findByPk(req.adminId, {
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+
+    if (!admin) {
+      // இந்த பிழை பெரும்பாலும் JWT-யில் உள்ள ID தவறாக இருக்கும்போது நிகழும்
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    res.status(200).json({
+      status: true,
+      admin: admin,
+    });
+  } catch (error) {
+    console.error("Get Me Error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error while fetching admin details." });
+  }
+};
+
 exports.logout = async (req, res) => {
   res.clearCookie("admin_auth_token", {
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: "none",
   });
 
