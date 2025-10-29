@@ -227,70 +227,74 @@ const AllProfiles = () => {
         👥 Profiles List
       </h1>
 
-      {/* Search Input */}
-      {/* ... Search Input section is unchanged ... */}
-      <div className="flex-1 min-w-[200px]">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Search (ID, Name, Email)
-        </label>
-        <div className="flex rounded-md shadow-sm">
-          <input
-            type="text"
-            className="w-full md:w-1/2 lg:w-1/2 flex-1 min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Start typing to search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none flex items-center">
+      <div className="lg:flex lg:w-full lg:justify-between">
+        {/* Search Input */}
+        {/* ... Search Input section is unchanged ... */}
+        <div className="lg:flex lg:gap-5 lg:items-center">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Search (ID, Name, Email) :
+          </label>
+          <div className="flex rounded-md shadow-sm">
+            <input
+              type="text"
+              className="w-full md:w-full lg:w-full  min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Start typing to search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {/* <button className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-r-md hover:bg-indigo-700 focus:outline-none flex items-center">
             <FaSearch className="mr-1" /> Search
-          </button>
+          </button> */}
+          </div>
         </div>
-      </div>
 
-      {/* Marital Status Filter */}
-      {/* ... Marital Status Filter section is unchanged ... */}
-      <div className="min-w-[150px] mt-5 ">
-        <label
-          htmlFor="marital-status"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Marital Status
-        </label>
-        <select
-          id="marital-status"
-          value={filterMaritalStatus}
-          onChange={(e) => setFilterMaritalStatus(e.target.value)}
-          className="block w-full md:w-1/2 lg:w-1/4  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          {MARITAL_STATUS_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="lg:flex lg:gap-5 lg:items-center ">
+          {/* Marital Status Filter */}
+          {/* ... Marital Status Filter section is unchanged ... */}
+          <div className=" lg:flex mt-5 lg:items-center lg:gap-3">
+            <label
+              htmlFor="marital-status"
+              className="block text-sm  font-medium text-gray-700 mb-1"
+            >
+              M.Status:
+            </label>
+            <select
+              id="marital-status"
+              value={filterMaritalStatus}
+              onChange={(e) => setFilterMaritalStatus(e.target.value)}
+              className="block w-full md:w-1/2 lg:w-full  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              {MARITAL_STATUS_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Gender Filter */}
-      {/* ... Gender Filter section is unchanged ... */}
-      <div className="min-w-[150px] mt-5">
-        <label
-          htmlFor="gender"
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
-          Gender
-        </label>
-        <select
-          id="gender" // ID சேர்க்கப்பட்டுள்ளது
-          value={filterGender} // Value மற்றும் onChange சேர்க்கப்பட்டுள்ளது
-          onChange={(e) => setFilterGender(e.target.value)}
-          className="block w-full md:w-1/2 lg:w-1/4  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          {GENDER_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+          {/* Gender Filter */}
+          {/* ... Gender Filter section is unchanged ... */}
+          <div className="min-w-[150px] lg:flex lg:items-center lg:gap-3 mt-5">
+            <label
+              htmlFor="gender"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Gender:
+            </label>
+            <select
+              id="gender"
+              value={filterGender}
+              onChange={(e) => setFilterGender(e.target.value)}
+              className="block w-full md:w-1/2 lg:w-full  px-2 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              {GENDER_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
       {/* Profile Counts Section */}

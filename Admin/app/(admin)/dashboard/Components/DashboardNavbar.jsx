@@ -27,14 +27,15 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAdmin, reset } from "@/app/redux/Slices/adminAuthSlice";
 import { toast } from "sonner";
+import { MdAppRegistration } from "react-icons/md";
 
 const DASHBOARD_BASE_PATH = "/dashboard";
 
 const navItems = [
   {
     href: `${DASHBOARD_BASE_PATH}`,
-    label: "Dashboard",
-    icon: LayoutDashboard,
+    label: "Register Profile",
+    icon: MdAppRegistration,
   },
   {
     href: `${DASHBOARD_BASE_PATH}/profiles`,
@@ -111,11 +112,11 @@ const DashboardNavbar = () => {
       {/* ======================================================= */}
 
       <aside
-        className={`bg-gray-800 text-white h-screen lg:h-[100px] lg:flex lg:justify-between lg:items-center p-4 shadow-2xl fixed lg:relative top-0 left-0 z-30 lg:z-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`bg-gray-800 text-white  h-screen lg:h-[100px] lg:flex lg:justify-between lg:items-center p-4 shadow-2xl fixed lg:relative top-0 left-0 z-30 lg:z-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } `}
       >
-        <h2 className="text-3xl audio-wide font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-neutral-200 to-purple-500">
+        <h2 className="text-[15px] md:text-xl pb-5 md:pb-5 lg:pb-0 lg:text-2xl audio-wide font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-neutral-200 to-purple-500">
           INDOLANKAMATRIMONY
         </h2>
 

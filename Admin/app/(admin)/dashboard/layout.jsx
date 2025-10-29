@@ -43,7 +43,7 @@ const DashboardLayout = ({ children }) => {
         {/* Right Content Area */}
         {/* Sidebar width (w-64) ku equal-a margin (ml-64) kodukkanum */}
         <main className="p-4  pt-20 lg:p-0">
-          <div className="max-w-7xl overflow-x-hidden mx-auto">
+          <div className=" overflow-x-hidden ">
             <DashboardNavbar />
             {children} {/* 👈 Active route-oda content inga render aagum */}
             <Toaster

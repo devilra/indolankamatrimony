@@ -1,9 +1,10 @@
 import React from "react";
+import RegisterProfileDashboard from "./Components/RegisterProfileDashboard";
 
 const page = () => {
   return (
-    <div className="h-screen flex justify-center items-center">
-      Hello Dashboard layout
+    <div className="">
+      <RegisterProfileDashboard />
     </div>
   );
 };
