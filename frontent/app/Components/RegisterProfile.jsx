@@ -1052,6 +1052,39 @@ const dropdownData = {
 
   "Father's Occupation": uniqueFatherOccupations,
   "Mother's Occupation": uniqueMotherOccupations,
+  Height: [
+    "4ft 6in - 137cm",
+    "4ft 7in - 139cm",
+    "4ft 8in - 142cm",
+    "4ft 9in - 144cm",
+    "4ft 10in - 147cm",
+    "4ft 11in - 149cm",
+    "5ft - 152cm",
+    "5ft 1in - 154cm",
+    "5ft 2in - 157cm",
+    "5ft 3in - 160cm",
+    "5ft 4in - 162cm",
+    "5ft 5in - 165cm",
+    "5ft 6in - 167cm",
+    "5ft 7in - 170cm",
+    "5ft 8in - 172cm",
+    "5ft 9in - 175cm",
+    "5ft 10in - 177cm",
+    "5ft 11in - 180cm",
+    "6ft - 182cm",
+    "6ft 1in - 185cm",
+    "6ft 2in - 187cm",
+    "6ft 3in - 190cm",
+    "6ft 4in - 193cm",
+    "6ft 5in - 195cm",
+    "6ft 6in - 198cm",
+    "6ft 7in - 200cm",
+    "6ft 8in - 203cm",
+    "6ft 9in - 205cm",
+    "6ft 10in - 208cm",
+    "6ft 11in - 210cm",
+    "7ft - 213cm",
+  ],
 };
 
 // 🔁 Dropdown field mapping (First code base-la update aagirukku)
@@ -1084,7 +1117,7 @@ const fieldOrder = [
   { label: "Rasi", type: "select" },
   { label: "Nakshatram", type: "select" },
   { label: "Laknam", type: "select" },
-  { label: "Height", name: "height", type: "input" },
+  { label: "Height", name: "height", type: "select" },
   { label: "Weight", name: "weight", type: "input" },
   { label: "Color", type: "select" },
   { label: "Marital Status", type: "select" },
@@ -1186,6 +1219,8 @@ export default function RegisterProfile() {
     addressdetails: "",
     phonenumber: "",
   });
+
+  console.log(formData);
 
   const [image, setImage] = useState(null);
   const [dobDate, setDobDate] = useState(null);

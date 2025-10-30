@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "./Components/Sidebar";
 import { Toaster } from "sonner";
 import DashboardNavbar from "./Components/DashboardNavbar";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -36,32 +37,34 @@ const DashboardLayout = ({ children }) => {
     //   </div>
     // </div>
 
-    <div className="overflow-x-hidden">
-      <div className="">
-        <div>{/* <Sidebar /> */}</div>
+    <ProtectedRoute>
+      <div className="overflow-x-hidden">
+        <div className="">
+          <div>{/* <Sidebar /> */}</div>
 
-        {/* Right Content Area */}
-        {/* Sidebar width (w-64) ku equal-a margin (ml-64) kodukkanum */}
-        <main className="p-4  pt-20 lg:p-0">
-          <div className=" overflow-x-hidden ">
-            <DashboardNavbar />
-            {children} {/* 👈 Active route-oda content inga render aagum */}
-            <Toaster
-              toastOptions={{
-                className: "rounded-2xl border shadow-lg",
-                style: {
-                  //background: "#1e1e1e",
-                  // color: "#fff",
-                  fontSize: "16px",
-                  //color: "white",
-                  borderLeft: "10px solid ",
-                },
-              }}
-            />
-          </div>
-        </main>
+          {/* Right Content Area */}
+          {/* Sidebar width (w-64) ku equal-a margin (ml-64) kodukkanum */}
+          <main className="p-4  pt-20 lg:p-0">
+            <div className=" overflow-x-hidden ">
+              <DashboardNavbar />
+              {children} {/* 👈 Active route-oda content inga render aagum */}
+              <Toaster
+                toastOptions={{
+                  className: "rounded-2xl border shadow-lg",
+                  style: {
+                    //background: "#1e1e1e",
+                    // color: "#fff",
+                    fontSize: "16px",
+                    //color: "white",
+                    borderLeft: "10px solid ",
+                  },
+                }}
+              />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 };
 

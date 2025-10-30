@@ -227,7 +227,7 @@ const AllProfiles = () => {
         👥 Profiles List
       </h1>
 
-      <div className="lg:flex lg:w-full lg:justify-between">
+      <div className="lg:flex  lg:justify-between lg:items-center">
         {/* Search Input */}
         {/* ... Search Input section is unchanged ... */}
         <div className="lg:flex lg:gap-5 lg:items-center">

@@ -111,7 +111,7 @@ const DashboardNavbar = () => {
       {/* 3. The Actual Sidebar */}
       {/* ======================================================= */}
 
-      <aside
+      <div
         className={`bg-gray-800 text-white  h-screen lg:h-[100px] lg:flex lg:justify-between lg:items-center p-4 shadow-2xl fixed lg:relative top-0 left-0 z-30 lg:z-0 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } `}
@@ -165,7 +165,7 @@ const DashboardNavbar = () => {
             </button>
           </div>
         </div>
-      </aside>
+      </div>
 
       {/* ======================================================= */}
       {/* 5. Logout Confirmation Dialog */}
