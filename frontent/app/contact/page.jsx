@@ -6,6 +6,8 @@ import { FaHandshakeSimple } from "react-icons/fa6"; // Customer Relations Icon
 import { RiWhatsappFill } from "react-icons/ri";
 import { IoTimerOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
+import API from "../api";
+import { toast } from "sonner";
 
 // ⚙️ Card Data Array
 const contactData = [
@@ -157,11 +159,56 @@ const Contact = () => {
   };
 
   const [loading, setLoading] = useState(false);
-
   const [alert, setAlert] = useState({
     type: "",
     message: "", // success, error
   });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.message
+    ) {
+      toast.error("Please fill all fields");
+      return;
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!phoneRegex.test(formData.phone)) {
+      toast.error("Please enter a valid 10-digit phone number");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await API.post("/contact/submit", formData);
+      if (res.data.success) {
+        toast.success("Contact submitted successfully!");
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        toast.error(res.data.message || "Something went wrong");
+      }
+    } catch (error) {
+      toast.error("Failed to send enquiry. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="mt-20">
@@ -250,7 +297,7 @@ const Contact = () => {
               </div>
             )}
 
-            <form>
+            <form className="space-y-3" onSubmit={handleSubmit}>
               <div>
                 <label className="block text-sm font-semibold text-gray-600 mb-1">
                   Name:
@@ -258,8 +305,8 @@ const Contact = () => {
                 <input
                   type="text"
                   name="name"
-                  //value={formData.name}
-                  //onChange={handleChange}
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Enter your full name"
                   required
                   // Input Styles: w-full, p-3, border-gray-300, rounded-md, focus ring
@@ -273,8 +320,8 @@ const Contact = () => {
                 <input
                   type="email"
                   name="email"
-                  //value={formData.email}
-                  //onChange={handleChange}
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter email"
                   required
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -287,8 +334,8 @@ const Contact = () => {
                 <input
                   type="tel"
                   name="phone"
-                  //value={formData.phone}
-                  //onChange={handleChange}
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="Enter phone number"
                   required
                   minLength="10"
@@ -302,8 +349,8 @@ const Contact = () => {
                 </label>
                 <textarea
                   name="message"
-                  //value={formData.message}
-                  //onChange={handleChange}
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Enter message"
                   required
                   rows="4" // 4 lines height
@@ -311,7 +358,9 @@ const Contact = () => {
                 />
               </div>
               <div className="py-5">
-                <Button>Submit</Button>
+                <Button disabled={loading} type="submit">
+                  {loading ? "Sending..." : "Submit"}
+                </Button>
               </div>
             </form>
           </div>

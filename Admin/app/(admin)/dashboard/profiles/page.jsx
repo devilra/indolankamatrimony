@@ -17,10 +17,12 @@ import { toast } from "sonner";
 // ----------------------------------------------------
 const MARITAL_STATUS_OPTIONS = [
   "All",
-  "Single",
-  "Married",
+  "UnMarried",
   "Divorced",
   "Widowed",
+  "Separated",
+  "Married",
+  "Annulled",
 ];
 const GENDER_OPTIONS = ["All", "Male", "Female"];
 
