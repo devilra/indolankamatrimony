@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react"; // ✅ useState added
+import React, { useCallback, useEffect, useState } from "react"; // ✅ useState added
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProfiles } from "../redux/profileSlice";
 import { useRouter } from "next/navigation";
@@ -18,74 +18,33 @@ import { Label } from "@/components/ui/label";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL_PRODUCTION;
 
-// 🔑 Session Storage Keys
-const SESSION_KEYS = {
-  SEARCH: "profileSearch",
-  GENDER: "profileGender",
-  MARITAL_STATUS: "profileMaritalStatus",
-  CASTE: "profileCaste",
-
-  // 💡 NEW: Profile Details Page-க்குச் செல்லும் போது cleanup-ஐ தவிர்க்கும் flag
-  NAVIGATING_TO_DETAILS: "isNavigatingToDetails",
-};
-
-// 🔥 Helper function to get initial state from Session Storage
-const getInitialState = (key, defaultValue) => {
-  // Client side rendering-la mattum session storage access panna mudiyum
-  if (typeof window !== "undefined" && window.sessionStorage.getItem(key)) {
-    return window.sessionStorage.getItem(key) || defaultValue;
-  }
-  return defaultValue;
-};
-
-// 🔥 Helper function to update state and Session Storage
-const updateStateAndSession = (key, value, setter) => {
-  setter(value);
-  if (typeof window !== "undefined") {
-    window.sessionStorage.setItem(key, value);
-  }
-};
-
 const ProfileGallery = () => {
   const dispatch = useDispatch();
   const { profiles, loading, error } = useSelector((state) => state.profile);
   const router = useRouter();
-
-  // ✅ State initialization: Session Storage-la irundhu value-ai load seigirōm.
-  const [search, setSearch] = useState(
-    getInitialState(SESSION_KEYS.SEARCH, "")
-  );
-  const [gender, setGender] = useState(
-    getInitialState(SESSION_KEYS.GENDER, "All")
-  );
-  const [maritalStatus, setMaritalStatus] = useState(
-    getInitialState(SESSION_KEYS.MARITAL_STATUS, "All")
-  );
-  const [caste, setCaste] = useState(
-    getInitialState(SESSION_KEYS.CASTE, "All")
-  );
-
+  const [search, setSearch] = useState("");
+  const [gender, setGender] = useState("All");
+  const [maritalStatus, setMaritalStatus] = useState("All");
+  const [caste, setCaste] = useState("All");
+  // ✅ New State: Initial load mudinjirucha nu therinjukka
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
 
   // Helper function to check if a filter value is the "All" default
   const getFilterValue = (value) => (value !== "All" ? value : "");
 
-  // Debounce Utility Function (unchanged)
+  // 🔥 Debounce Utility Function
   const debounce = (func, delay) => {
     let timeoutId;
-    const debounced = function (...args) {
-      // Add debounced reference for cleanup
+    return function (...args) {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         func.apply(this, args);
-        debounced.__timeoutId = null; // Clear ID after execution
       }, delay);
-      debounced.__timeoutId = timeoutId; // Store ID
     };
-    return debounced;
   };
 
-  // --- Filter Options (Unchanged) ---
+  //console.log(profiles);
+
   const genderOptions = ["All", "Male", "Female"];
   const maritalOptions = [
     "All",
@@ -253,110 +212,61 @@ const ProfileGallery = () => {
     "Yadav",
     "Yadava Naidu",
   ];
-  // --- End Filter Options ---
 
-  // API Fetch Logic (Unchanged)
-  const fetchProfiles = useCallback(
-    (currentSearch) => {
-      const filters = {
-        // currentSearch debounce-kku, illati state-la irukkaradhu
-        search: currentSearch || search,
-        gender: getFilterValue(gender),
-        maritalStatus: getFilterValue(maritalStatus),
-        caste: getFilterValue(caste),
-      };
-      dispatch(getAllProfiles(filters));
-    },
-    [dispatch, search, gender, maritalStatus, caste]
-  );
+  const fetchProfiles = useCallback(() => {
+    const filters = {
+      search: search,
+      gender: gender !== "All" ? gender : "",
+      maritalStatus: maritalStatus !== "All" ? maritalStatus : "",
+      caste: caste !== "All" ? caste : "",
+    };
 
-  // Debounced Search Handler
-  const debouncedFetchProfiles = useMemo(
-    () => debounce((currentSearch) => fetchProfiles(currentSearch), 700),
-    [fetchProfiles]
-  );
+    dispatch(getAllProfiles(filters));
+  }, [dispatch, search, gender, maritalStatus, caste]);
 
-  // Add a cancel method to the debounced function for cleanup
-  useMemo(() => {
-    debouncedFetchProfiles.cancel = () =>
-      clearTimeout(debouncedFetchProfiles.__timeoutId);
-  }, [debouncedFetchProfiles]);
+  const calculateAge = (dob) => {
+    if (!dob) return "";
+    const today = new Date();
+    console.log("Today", today);
+    const birthDate = new Date(dob);
+    console.log("birthDate", birthDate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
 
-  // 🔑 Search Input Change Handler (Updates State & Session Storage)
-  const handleSearchChange = (e) => {
-    const newSearch = e.target.value;
-    // setSearch(newSearch); // Direct state change is replaced by the helper
-    updateStateAndSession(SESSION_KEYS.SEARCH, newSearch, setSearch);
-    debouncedFetchProfiles(newSearch);
-  };
-
-  // 🔑 Select Filter Change Handler (Updates State & Session Storage)
-  const handleSelectChange = (key, value, setter) => {
-    updateStateAndSession(key, value, setter);
-    // debouncedFetchProfiles is NOT needed here, as the useEffect below handles the API call
-  };
-
-  // Effect for Non-Search Filters (Gender, Status, Caste)
-  useEffect(() => {
-    // Session Storage-la irukkum values state-kku set aana udan, data fetch seiya.
-    if (isInitialLoadComplete) {
-      fetchProfiles();
+    // Check if birthday has passed this year
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
     }
-    // Clean-up the debounced function on unmount
-    return () =>
-      debouncedFetchProfiles.cancel && debouncedFetchProfiles.cancel();
-  }, [gender, maritalStatus, caste, isInitialLoadComplete, fetchProfiles]);
 
-  // Initial Load Effect (Unchanged)
+    return age >= 0 ? age.toString() : "";
+  };
+
+  // ✅ Initial data fetch logic
   useEffect(() => {
-    if (!isInitialLoadComplete) {
-      // First load (or back button press), fetch with initial state (from Session Storage)
-      fetchProfiles();
+    // 1. Initial Load-la, oru thadavai API call pannunga
+    //console.log("API Called");
+
+    fetchProfiles();
+
+    if (profiles.length === 0 && !error && !isInitialLoadComplete) {
+      dispatch(getAllProfiles());
+    }
+  }, [dispatch, profiles.length, error, isInitialLoadComplete]);
+
+  // ✅ New useEffect: Loading mudinja udane InitialLoadComplete- true set pannunga.
+  useEffect(() => {
+    // Loading mudinjadhum (success/failure) isInitialLoadComplete true aagum
+    if (!loading && !isInitialLoadComplete) {
       setIsInitialLoadComplete(true);
     }
-  }, [isInitialLoadComplete, fetchProfiles]);
+  }, [loading, isInitialLoadComplete]);
+  // 💡 Note: Indha logic, profiles.length == 0 aanaalum, API call-uku appuram dhaan true aagum.
 
-  // 💡 MODIFIED: Component Unmount (Route change) ஆகும் போது Session Storage-ஐ Clear செய்யும் Effect
-  useEffect(() => {
-    // Component Mount ஆகும் போது, profile details page-ல் இருந்து back வந்திருந்தால் flag-ஐ clear செய்ய வேண்டும்
-    if (typeof window !== "undefined") {
-      window.sessionStorage.removeItem(SESSION_KEYS.NAVIGATING_TO_DETAILS);
-    }
-
-    return () => {
-      // Component Unmount ஆகும் போது (வேறு route-க்கு செல்லும் போது)
-      if (typeof window !== "undefined") {
-        const isNavigatingToDetails = window.sessionStorage.getItem(
-          SESSION_KEYS.NAVIGATING_TO_DETAILS
-        );
-
-        if (isNavigatingToDetails === "true") {
-          // Profile Details-க்கு போனால், Session-ஐ clear செய்ய வேண்டாம்.
-          console.log(
-            "Skipping session cleanup: Navigating to Profile Details page."
-          );
-          // Flag-ஐ உடனடியாக நீக்க வேண்டாம், ஏனெனில் Details page-இல் இருந்து திரும்பும்போது அது தேவைப்படும்.
-          // Details page-ஐ விட்டு வெளியேறும்போது அது Clear ஆகிவிடும்.
-        } else {
-          // Home, Service, Contact, About போன்ற வேறு எந்த route-க்குச் சென்றாலும் clean up செய்ய வேண்டும்.
-          console.log(
-            "Clearing Profile Gallery Session Filters on navigation away."
-          );
-          window.sessionStorage.removeItem(SESSION_KEYS.SEARCH);
-          window.sessionStorage.removeItem(SESSION_KEYS.GENDER);
-          window.sessionStorage.removeItem(SESSION_KEYS.MARITAL_STATUS);
-          window.sessionStorage.removeItem(SESSION_KEYS.CASTE);
-        }
-      }
-    };
-  }, []); // Empty dependency array means this runs only on mount and cleanup on unmount
-
-  // 💡 MODIFIED: Handle click on a profile card
+  // Handle click on a profile card
   const handleProfileClick = (id) => {
-    // Profile Details page-க்கு செல்லும் முன் flag-ஐ செட் செய்கிறோம்.
-    if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(SESSION_KEYS.NAVIGATING_TO_DETAILS, "true");
-    }
     router.push(`/profile/${id}`);
   };
 
@@ -473,7 +383,7 @@ const ProfileGallery = () => {
               type="text"
               placeholder="Search by ID, Name, Email.."
               value={search}
-              onChange={handleSearchChange}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full"
             />
           </div>
@@ -484,12 +394,7 @@ const ProfileGallery = () => {
               <Label className="text-[12px] md:text-[12px] lg:text-[13px]">
                 Gender:
               </Label>
-              <Select
-                value={gender}
-                onValueChange={(value) =>
-                  handleSelectChange(SESSION_KEYS.GENDER, value, setGender)
-                }
-              >
+              <Select value={gender} onValueChange={setGender}>
                 <SelectTrigger className="w-full md:w-[100px] py-5 ">
                   <SelectValue placeholder="Gender" />
                 </SelectTrigger>
@@ -508,16 +413,7 @@ const ProfileGallery = () => {
               <Label className="text-[12px] md:text-[12px] lg:text-[13px]">
                 M.Status:
               </Label>
-              <Select
-                value={maritalStatus}
-                onValueChange={(value) =>
-                  handleSelectChange(
-                    SESSION_KEYS.MARITAL_STATUS,
-                    value,
-                    setMaritalStatus
-                  )
-                }
-              >
+              <Select value={maritalStatus} onValueChange={setMaritalStatus}>
                 <SelectTrigger className="w-full md:w-[100px] py-5 ">
                   <SelectValue placeholder="Marital Status" />
                 </SelectTrigger>
@@ -536,12 +432,7 @@ const ProfileGallery = () => {
               <Label className="text-[12px] md:text-[12px] lg:text-[13px]">
                 Caste:
               </Label>
-              <Select
-                value={caste}
-                onValueChange={(value) =>
-                  handleSelectChange(SESSION_KEYS.CASTE, value, setCaste)
-                }
-              >
+              <Select value={caste} onValueChange={setCaste}>
                 <SelectTrigger className="w-full md:w-[100px] py-5">
                   <SelectValue placeholder="Caste" />
                 </SelectTrigger>

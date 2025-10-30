@@ -551,67 +551,236 @@ exports.verifyOtpAndRegister = async (req, res) => {
   }
 };
 
+// exports.getAllProfiles = async (req, res) => {
+//   //console.log("Api called");
+//   try {
+//     const { query } = req;
+//     const search = query.search ? query.search.trim() : "";
+
+//     let whereCondition = {};
+
+//     // 🔍 If user types something in search bar
+//     if (search) {
+//       // if number => try to match id also
+//       const isNumber = !isNaN(Number(search));
+
+//       if (isNumber) {
+//         whereCondition = {
+//           [Op.or]: [
+//             {
+//               id: Number(search),
+//             },
+//             {
+//               pname: {
+//                 [Op.like]: `%${search}%`,
+//               },
+//             },
+//           ],
+//         };
+//       } else {
+//         whereCondition = {
+//           pname: {
+//             [Op.like]: `%${search}%`,
+//           },
+//         };
+//       }
+//     }
+
+//     const profiles = await Profile.findAll({
+//       where: whereCondition,
+//       order: [["id", "DESC"]],
+//     });
+
+//     // ❌ No profiles found
+//     if (profiles.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: search
+//           ? `No profiles found for "${search}" ❌`
+//           : "No profiles found ❌",
+//       });
+//     }
+
+//     // ✅ Response success
+//     res.status(200).json({
+//       success: true,
+//       message: search
+//         ? `Profiles matching "${search}" fetched successfully ✅`
+//         : "All profiles fetched successfully ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching profiles:", error);
+//     console.error("❌ Error fetching profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while fetching profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// exports.getAllProfiles = async (req, res) => {
+//   //console.log("Api called");
+//   try {
+//     const { query } = req; // Filters from frontend
+//     const search = query.search ? query.search.trim() : "";
+//     const gender = query.gender ? query.gender.trim() : "";
+//     const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
+//     const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
+
+//     let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
+
+//     if (search) {
+//       const isNumber = !isNaN(Number(search));
+
+//       const searchConditions = {
+//         [Op.or]: [
+//           {
+//             pname: {
+//               [Op.like]: `%${search}%`, // Partial name match
+//             },
+//           }, // ID search-kku number-a irundha mattum
+//           isNumber && {
+//             id: Number(search),
+//           },
+//         ].filter(Boolean), // empty objects-ai remove pannuvom
+//       }; // whereCondition-la search-ai add panna vendum
+//       whereCondition = { ...whereCondition, ...searchConditions };
+//     } // 2. 🚻 Gender Filter
+
+//     if (gender) {
+//       // Frontend-la 'All' empty string-a anuppinaalum, indha check-la filter aagum
+//       whereCondition.gender = gender;
+//     } // 3. 💍 Marital Status Filter
+
+//     if (maritalStatus) {
+//       whereCondition.maritalstatus = maritalStatus; // DB field: maritalstatus
+//     } // 4. ⚜️ Caste Filter (FIXED)
+
+//     if (caste) {
+//       whereCondition.caste = caste; // DB field: caste
+//     } //console.log("Final Sequelize whereCondition:", whereCondition);
+
+//     const profiles = await Profile.findAll({
+//       // whereCondition empty-a irundhaa, ellathaiyum edukkum. Illaati filters apply aagum.
+//       where: whereCondition,
+//       order: [["id", "DESC"]],
+//     }); // ❌ No profiles found
+
+//     if (profiles.length === 0) {
+//       // User-kku nalla message kaatta, current filters-aiyum use panni message create pannalaam.
+//       const filterText = [search, gender, maritalStatus, caste].filter(
+//         (f) => f
+//       );
+//       const message =
+//         filterText.length > 0
+//           ? `No profiles found matching the current filters: ${filterText.join(
+//               ", "
+//             )} ❌`
+//           : "No profiles found ❌";
+
+//       return res.status(404).json({
+//         success: false,
+//         message: message,
+//       });
+//     } // ✅ Response success
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Profiles fetched successfully based on filters ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while fetching profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// waiting for Filter Apply
 exports.getAllProfiles = async (req, res) => {
   //console.log("Api called");
   try {
-    const { query } = req;
+    const { query } = req; // Filters from frontend
     const search = query.search ? query.search.trim() : "";
+    const gender = query.gender ? query.gender.trim() : "";
+    const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
+    const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
 
-    let whereCondition = {};
+    let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
 
-    // 🔍 If user types something in search bar
     if (search) {
-      // if number => try to match id also
-      const isNumber = !isNaN(Number(search));
+      const isNumber = /^\d+$/.test(search); // 💡 Better number check for partial ID search
 
-      if (isNumber) {
-        whereCondition = {
-          [Op.or]: [
-            {
-              id: Number(search),
+      const searchConditions = {
+        [Op.or]: [
+          {
+            // 1. Name Search (Partial match anywhere)
+            pname: {
+              [Op.like]: `%${search}%`,
             },
-            {
-              pname: {
-                [Op.like]: `%${search}%`,
-              },
+          }, // 2. ID Search (Partial match from START)
+          isNumber && {
+            // ID field Number type-ஆக இருந்தாலும், Op.like/Op.startsWith
+            // பயன்படுத்தும் போது Sequelize அதை string-ஆக மாற்றி search செய்யும்.
+            id: {
+              [Op.like]: `${search}%`, // 💡 ID starts with the typed search value
             },
-          ],
-        };
-      } else {
-        whereCondition = {
-          pname: {
-            [Op.like]: `%${search}%`,
           },
-        };
-      }
-    }
+        ].filter(Boolean), // empty objects-ஐ remove பண்ணுவதற்கு
+      };
+      whereCondition = { ...whereCondition, ...searchConditions };
+    } // 2. 🚻 Gender Filter
+
+    if (gender) {
+      whereCondition.gender = gender;
+    } // 3. 💍 Marital Status Filter
+
+    if (maritalStatus) {
+      whereCondition.maritalstatus = maritalStatus; // DB field: maritalstatus
+    } // 4. ⚜️ Caste Filter
+
+    if (caste) {
+      whereCondition.caste = caste; // DB field: caste
+    } //console.log("Final Sequelize whereCondition:", whereCondition);
 
     const profiles = await Profile.findAll({
+      // whereCondition empty-a irundhaa, ellathaiyum edukkum. Illaati filters apply aagum.
       where: whereCondition,
       order: [["id", "DESC"]],
-    });
+    }); // ❌ No profiles found
 
-    // ❌ No profiles found
     if (profiles.length === 0) {
+      // User-kku nalla message kaatta, current filters-ஐயும் use panni message create pannalaam.
+      const filterText = [search, gender, maritalStatus, caste].filter(
+        (f) => f
+      );
+      const message =
+        filterText.length > 0
+          ? `No profiles found matching the current filters: ${filterText.join(
+              ", "
+            )} ❌`
+          : "No profiles found ❌";
+
       return res.status(404).json({
         success: false,
-        message: search
-          ? `No profiles found for "${search}" ❌`
-          : "No profiles found ❌",
+        message: message,
       });
-    }
+    } // ✅ Response success
 
-    // ✅ Response success
     res.status(200).json({
       success: true,
-      message: search
-        ? `Profiles matching "${search}" fetched successfully ✅`
-        : "All profiles fetched successfully ✅",
+      message: "Profiles fetched successfully based on filters ✅",
       count: profiles.length,
       data: profiles,
     });
   } catch (error) {
-    console.error("❌ Error fetching profiles:", error);
     console.error("❌ Error fetching profiles:", error);
     res.status(500).json({
       success: false,

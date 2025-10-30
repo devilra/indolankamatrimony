@@ -66,12 +66,44 @@ export const verifyOtpAndRegister = createAsyncThunk(
   }
 );
 
+// export const getAllProfiles = createAsyncThunk(
+//   "profile/getAllProfiles",
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const res = await API.get("/profile/all");
+//       //console.log(res.data);
+//       return res.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response?.data || { message: "Server error" }
+//       );
+//     }
+//   }
+// );
+
+// ✅ Get single profile by ID
+
 export const getAllProfiles = createAsyncThunk(
-  "profile/getAllProfiles",
-  async (_, { rejectWithValue }) => {
+  "profile/getAllProfiles", // 💡 Ippo filters object-ai argument-a edukkum. Default-a empty object kodukkalam.
+  async (filters = {}, { rejectWithValue }) => {
     try {
-      const res = await API.get("/profile/all");
-      //console.log(res.data);
+      // Filters-ai URL query string-a maattranum
+      const queryParams = new URLSearchParams(filters).toString(); // Empty parameters-ai remove panna vendum:
+      let queryString = "";
+      const validParams = {};
+
+      for (const key in filters) {
+        // Value empty string-a irundha (UI-la 'All' select pannaal), adhai skip pannuvom
+        if (filters[key] && filters[key].trim() !== "") {
+          validParams[key] = filters[key];
+        }
+      } // Validana filters mattum use panni query string create pannuvom
+
+      const finalQueryParams = new URLSearchParams(validParams).toString(); // Endpoint: /profile/all or /profile/all?gender=Male&caste=...
+      const endpoint = `/profile/all${
+        finalQueryParams ? `?${finalQueryParams}` : ""
+      }`;
+      const res = await API.get(endpoint); //console.log("Profiles API Endpoint:", endpoint);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -81,7 +113,6 @@ export const getAllProfiles = createAsyncThunk(
   }
 );
 
-// ✅ Get single profile by ID
 export const getProfileById = createAsyncThunk(
   "profile/getProfileById",
   async (id, { rejectWithValue }) => {
