@@ -42,11 +42,11 @@ const navItems = [
     label: "Profiles List",
     icon: User,
   },
-  {
-    href: `${DASHBOARD_BASE_PATH}/settings`,
-    label: "Settings",
-    icon: Settings,
-  },
+  // {
+  //   href: `${DASHBOARD_BASE_PATH}/settings`,
+  //   label: "Settings",
+  //   icon: Settings,
+  // },
 ];
 
 const DashboardNavbar = () => {

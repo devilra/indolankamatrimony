@@ -201,20 +201,20 @@ const AllProfiles = () => {
         */}
           <button
             // onClick={() => handleEdit(profile.id)} // Function is missing, uncomment when implemented
-            className="text-indigo-600 hover:text-indigo-900 mr-3 p-1"
+            className="text-indigo-600 hover:text-indigo-900 mr-3 p-1 cursor-pointer"
             title="Edit Profile"
           >
             <FaEdit
               onClick={() => handleEdit(profile.id)}
-              className="w-3 h-3"
+              className="w-4 h-4"
             />
           </button>
           <button
             onClick={() => handleDelete(profile.id)} // Function is missing, uncomment when implemented
-            className="text-red-600 hover:text-red-900 p-1"
+            className="text-red-600 hover:text-red-900 p-1 cursor-pointer"
             title="Delete Profile"
           >
-            <FaTrashAlt className="w-3 h-3" />
+            <FaTrashAlt className="w-4 h-4 " />
           </button>
         </td>
       ),

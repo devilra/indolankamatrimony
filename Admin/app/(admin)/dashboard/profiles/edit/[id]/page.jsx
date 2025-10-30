@@ -935,7 +935,7 @@ const EditProfile = () => {
 
   return (
     <div className="max-w-8xl mx-auto shadow-lg rounded-2xl">
-      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+      <div className="lg:max-w-3xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-5 lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
         <form
           onSubmit={handleSubmit}
           className="md:grid flex flex-col md:grid-cols-2 lg:flex lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[670px] lg:grid-cols-1 gap-2 md:gap-3 lg:gap-2"
