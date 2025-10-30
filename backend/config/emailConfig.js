@@ -2,8 +2,22 @@ const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 // Create a transporter object using the default SMTP transport
+// Testing Free gmail send Code
+// const transporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
+// cpanel Email using Transport
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  //secure: process.env.EMAIL_SECURE === "true",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -16,7 +30,7 @@ const transporter = nodemailer.createTransport({
  * @returns {object} Mail options object
  */
 
-exports.adminMailOptions = (data) => ({
+const adminMailOptions = (data) => ({
   from: `Contact Form <${process.env.EMAIL_USER}>`,
   to: process.env.ADMIN_EMAIL,
   subject: `New Contact Enquiry from ${data.name}`,
@@ -39,7 +53,7 @@ exports.adminMailOptions = (data) => ({
  * @returns {object} Mail options object
  */
 
-exports.userMailOptions = (data) => ({
+const userMailOptions = (data) => ({
   from: `[indolanka matrimonial services] ${process.env.EMAIL_USER}`,
   to: data.email,
   subject: `Thank you for your enquiry, ${data.name}!`,
@@ -47,8 +61,8 @@ exports.userMailOptions = (data) => ({
     <h2>Thank you for contacting us!</h2>
     <p>Dear ${data.name},</p>
     <p>We have successfully received your enquiry. Our team will review your message and get back to you shortly.</p>
-    <p>Regards,<br/>The [Your Company Name] Team</p>
+    <p>Regards,<br/>The Indolankamatrimony Team</p>
   `,
 });
 
-module.exports = transporter;
+module.exports = { transporter, adminMailOptions, userMailOptions };

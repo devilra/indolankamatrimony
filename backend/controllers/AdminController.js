@@ -80,77 +80,163 @@ const cloudinary = require("cloudinary").v2; // Image delete panna Cloudinary ve
 //   }
 // };
 
-exports.getAllProfiles = async (req, res) => {
+// exports.getAllProfiles = async (req, res) => {
+//   try {
+//     const { search, gender, maritalStatus } = req.query;
+
+//     let whereCondition = [];
+
+//     // 1. GENDER Filter Logic
+//     if (gender && gender !== "All" && gender.trim()) {
+//       whereCondition.push({
+//         gender: gender, // Exact match
+//       });
+//     }
+
+//     // 2. MARITAL STATUS Filter Logic
+//     if (maritalStatus && maritalStatus !== "All" && maritalStatus.trim()) {
+//       whereCondition.push({
+//         maritalstatus: maritalStatus, // Exact match (DB column name 'maritalstatus' nu assume panrom)
+//       });
+//     }
+
+//     // Search logic (pname, id, phonenumber, email - STARTING WITH)
+//     if (search && search.trim()) {
+//       const trimmedSearch = search.trim();
+
+//       whereCondition = {
+//         [Op.or]: [
+//           // 1. Search by Name (pname) - Starts with
+//           {
+//             pname: {
+//               [Op.like]: `${trimmedSearch}%`, // Starts with logic
+//             },
+//           }, // 2. Search by Email - Starts with
+//           {
+//             email: {
+//               [Op.like]: `${trimmedSearch}%`, // Starts with logic
+//             },
+//           }, // 3. Search by Phone Number - Starts with
+//           {
+//             phonenumber: {
+//               [Op.like]: `${trimmedSearch}%`, // Starts with logic
+//             },
+//           }, // 4. Search by ID - Starts with (ID is converted to String for LIKE operator)
+//           {
+//             [Op.and]: [
+//               // Sequelize-ல் ID-ஐ String-ஆக மாற்றி search செய்ய
+//               Profile.sequelize.where(
+//                 Profile.sequelize.cast(Profile.sequelize.col("id"), "CHAR"),
+//                 {
+//                   [Op.like]: `${trimmedSearch}%`,
+//                 }
+//               ),
+//             ],
+//           },
+//         ],
+//       };
+//     }
+
+//     // Final Where Clause: Ellā conditions-um Op.and-la combine pannuvom
+
+//     let finalWhere =
+//       whereCondition.length > 0 ? { [Op.and]: whereCondition } : {};
+
+//     const profiles = await Profile.findAll({
+//       where: finalWhere,
+//       order: [["id", "DESC"]], // New profiles first
+//     });
+
+//     if (profiles.length === 0) {
+//       let message = "No profiles found ❌";
+//       if (search || gender || maritalStatus) {
+//         // Custom message for filtered searches
+//         const filterList = [
+//           search && `Search: "${search}"`,
+//           gender && `Gender: ${gender}`,
+//           maritalStatus && `Status: ${maritalStatus}`,
+//         ]
+//           .filter(Boolean)
+//           .join(" | ");
+//         message = `No profiles found matching criteria: ${filterList} 🔎`;
+//       }
+//       return res.status(404).json({
+//         success: false,
+//         message: message,
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Profiles fetched successfully for Admin Panel ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Admin GetAllProfiles Error:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Failed to fetch profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+exports.getAllAdminProfiles = async (req, res) => {
+  //console.log(req.query);
+  //console.log("Get all profile run");
   try {
     const { search, gender, maritalStatus } = req.query;
-
     let whereCondition = [];
 
-    // 1. GENDER Filter Logic
+    // 1️⃣ Gender Filter
     if (gender && gender !== "All" && gender.trim()) {
-      whereCondition.push({
-        gender: gender, // Exact match
-      });
+      whereCondition.push({ gender: gender });
     }
 
-    // 2. MARITAL STATUS Filter Logic
+    // 2️⃣ Marital Status Filter
     if (maritalStatus && maritalStatus !== "All" && maritalStatus.trim()) {
-      whereCondition.push({
-        maritalstatus: maritalStatus, // Exact match (DB column name 'maritalstatus' nu assume panrom)
-      });
+      whereCondition.push({ maritalstatus: maritalStatus });
     }
 
-    // Search logic (pname, id, phonenumber, email - STARTING WITH)
+    // 3️⃣ Search Filter (pname, id, phonenumber, email)
     if (search && search.trim()) {
       const trimmedSearch = search.trim();
-
-      whereCondition = {
+      whereCondition.push({
         [Op.or]: [
-          // 1. Search by Name (pname) - Starts with
-          {
-            pname: {
-              [Op.like]: `${trimmedSearch}%`, // Starts with logic
-            },
-          }, // 2. Search by Email - Starts with
-          {
-            email: {
-              [Op.like]: `${trimmedSearch}%`, // Starts with logic
-            },
-          }, // 3. Search by Phone Number - Starts with
-          {
-            phonenumber: {
-              [Op.like]: `${trimmedSearch}%`, // Starts with logic
-            },
-          }, // 4. Search by ID - Starts with (ID is converted to String for LIKE operator)
+          // Name
+          { pname: { [Op.like]: `${trimmedSearch}%` } },
+          // Email
+          { email: { [Op.like]: `${trimmedSearch}%` } },
+          // Phone number
+          { phonenumber: { [Op.like]: `${trimmedSearch}%` } },
+          // ID (Convert to string)
           {
             [Op.and]: [
-              // Sequelize-ல் ID-ஐ String-ஆக மாற்றி search செய்ய
               Profile.sequelize.where(
                 Profile.sequelize.cast(Profile.sequelize.col("id"), "CHAR"),
-                {
-                  [Op.like]: `${trimmedSearch}%`,
-                }
+                { [Op.like]: `${trimmedSearch}%` }
               ),
             ],
           },
         ],
-      };
+      });
     }
 
-    // Final Where Clause: Ellā conditions-um Op.and-la combine pannuvom
-
-    let finalWhere =
+    // 4️⃣ Final where condition
+    const finalWhere =
       whereCondition.length > 0 ? { [Op.and]: whereCondition } : {};
 
+    // 5️⃣ Fetch profiles
     const profiles = await Profile.findAll({
       where: finalWhere,
-      order: [["id", "DESC"]], // New profiles first
+      order: [["id", "DESC"]], // latest first
     });
 
+    // 6️⃣ If no profiles found
     if (profiles.length === 0) {
       let message = "No profiles found ❌";
       if (search || gender || maritalStatus) {
-        // Custom message for filtered searches
         const filterList = [
           search && `Search: "${search}"`,
           gender && `Gender: ${gender}`,
@@ -162,10 +248,11 @@ exports.getAllProfiles = async (req, res) => {
       }
       return res.status(404).json({
         success: false,
-        message: message,
+        message,
       });
     }
 
+    // 7️⃣ Success response
     res.status(200).json({
       success: true,
       message: "Profiles fetched successfully for Admin Panel ✅",

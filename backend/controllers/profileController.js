@@ -552,7 +552,7 @@ exports.verifyOtpAndRegister = async (req, res) => {
 };
 
 exports.getAllProfiles = async (req, res) => {
-  console.log("Api called");
+  //console.log("Api called");
   try {
     const { query } = req;
     const search = query.search ? query.search.trim() : "";

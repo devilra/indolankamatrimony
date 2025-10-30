@@ -9,9 +9,10 @@ const cloudinaryUpload = require("../middleware/cloudinaryUploads");
 const {
   sendOtp,
   verifyOtpAndRegister,
-  getAllProfiles,
+
   getProfileById,
   registerProfile,
+  getAllProfiles,
 } = require("../controllers/profileController");
 
 const router = express.Router();
