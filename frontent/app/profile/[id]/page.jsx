@@ -178,7 +178,10 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
           </div>
           <div className="w-1/2">
             <label className="text-[13px]  text-[#4a2f1c] mb-1 block">To</label>
-            <Select>
+            <Select
+              value={filters.age_to}
+              onValueChange={(v) => handleSelectChange("age_to", v)}
+            >
               <SelectTrigger className="h-10 py-4">
                 <SelectValue placeholder="Max Age" />
               </SelectTrigger>
@@ -204,7 +207,10 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
           <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
             Religion
           </label>
-          <Select>
+          <Select
+            value={filters.religion}
+            onValueChange={(v) => handleSelectChange("religion", v)}
+          >
             <SelectTrigger className="h-10 py-4">
               <SelectValue placeholder="Choose a Religion" />
             </SelectTrigger>
@@ -272,7 +278,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c] ">
               {/* 🚩 FIX: Changed value="" to value="all" */}
-              <SelectItem value="all" className="text-[10px]">
+              <SelectItem value="all" className="text-[13px]">
                 Any Language
               </SelectItem>
               {motherTongueOptions.map((m) => (
@@ -309,6 +315,8 @@ const page = () => {
   const dispatch = useDispatch();
   const pathname = usePathname(); // useDispatch initialize pannuvom
   const [filters, setFilters] = useState(initialFilters);
+
+  console.log(filters);
 
   // 🚩 HIGHLIGHT: Filters Initial State
   // Default empty/any-ku 'all' use panrom
@@ -508,7 +516,7 @@ const page = () => {
             </div>
           </div>
           <div className="w-full md:w-1/2 lg:w-2/5">
-            <FilterForm filters={filters} />
+            <FilterForm filters={filters} setFilters={setFilters} />
           </div>
         </div>
 
