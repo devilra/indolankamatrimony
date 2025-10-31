@@ -109,11 +109,11 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
               <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
-              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Female">
-                Bride (Female)
+              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Bride">
+                Bride
               </SelectItem>
-              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Male">
-                Groom (Male)
+              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Groom">
+                Groom
               </SelectItem>
             </SelectContent>
           </Select>
