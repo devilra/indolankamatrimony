@@ -2,13 +2,305 @@
 
 import { getProfileById } from "@/app/redux/profileSlice";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2, Search } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import defaultBoy from "@/public/default-boy.jpg";
-import defaultGirl from "@/public/default-girl.jpg";
+
+const ageOptions = Array.from({ length: 33 }, (_, i) => 18 + i);
+const heightOptions = [
+  "4ft 6in - 137cm",
+  "4ft 8in - 142cm",
+  "4ft 10in - 147cm",
+  "5ft 0in - 152cm",
+  "5ft 2in - 157cm",
+  "5ft 4in - 163cm",
+  "5ft 6in - 168cm",
+  "5ft 8in - 173cm",
+  "5ft 10in - 178cm",
+  "6ft 0in - 183cm",
+  "6ft 2in - 188cm",
+];
+const religionOptions = [
+  "Hindu",
+  "Christian",
+  "Muslim",
+  "Sikh",
+  "Jain",
+  "Buddhist",
+];
+const casteOptions = [
+  "Ezhava",
+  "Nair",
+  "Vanniyar",
+  "Gounder",
+  "Brahmin",
+  "Reddy",
+];
+const motherTongueOptions = [
+  "Tamil",
+  "Telugu",
+  "Malayalam",
+  "Kannada",
+  "Hindi",
+];
+
+const initialFilters = {
+  looking_for: "Bride",
+  age_from: "18",
+  age_to: "30",
+  height: "all", // Changed from '' to 'all'
+  religion: "all", // Changed from '' to 'all'
+  caste: "all", // Changed from '' to 'all'
+  mother_tongue: "all", // Changed from '' to 'all'
+  profile_id: "",
+};
+
+const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({ ...prev, [name]: e.target.value }));
+  };
+
+  const handleSelectChange = (name, value) => {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  return (
+    <div className="p-4 border rounded-lg  bg-white shadow-xl">
+      <h2 className="text-[14px] font-bold mb-4 text-center text-[#4a2f1c] border-b pb-2">
+        Search Your Partner
+      </h2>
+      {/* Profile ID Search (Input Box) */}
+      {/* <div className="mb-4 w-full">
+        <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          Search by Profile ID
+        </label>
+        <Input
+          type="text"
+          name="profile_id"
+          placeholder="Enter Profile ID"
+          value={filters.profile_id}
+          onChange={handleInputChange}
+          className="h-10"
+        />
+      </div> */}
+
+      {/* Filter Boxes Grid (Mobile/Tablet: Column, Desktop: Grid) */}
+      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2">
+        <div className="col-span-2  sm:col-span-1">
+          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            Looking for
+          </label>
+          <Select
+            value={filters.looking_for}
+            onValueChange={(v) => handleSelectChange("looking_for", v)}
+          >
+            <SelectTrigger className="h-20 py-4">
+              <SelectValue placeholder="Select Gender" />
+            </SelectTrigger>
+            <SelectContent className="text-[#4a2f1c]">
+              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Female">
+                Bride (Female)
+              </SelectItem>
+              <SelectItem className="text-[#4a2f1c] text-[13px]" value="Male">
+                Groom (Male)
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {/* Height (Single Select) */}
+
+        <div className="col-span-2 sm:col-span-1">
+          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            Height
+          </label>
+          <Select
+            value={filters.height}
+            onValueChange={(v) => handleSelectChange("height", v)}
+          >
+            <SelectTrigger className="h-10 py-4">
+              <SelectValue placeholder="Select Height" />
+            </SelectTrigger>
+            <SelectContent className="text-[#4a2f1c]">
+              {/* 🚩 FIX: Changed value="" to value="all" */}
+              <SelectItem value="all" className="text-[#4a2f1c]">
+                Any Height
+              </SelectItem>
+              {heightOptions.map((h) => (
+                <SelectItem
+                  className="text-[#4a2f1c] text-[13px]"
+                  key={h}
+                  value={h}
+                >
+                  {h}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Age Range */}
+        <div className="col-span-2 flex items-end space-x-2">
+          <div className="w-1/2">
+            <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+              Age From
+            </label>
+            <Select
+              value={filters.age_from}
+              className="text-[#4a2f1c]"
+              onValueChange={(v) => handleSelectChange("age_from", v)}
+            >
+              <SelectTrigger className="h-10 py-4">
+                <SelectValue placeholder="Min Age" />
+              </SelectTrigger>
+              <SelectContent className="text-[#4a2f1c]">
+                {ageOptions.map((age) => (
+                  <SelectItem
+                    key={age}
+                    value={String(age)}
+                    className="text-[#4a2f1c] text-[13px]"
+                  >
+                    {age}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-1/2">
+            <label className="text-[13px]  text-[#4a2f1c] mb-1 block">To</label>
+            <Select>
+              <SelectTrigger className="h-10 py-4">
+                <SelectValue placeholder="Max Age" />
+              </SelectTrigger>
+              <SelectContent className="text-[#4a2f1c]">
+                {ageOptions
+                  .filter((age) => age >= Number(filters.age_from))
+                  .map((age) => (
+                    <SelectItem
+                      key={age}
+                      value={String(age)}
+                      className="text-[#4a2f1c] text-[13px]"
+                    >
+                      {age}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Religion */}
+        <div className="col-span-2 sm:col-span-1">
+          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            Religion
+          </label>
+          <Select>
+            <SelectTrigger className="h-10 py-4">
+              <SelectValue placeholder="Choose a Religion" />
+            </SelectTrigger>
+            <SelectContent className="text-[#4a2f1c]">
+              {/* 🚩 FIX: Changed value="" to value="all" */}
+              <SelectItem value="all" className="text-[#4a2f1c]">
+                Any Religion
+              </SelectItem>
+              {religionOptions.map((r) => (
+                <SelectItem
+                  className="text-[#4a2f1c] text-[13px]"
+                  key={r}
+                  value={r}
+                >
+                  {r}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Caste */}
+
+        <div className="col-span-2 sm:col-span-1">
+          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            Caste
+          </label>
+          <Select
+            value={filters.caste}
+            onValueChange={(v) => handleSelectChange("caste", v)}
+          >
+            <SelectTrigger className="h-10 py-4">
+              <SelectValue placeholder="Choose a Caste" />
+            </SelectTrigger>
+            <SelectContent className="text-[#4a2f1c]">
+              {/* 🚩 FIX: Changed value="" to value="all" */}
+              <SelectItem value="all" className="text-[#4a2f1c]">
+                Any Caste
+              </SelectItem>
+              {casteOptions.map((c) => (
+                <SelectItem
+                  className="text-[#4a2f1c] text-[13px]"
+                  key={c}
+                  value={c}
+                >
+                  {c}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Mother Tongue */}
+        <div className="col-span-2 sm:col-span-2">
+          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            Mother Tongue
+          </label>
+          <Select
+            value={filters.mother_tongue}
+            onValueChange={(v) => handleSelectChange("mother_tongue", v)}
+            className=""
+          >
+            <SelectTrigger className="h-10 py-4">
+              <SelectValue placeholder="Choose a Language" />
+            </SelectTrigger>
+            <SelectContent className="text-[#4a2f1c] ">
+              {/* 🚩 FIX: Changed value="" to value="all" */}
+              <SelectItem value="all" className="text-[10px]">
+                Any Language
+              </SelectItem>
+              {motherTongueOptions.map((m) => (
+                <SelectItem className="text-[13px]" key={m} value={m}>
+                  {m}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Search Button */}
+      <Button
+        //onClick={handleSearch}
+        //disabled={loading}
+        className="w-full mt-6 bg-[#4a2f1c] hover:bg-[#6e4e3b] text-white"
+      >
+        {false ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <Search className="mr-2 h-4 w-4" />
+        )}
+        Search Matches
+      </Button>
+    </div>
+  );
+};
 
 const page = () => {
   const [profileData, setProfileData] = useState(null);
@@ -16,6 +308,10 @@ const page = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const pathname = usePathname(); // useDispatch initialize pannuvom
+  const [filters, setFilters] = useState(initialFilters);
+
+  // 🚩 HIGHLIGHT: Filters Initial State
+  // Default empty/any-ku 'all' use panrom
 
   // data-vum, error-um Redux store-la irundhu eduthukkalaam
   const {
@@ -176,9 +472,9 @@ const page = () => {
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
-        <div className="p-6 rounded-lg  mb-8">
+        <div className="p-6 rounded-lg flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between  mb-8">
           <div className="flex flex-col  md:items-start pb-6">
-            <div className="w-full md:w-1/3 lg:w-1/4 mb-4 md:mb-0 md:mr-6">
+            <div className="w-full md:w-3/4 lg:w-full mb-4 md:mb-0 md:mr-6">
               <img
                 src={formatImageUrl(p.image, p.gender)}
                 alt={p.name || "Profile Picture"}
@@ -211,7 +507,11 @@ const page = () => {
               </div>
             </div>
           </div>
+          <div className="w-full md:w-1/2 lg:w-2/5">
+            <FilterForm filters={filters} />
+          </div>
         </div>
+
         {/* 2. Personal Details Section in a Box */}
         <DetailBox title="Personal Details">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5">

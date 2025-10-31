@@ -1,5 +1,5 @@
 const Profile = require("../models/profile");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const nodemailer = require("nodemailer");
 
 exports.registerProfile = async (req, res) => {
@@ -621,89 +621,6 @@ exports.verifyOtpAndRegister = async (req, res) => {
 //   }
 // };
 
-// exports.getAllProfiles = async (req, res) => {
-//   //console.log("Api called");
-//   try {
-//     const { query } = req; // Filters from frontend
-//     const search = query.search ? query.search.trim() : "";
-//     const gender = query.gender ? query.gender.trim() : "";
-//     const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
-//     const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
-
-//     let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
-
-//     if (search) {
-//       const isNumber = !isNaN(Number(search));
-
-//       const searchConditions = {
-//         [Op.or]: [
-//           {
-//             pname: {
-//               [Op.like]: `%${search}%`, // Partial name match
-//             },
-//           }, // ID search-kku number-a irundha mattum
-//           isNumber && {
-//             id: Number(search),
-//           },
-//         ].filter(Boolean), // empty objects-ai remove pannuvom
-//       }; // whereCondition-la search-ai add panna vendum
-//       whereCondition = { ...whereCondition, ...searchConditions };
-//     } // 2. 🚻 Gender Filter
-
-//     if (gender) {
-//       // Frontend-la 'All' empty string-a anuppinaalum, indha check-la filter aagum
-//       whereCondition.gender = gender;
-//     } // 3. 💍 Marital Status Filter
-
-//     if (maritalStatus) {
-//       whereCondition.maritalstatus = maritalStatus; // DB field: maritalstatus
-//     } // 4. ⚜️ Caste Filter (FIXED)
-
-//     if (caste) {
-//       whereCondition.caste = caste; // DB field: caste
-//     } //console.log("Final Sequelize whereCondition:", whereCondition);
-
-//     const profiles = await Profile.findAll({
-//       // whereCondition empty-a irundhaa, ellathaiyum edukkum. Illaati filters apply aagum.
-//       where: whereCondition,
-//       order: [["id", "DESC"]],
-//     }); // ❌ No profiles found
-
-//     if (profiles.length === 0) {
-//       // User-kku nalla message kaatta, current filters-aiyum use panni message create pannalaam.
-//       const filterText = [search, gender, maritalStatus, caste].filter(
-//         (f) => f
-//       );
-//       const message =
-//         filterText.length > 0
-//           ? `No profiles found matching the current filters: ${filterText.join(
-//               ", "
-//             )} ❌`
-//           : "No profiles found ❌";
-
-//       return res.status(404).json({
-//         success: false,
-//         message: message,
-//       });
-//     } // ✅ Response success
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Profiles fetched successfully based on filters ✅",
-//       count: profiles.length,
-//       data: profiles,
-//     });
-//   } catch (error) {
-//     console.error("❌ Error fetching profiles:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Something went wrong while fetching profiles ❌",
-//       error: error.message,
-//     });
-//   }
-// };
-
-// waiting for Filter Apply
 exports.getAllProfiles = async (req, res) => {
   //console.log("Api called");
   try {
@@ -713,38 +630,36 @@ exports.getAllProfiles = async (req, res) => {
     const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
     const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
 
+    console.log(search);
+
     let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
 
     if (search) {
-      const isNumber = /^\d+$/.test(search); // 💡 Better number check for partial ID search
+      const isNumber = !isNaN(Number(search));
 
       const searchConditions = {
         [Op.or]: [
           {
-            // 1. Name Search (Partial match anywhere)
             pname: {
-              [Op.like]: `%${search}%`,
+              [Op.like]: `%${search}%`, // Partial name match
             },
-          }, // 2. ID Search (Partial match from START)
+          }, // ID search-kku number-a irundha mattum
           isNumber && {
-            // ID field Number type-ஆக இருந்தாலும், Op.like/Op.startsWith
-            // பயன்படுத்தும் போது Sequelize அதை string-ஆக மாற்றி search செய்யும்.
-            id: {
-              [Op.like]: `${search}%`, // 💡 ID starts with the typed search value
-            },
+            id: Number(search),
           },
-        ].filter(Boolean), // empty objects-ஐ remove பண்ணுவதற்கு
-      };
+        ].filter(Boolean), // empty objects-ai remove pannuvom
+      }; // whereCondition-la search-ai add panna vendum
       whereCondition = { ...whereCondition, ...searchConditions };
     } // 2. 🚻 Gender Filter
 
     if (gender) {
+      // Frontend-la 'All' empty string-a anuppinaalum, indha check-la filter aagum
       whereCondition.gender = gender;
     } // 3. 💍 Marital Status Filter
 
     if (maritalStatus) {
       whereCondition.maritalstatus = maritalStatus; // DB field: maritalstatus
-    } // 4. ⚜️ Caste Filter
+    } // 4. ⚜️ Caste Filter (FIXED)
 
     if (caste) {
       whereCondition.caste = caste; // DB field: caste
@@ -757,7 +672,7 @@ exports.getAllProfiles = async (req, res) => {
     }); // ❌ No profiles found
 
     if (profiles.length === 0) {
-      // User-kku nalla message kaatta, current filters-ஐயும் use panni message create pannalaam.
+      // User-kku nalla message kaatta, current filters-aiyum use panni message create pannalaam.
       const filterText = [search, gender, maritalStatus, caste].filter(
         (f) => f
       );
@@ -790,6 +705,92 @@ exports.getAllProfiles = async (req, res) => {
   }
 };
 
+// waiting for Filter Apply
+
+// exports.getAllProfiles = async (req, res) => {
+//   //console.log("Api called");
+//   try {
+//     const { query } = req; // Filters from frontend
+//     const search = query.search ? query.search.trim() : "";
+//     const gender = query.gender ? query.gender.trim() : "";
+//     const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
+//     const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
+
+//     let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
+
+//     if (search) {
+//       // முழுமையான எண் சரிபார்ப்பு
+//       const isNumber = /^\d+$/.test(search);
+
+//       const searchConditions = {
+//         [Op.or]: [
+//           {
+//             // 1. Name Search (Partial match anywhere)
+//             pname: {
+//               [Op.like]: `%${search}%`,
+//             },
+//           }, // 💥 ID Search: Exact Match for Speed
+//           // (Partial match-க்கு பதில் Exact Number Match பயன்படுத்தப்பட்டுள்ளது)
+//           isNumber && {
+//             id: Number(search), // 💡 ID-ஐ Number-ஆக மாற்றி Exact match செய்கிறோம்.
+//           },
+//         ].filter(Boolean), // empty objects-ஐ remove பண்ணுவதற்கு
+//       };
+//       whereCondition = { ...whereCondition, ...searchConditions };
+//     } // 2. 🚻 Gender Filter
+
+//     if (gender) {
+//       whereCondition.gender = gender;
+//     } // 3. 💍 Marital Status Filter
+
+//     if (maritalStatus) {
+//       whereCondition.maritalstatus = maritalStatus; // DB field: maritalstatus
+//     } // 4. ⚜️ Caste Filter
+
+//     if (caste) {
+//       whereCondition.caste = caste; // DB field: caste
+//     } //console.log("Final Sequelize whereCondition:", whereCondition);
+
+//     const profiles = await Profile.findAll({
+//       // whereCondition empty-a irundhaa, ellathaiyum edukkum. Illaati filters apply aagum.
+//       where: whereCondition,
+//       order: [["id", "DESC"]],
+//     }); // ❌ No profiles found
+
+//     if (profiles.length === 0) {
+//       // User-kku nalla message kaatta, current filters-ஐயும் use panni message create pannalaam.
+//       const filterText = [search, gender, maritalStatus, caste].filter(
+//         (f) => f
+//       );
+//       const message =
+//         filterText.length > 0
+//           ? `No profiles found matching the current filters: ${filterText.join(
+//               ", "
+//             )} ❌`
+//           : "No profiles found ❌";
+
+//       return res.status(404).json({
+//         success: false,
+//         message: message,
+//       });
+//     } // ✅ Response success
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Profiles fetched successfully based on filters ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while fetching profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
 exports.getProfileById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -812,6 +813,108 @@ exports.getProfileById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Something went wrong while fetching profile details ❌",
+      error: error.message,
+    });
+  }
+};
+
+exports.searchMatches = async (req, res) => {
+  try {
+    const { query } = req;
+
+    // --- 1. Basic Filters Parsing ---
+    const looking_for = query.looking_for ? query.looking_for.trim() : ""; // Partner Gender
+    const religion = query.religion ? query.religion.trim() : "";
+    const caste = query.caste ? query.caste.trim() : "";
+    const mother_tongue = query.mother_tongue ? query.mother_tongue.trim() : "";
+    // --- 2. Range Filters Parsing (Age) ---
+    const age_from = Number(query.age_from);
+    const age_to = Number(query.age_to);
+
+    // --- 3. Single Height Filter Parsing ---
+    const selected_height = query.selected_height
+      ? query.selected_height.trim()
+      : "";
+
+    let whereCondition = {};
+
+    // ---------------------------------------------
+    // 🔍 FILTER LOGIC
+    // ---------------------------------------------
+
+    // 1. 🚻 Gender Filter
+    if (looking_for) {
+      if (looking_for.toLowerCase() === "bride") {
+        whereCondition.gender = "Female";
+      } else if (looking_for.toLowerCase() === "groom") {
+        whereCondition.gender = "Male";
+      } else {
+        whereCondition.gender = looking_for;
+      }
+    }
+
+    // 2. 🎂 Age Range Filter
+    if (
+      !isNaN(age_from) &&
+      !isNaN(age_to) &&
+      age_from > 0 &&
+      age_to >= age_from
+    ) {
+      whereCondition.age = {
+        [Op.between]: [`${age_from}`, `${age_to}`],
+      };
+    }
+
+    // 3. 📏 Single Height Exact Match Filter 🎯
+
+    if (selected_height) {
+      whereCondition.height = selected_height;
+    }
+
+    // 4. ⚜️ Caste and Religion Filters (Direct Match)
+
+    if (caste) {
+      whereCondition.caste = caste;
+    }
+    if (religion) {
+      whereCondition.religion = religion;
+    }
+
+    // 5. 🗣️ Mother Tongue Filter (NEW Logic)
+    // Query-la 'mother_tongue' value irundhaa, adha use panni filter pannum.
+
+    if (mother_tongue) {
+      // Unga DB field name: mothertongue
+      whereCondition.mothertongue = mother_tongue;
+    }
+
+    // --- 3. Execute Query ---
+
+    const profiles = await Profile.findAll({
+      where: whereCondition,
+      order: [["id", "DESC"]],
+      // ... pagination settings
+    });
+
+    // --- 4. Handle Results ---
+    if (profiles.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No matches found for your partner preference 💔",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Potential matches fetched successfully! ✨",
+      count: profiles.length,
+      data: profiles,
+    });
+  } catch (error) {
+    console.error("❌ Error fetching matches:", error);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong while searching for matches ❌",
       error: error.message,
     });
   }

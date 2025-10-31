@@ -113,6 +113,43 @@ export const getAllProfiles = createAsyncThunk(
   }
 );
 
+// 🎯 NEW: Search Matches Thunk (Matrimony Search - /profile/search)
+
+export const searchMatches = createAsyncThunk(
+  "profile/searchMatches",
+  async (filters = {}, { rejectWithValue }) => {
+    try {
+      // Filters object-a API-kku anuppuradhuku munnadi query string-a maattranum.
+      // E.g., filters = { looking_for: 'Male', caste: 'Vanniyar' }
+
+      const validParams = {};
+
+      for (const key in filters) {
+        // Value empty string-a irundhaa (UI-la 'All' select pannaal), adhai skip pannuvom
+        if (filters[key] && filters[key].toString().trim() !== "") {
+          validParams[key] = filters[key];
+        }
+      }
+
+      // Validana filters mattum use panni query string create pannuvom
+      const finalQueryParams = new URLSearchParams(validParams).toString();
+
+      // Endpoint: /profile/search?looking_for=Male&caste=...
+      const endpoint = `/profile/search${
+        finalQueryParams ? `?${finalQueryParams}` : ""
+      }`;
+
+      const res = API.get(endpoint);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "Match search failed" }
+      );
+    }
+  }
+);
+
 export const getProfileById = createAsyncThunk(
   "profile/getProfileById",
   async (id, { rejectWithValue }) => {
@@ -156,6 +193,7 @@ const profileSlice = createSlice({
     error: null,
     data: null,
     profiles: [], // for all profiles
+    matchProfiles: [], // 🎯 2. New Array: Matrimony Search Results (for /profile/search)
     // 🔥 OTP Verification State Fields
     otpSent: false,
     otpError: null,
@@ -287,6 +325,24 @@ const profileSlice = createSlice({
         state.loading = false;
         state.error = action.payload.message;
         state.profiles = []; // clear on not found
+      })
+
+      // 🔍 Search Profiles (ID/Name Search - Unga code-la idhuvum 'profiles'-a use pannudhu)
+      .addCase(searchMatches.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.matchProfiles = [];
+      })
+      .addCase(searchMatches.fulfilled, (state, action) => {
+        state.loading = false;
+        state.matchProfiles = action.payload.data || [];
+        state.success = true;
+      })
+
+      .addCase(searchMatches.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+        state.matchProfiles = [];
       });
   },
 });

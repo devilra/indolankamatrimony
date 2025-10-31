@@ -13,6 +13,7 @@ const {
   getProfileById,
   registerProfile,
   getAllProfiles,
+  searchMatches,
 } = require("../controllers/profileController");
 
 const router = express.Router();
@@ -25,9 +26,6 @@ router.post("/register", cloudinaryUpload.single("image"), registerProfile);
 // // Get all profiles
 router.get("/all", getAllProfiles);
 
-// // ✅ Get single profile by ID
-router.get("/:id", getProfileById);
-
 // 1. Confirm Profile  with otp verification
 
 router.post("/send-otp", cloudinaryUpload.single("image"), sendOtp);
@@ -35,5 +33,11 @@ router.post("/send-otp", cloudinaryUpload.single("image"), sendOtp);
 // 2. OTP confirm and Verification
 
 router.post("/verify-and-register", verifyOtpAndRegister);
+
+// 🎯 NEW: Matrimony Match Search API Route (User Search)
+router.get("/search", searchMatches);
+
+// // ✅ Get single profile by ID
+router.get("/:id", getProfileById);
 
 module.exports = router;
