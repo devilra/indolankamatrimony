@@ -476,7 +476,7 @@ const ProfileGallery = () => {
         Matrimony Profiles
       </h2>
 
-      <div className="mb-8 p-4 bg-gray-50 rounded-lg shadow-inner flex flex-col md:flex-row gap-4 items-center">
+      {/* <div className="mb-8 p-4 bg-gray-50 rounded-lg shadow-inner flex flex-col md:flex-row gap-4 items-center">
         <div className="flex flex-col md:flex-row lg:flex-row justify-between md:justify-between lg:justify-between gap-5 w-full">
           <div className="flex md:items-center lg:items-center w-full ">
             <Label className="hidden">Search by ID, Name, Email..</Label>
@@ -564,7 +564,7 @@ const ProfileGallery = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Responsive Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-y-10 lg:gap-x-4">
