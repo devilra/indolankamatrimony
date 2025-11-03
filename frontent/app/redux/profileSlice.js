@@ -139,7 +139,7 @@ export const searchMatches = createAsyncThunk(
         finalQueryParams ? `?${finalQueryParams}` : ""
       }`;
 
-      const res = API.get(endpoint);
+      const res = await API.get(endpoint);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -192,6 +192,7 @@ const profileSlice = createSlice({
     success: false,
     error: null,
     data: null,
+    matchErrors: null,
     profiles: [], // for all profiles
     matchProfiles: [], // 🎯 2. New Array: Matrimony Search Results (for /profile/search)
     // 🔥 OTP Verification State Fields
@@ -330,7 +331,7 @@ const profileSlice = createSlice({
       // 🔍 Search Profiles (ID/Name Search - Unga code-la idhuvum 'profiles'-a use pannudhu)
       .addCase(searchMatches.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.matchErrors = null;
         state.matchProfiles = [];
       })
       .addCase(searchMatches.fulfilled, (state, action) => {
@@ -341,7 +342,7 @@ const profileSlice = createSlice({
 
       .addCase(searchMatches.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.matchErrors = action.payload.message;
         state.matchProfiles = [];
       });
   },

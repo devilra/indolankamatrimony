@@ -1,6 +1,6 @@
 "use client";
 
-import { getProfileById } from "@/app/redux/profileSlice";
+import { getProfileById, searchMatches } from "@/app/redux/profileSlice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,36 +15,210 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const ageOptions = Array.from({ length: 33 }, (_, i) => 18 + i);
 const heightOptions = [
   "4ft 6in - 137cm",
+  "4ft 7in - 139cm",
   "4ft 8in - 142cm",
+  "4ft 9in - 144cm",
   "4ft 10in - 147cm",
-  "5ft 0in - 152cm",
+  "4ft 11in - 149cm",
+  "5ft - 152cm",
+  "5ft 1in - 154cm",
   "5ft 2in - 157cm",
-  "5ft 4in - 163cm",
-  "5ft 6in - 168cm",
-  "5ft 8in - 173cm",
-  "5ft 10in - 178cm",
-  "6ft 0in - 183cm",
-  "6ft 2in - 188cm",
+  "5ft 3in - 160cm",
+  "5ft 4in - 162cm",
+  "5ft 5in - 165cm",
+  "5ft 6in - 167cm",
+  "5ft 7in - 170cm",
+  "5ft 8in - 172cm",
+  "5ft 9in - 175cm",
+  "5ft 10in - 177cm",
+  "5ft 11in - 180cm",
+  "6ft - 182cm",
+  "6ft 1in - 185cm",
+  "6ft 2in - 187cm",
+  "6ft 3in - 190cm",
+  "6ft 4in - 193cm",
+  "6ft 5in - 195cm",
+  "6ft 6in - 198cm",
+  "6ft 7in - 200cm",
+  "6ft 8in - 203cm",
+  "6ft 9in - 205cm",
+  "6ft 10in - 208cm",
+  "6ft 11in - 210cm",
+  "7ft - 213cm",
 ];
 const religionOptions = [
   "Hindu",
   "Christian",
   "Muslim",
   "Sikh",
-  "Jain",
-  "Buddhist",
+  "Jain - Digambar",
+  "Jain - Shwetambar",
+  "Jain - Others",
+  "Parsi",
+  "Buddhis",
+  "Inter-Religion",
+  "Others",
 ];
 const casteOptions = [
-  "Ezhava",
-  "Nair",
-  "Vanniyar",
+  "24 Manai Telugu Chettiar",
+  "Aaru Nattu Vellala",
+  "Achirapakkam Chettiar",
+  "Adi Dravidar",
+  "Agamudayar / Arcot / Thuluva Vellala",
+  "Agaram Vellan Chettiar",
+  "Ahirwar",
+  "Arunthathiyar",
+  "Ayira Vysya",
+  "Badaga",
+  "Bairwa",
+  "Balai",
+  "Beri Chettiar",
+  "Boyar",
+  "Brahmin - Anaviln Desai",
+  "Brahmin - Baidhiki/Vaidhiki",
+  "Brahmin - Bardai",
+  "Brahmin - Bhargav",
+  "Brahmin - Gurukkal",
+  "Brahmin - Iyengar",
+  "Brahmin - Iyer",
+  "Brahmin - Khadayata",
+  "Brahmin - Khedaval",
+  "Brahmin - Mevada",
+  "Brahmin - Others",
+  "Brahmin - Rajgor",
+  "Brahmin - Rarhi/Radhi",
+  "Brahmin - Sarua",
+  "Brahmin - Shri Gaud",
+  "Brahmin - Tapodhan",
+  "Brahmin - Valam",
+  "Brahmin - Zalora",
+  "Chattada Sri Vaishnava",
+  "Cherakula Vellalar",
+  "Chettiar",
+  "Dasapalanjika / Kannada Saineegar",
+  "Desikar",
+  "Desikar Thanjavur",
+  "Devandra Kula Vellalar",
+  "Devanga Chettiar",
+  "Devar/Thevar/Mukkulathor",
+  "Dhanak",
+  "Elur Chetty",
+  "Gandla / Ganiga",
   "Gounder",
-  "Brahmin",
+  "Gounder - Kongu Vellala Gounder",
+  "Gounder - Nattu Gounder",
+  "Gounder - Others",
+  "Gounder - Urali Gounder",
+  "Gounder - Vanniya Kula Kshatriyar",
+  "Gounder - Vettuva Gounder",
+  "Gramani",
+  "Gurukkal Brahmin",
+  "Illaththu Pillai",
+  "Intercaste",
+  "Isai Vellalar",
+  "Iyengar Brahmin",
+  "Iyer Brahmin",
+  "Julaha",
+  "Kamma Naidu",
+  "Kanakkan Padanna",
+  "Kandara",
+  "Karkathar",
+  "Karuneegar",
+  "Kasukara",
+  "Kerala Mudali",
+  "Khatik",
+  "Kodikal Pillai",
+  "Kongu Chettiar",
+  "Kongu Nadar",
+  "Kongu Vellala Gounder",
+  "Kori/Koli",
+  "Krishnavaka",
+  "Kshatriya Raju",
+  "Kulalar",
+  "Kuravan",
+  "Kuruhini Chetty",
+  "Kurumbar",
+  "Kuruva",
+  "Manjapudur Chettiar",
+  "Mannan / Velan / Vannan",
+  "Maruthuvar",
+  "Meenavar",
+  "Meghwal",
+  "Mudaliyar",
+  "Mukkulathor",
+  "Muthuraja / Mutharaiyar",
+  "Nadar",
+  "Naicker",
+  "Naicker - Others",
+  "Naicker - Vanniya Kula Kshatriyar",
+  "Naidu",
+  "Nanjil Mudali",
+  "Nanjil Nattu Vellalar",
+  "Nanjil Vellalar",
+  "Nanjil pillai",
+  "Nankudi Vellalar",
+  "Nattu Gounder",
+  "Nattukottai Chettiar",
+  "Othuvaar",
+  "Padmashali",
+  "Pallan / Devandra Kula Vellalan",
+  "Panan",
+  "Pandaram",
+  "Pandiya Vellalar",
+  "Pannirandam Chettiar",
+  "Paravan / Bharatar",
+  "Parkavakulam / Udayar",
+  "Parvatha Rajakulam",
+  "Paswan / Dusadh",
+  "Pattinavar",
+  "Pattusali",
+  "Pillai",
+  "Poundra",
+  "Pulaya / Cheruman",
   "Reddy",
+  "Rohit / Chamar",
+  "SC",
+  "ST",
+  "Sadhu Chetty",
+  "Saiva Pillai Thanjavur",
+  "Saiva Pillai Tirunelveli",
+  "Saiva Vellan chettiar",
+  "Saliyar",
+  "Samagar",
+  "Sambava",
+  "Satnami",
+  "Senai Thalaivar",
+  "Senguntha Mudaliyar",
+  "Sengunthar/Kaikolar",
+  "Shilpkar",
+  "Sonkar",
+  "Sourashtra",
+  "Sozhia Chetty",
+  "Sozhiya Vellalar",
+  "Telugupatti",
+  "Thandan",
+  "Thondai Mandala Vellalar",
+  "Urali Gounder",
+  "Vadambar",
+  "Vadugan",
+  "Valluvan",
+  "Vaniya Chettiar",
+  "Vannar",
+  "Vannia Kula Kshatriyar",
+  "Veera Saivam",
+  "Veerakodi Vellala",
+  "Vellalar",
+  "Vellan Chettiars",
+  "Vettuva Gounder",
+  "Vishwakarma",
+  "Vokkaliga",
+  "Yadav",
+  "Yadava Naidu",
 ];
 const motherTongueOptions = [
   "Tamil",
@@ -52,6 +226,65 @@ const motherTongueOptions = [
   "Malayalam",
   "Kannada",
   "Hindi",
+  "Marathi",
+  "Bengali",
+  "Gujarati",
+  "Marwari",
+  "Oriya",
+  "Punjabi",
+  "Sindhi",
+  "Urdu",
+  "Arunachali",
+  "Assamese",
+  "Awadhi",
+  "Bhojpuri",
+  "Brij",
+  "Bihari",
+  "Badaga",
+  "Chatisgarhi",
+  "Dogri",
+  "English",
+  "French",
+  "Garhwali",
+  "Garo",
+  "Haryanvi",
+  "Himachali/Pahari",
+  "Kanauji",
+  "Kashmiri",
+  "Khandesi",
+  "Khasi",
+  "Konkani",
+  "Koshali",
+  "Kumaoni",
+  "Kutchi",
+  "Lepcha",
+  "Ladacki",
+  "Magahi",
+  "Maithili",
+  "Manipuri",
+  "Miji",
+  "Mizo",
+  "Monpa",
+  "Nicobarese",
+  "Nepali",
+  "Rajasthani",
+  "Sanskrit",
+  "Santhali",
+  "Sourashtra",
+  "Tripuri",
+  "Tulu",
+  "Angika",
+  "Bagri Rajasthani",
+  "Dhundhari/Jaipuri",
+  "Gujari/Gojari",
+  "Harauti",
+  "Lambadi",
+  "Malvi",
+  "Mewari",
+  "Mewati/Ahirwati",
+  "Nimadi",
+  "Shekhawati",
+  "Wagdi",
 ];
 
 const initialFilters = {
@@ -293,11 +526,11 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
 
       {/* Search Button */}
       <Button
-        //onClick={handleSearch}
-        //disabled={loading}
+        onClick={handleSearch}
+        disabled={loading}
         className="w-full mt-6 bg-[#4a2f1c] hover:bg-[#6e4e3b] text-white"
       >
-        {false ? (
+        {loading ? (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <Search className="mr-2 h-4 w-4" />
@@ -315,6 +548,8 @@ const page = () => {
   const dispatch = useDispatch();
   const pathname = usePathname(); // useDispatch initialize pannuvom
   const [filters, setFilters] = useState(initialFilters);
+  // 🚩 ADDED STATE: Search panna aacha illaiya nu track panna
+  const [hasSearched, setHasSearched] = useState(false);
 
   console.log(filters);
 
@@ -327,7 +562,33 @@ const page = () => {
     loading,
     data: singleProfileData,
     error,
+    matchProfiles,
+    matchErrors,
   } = useSelector((state) => state.profile);
+
+  //console.log(matchProfiles);
+
+  const handleSearch = () => {
+    setHasSearched(true); // Search panna start panniyachu
+    //console.log(filters.profile_id);
+    if (filters.profile_id) {
+      router.push(`/profile/${filters.profile_id.toUpperCase()}`);
+      return;
+    }
+
+    // 🚩 HIGHLIGHT: Dispatch ku munadi 'all'-a empty string-a (or undefined) mattra vendum.
+    const cleanFilters = Object.fromEntries(
+      Object.entries(filters).map(([key, value]) => [
+        key,
+        value === "all" ? "" : value, // Backend-ku empty string-a anuppuvom
+      ])
+    );
+
+    //console.log(cleanFilters);
+
+    dispatch(searchMatches(cleanFilters));
+    toast.info("Check below profiles");
+  };
 
   // Helper function to format data display
   const formatValue = (value) => {
@@ -409,7 +670,7 @@ const page = () => {
           Please check the link or go back to the profiles list.
         </p>
         <Button
-          onClick={() => router.push("/partners")}
+          onClick={() => router.push("/gallery")}
           className="mt-4 text-white cursor-pointer"
         >
           Go to Profiles
@@ -480,7 +741,7 @@ const page = () => {
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
-        <div className="p-6 rounded-lg flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between  mb-8">
+        <div className="p-6 rounded-lg  flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between  mb-0">
           <div className="flex flex-col  md:items-start pb-6">
             <div className="w-full md:w-3/4 lg:w-full mb-4 md:mb-0 md:mr-6">
               <img
@@ -515,9 +776,111 @@ const page = () => {
               </div>
             </div>
           </div>
-          <div className="w-full md:w-1/2 lg:w-2/5">
-            <FilterForm filters={filters} setFilters={setFilters} />
+          <div className="">
+            <div className="w-full">
+              <FilterForm
+                filters={filters}
+                setFilters={setFilters}
+                handleSearch={handleSearch}
+                loading={loading}
+              />
+            </div>
           </div>
+        </div>
+        <div>
+          {/* 🚩 NEW LOGIC: Search panna apuram mattum results-a show pannanum */}
+          {hasSearched && (
+            <>
+              {/* Loading State */}
+              {loading && (
+                <div className="flex justify-center items-center h-48 p-6 border rounded-lg bg-white shadow-md">
+                  <Loader2 className="animate-spin h-6 w-6 text-[#4a2f1c]" /> 
+                  <span className="ml-2 text-lg text-gray-700">
+                    Searching for Matches...
+                  </span>
+                </div>
+              )}
+              {/* Results and No Match State (Loading mudinjadhukku apuram mattum) */}
+              {!loading && (
+                <>
+                  <h2 className="text-2xl py-5 font-bold mb-4 text-[#4a2f1c]">
+                    Found **{matchProfiles.length}** Matching Profiles
+                  </h2>
+
+                  {matchProfiles.length === 0 ? (
+                    // 🚩 No Matching Profile Error
+                    <div className="p-6 text-center border mb-10 rounded-lg bg-white shadow-md">
+                      <h3 className="text-xl font-semibold text-red-500">
+                        No Matching Profiles Found 😟
+                      </h3>
+                      <p className="mt-2 text-gray-600">
+                        try modifying your search filters to get better results.
+                      </p>
+                    </div>
+                  ) : (
+                    // 🚩 Profiles Display
+                    <div className="bg-white mb-10 p-4 mx-5 rounded-lg shadow-md overflow-x-auto">
+                      <div className="flex space-x-4 pb-2">
+                        {matchProfiles.map((p) => (
+                          <div
+                            key={p.id}
+                            onClick={() => router.push(`/profile/${p.id}`)}
+                            className="w-64 flex-shrink-0 border rounded-lg p-3 shadow-sm hover:shadow-md transition duration-200 cursor-pointer bg-white"
+                          >
+                            {/* Photo */}
+                            <div>
+                              <img
+                                src={formatImageUrl(p.image, p.gender)}
+                                alt={p.name || "Profile"}
+                                className="h-[150px] md:h-[250] md:w-[180px] w-[120px]"
+                              />
+                            </div>
+                            {/* Main Details */}
+                            <div className="space-y-1 text-sm">
+                              <div className="font-bold text-base text-[#4a2f1c] truncate">
+                                {p.pname || "N/A"}
+                              </div>
+                              <div className="text-xs text-[#4a2f1c] font-semibold">
+                                ID: {p.id || "N/A"}
+                              </div>
+                              <hr className="my-1 border-gray-100" />
+                              <div className="flex justify-between text-[#4a2f1c]">
+                                <span className="font-medium">Age:</span>
+                                <span>{p.age || "N/A"}</span>
+                              </div>
+                              {/* <div className="flex justify-between text-[#4a2f1c]">
+                                <span className="font-medium">Height:</span>
+                              
+                                <span>{p.height}</span>
+                              </div> */}
+                              {/* <div className="flex justify-between text-[#4a2f1c]">
+                                <span className="font-medium">Caste:</span>
+                                <span className="truncate max-w-[50%]">
+                                  {p.caste || "N/A"}
+                                </span>
+                              </div> */}
+                              {/* <div className="flex justify-between text-[#4a2f1c]">
+                                <span className="font-medium">Religion:</span>
+                                <span className="truncate max-w-[50%]">
+                                  {p.religion || "N/A"}
+                                </span>
+                              </div> */}
+                              {/* <div className="flex justify-between text-[#4a2f1c]">
+                                <span className="font-medium">M.Tongue:</span>
+                                <span className="truncate max-w-[50%]">
+                                  {p.mothertongue || "N/A"}
+                                </span>
+                              </div> */}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
         </div>
 
         {/* 2. Personal Details Section in a Box */}

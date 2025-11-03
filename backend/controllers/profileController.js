@@ -819,6 +819,7 @@ exports.getProfileById = async (req, res) => {
 };
 
 exports.searchMatches = async (req, res) => {
+  console.log(req.query);
   try {
     const { query } = req;
 
@@ -911,7 +912,7 @@ exports.searchMatches = async (req, res) => {
       data: profiles,
     });
   } catch (error) {
-    console.error("❌ Error fetching matches:", error);
+    console.error("❌ Error fetching matches:", error.message);
     res.status(500).json({
       success: false,
       message: "Something went wrong while searching for matches ❌",
