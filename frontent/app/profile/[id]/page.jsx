@@ -831,7 +831,7 @@ const page = () => {
               {/* Results and No Match State (Loading mudinjadhukku apuram mattum) */}
               {!loading && (
                 <>
-                  <h2 className="text-2xl py-5 font-bold mb-4 text-[#4a2f1c]">
+                  <h2 className="text-2xl py-5 text-start font-bold mb-4 text-[#4a2f1c]">
                     Found **{matchProfiles.length}** Matching Profiles
                   </h2>
 
