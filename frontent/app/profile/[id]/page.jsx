@@ -568,26 +568,54 @@ const page = () => {
 
   //console.log(matchProfiles);
 
+  // const handleSearch = () => {
+  //   setHasSearched(true); // Search panna start panniyachu
+  //   //console.log(filters.profile_id);
+  //   if (filters.profile_id) {
+  //     router.push(`/profile/${filters.profile_id.toUpperCase()}`);
+  //     return;
+  //   }
+
+  //   // 🚩 HIGHLIGHT: Dispatch ku munadi 'all'-a empty string-a (or undefined) mattra vendum.
+  //   const cleanFilters = Object.fromEntries(
+  //     Object.entries(filters).map(([key, value]) => [
+  //       key,
+  //       value === "all" ? "" : value, // Backend-ku empty string-a anuppuvom
+  //     ])
+  //   );
+
+  //   //console.log(cleanFilters);
+
+  //   dispatch(searchMatches(cleanFilters));
+  //   toast.info("Check below profiles");
+  // };
+
+  // ID Based handle searcf function
+
   const handleSearch = () => {
     setHasSearched(true); // Search panna start panniyachu
-    //console.log(filters.profile_id);
-    if (filters.profile_id) {
-      router.push(`/profile/${filters.profile_id.toUpperCase()}`);
-      return;
-    }
 
-    // 🚩 HIGHLIGHT: Dispatch ku munadi 'all'-a empty string-a (or undefined) mattra vendum.
-    const cleanFilters = Object.fromEntries(
+    // 1. Clean filters (converting 'all' to empty string)
+    let cleanFilters = Object.fromEntries(
       Object.entries(filters).map(([key, value]) => [
         key,
         value === "all" ? "" : value, // Backend-ku empty string-a anuppuvom
       ])
     );
 
-    //console.log(cleanFilters);
+    // 2. 🛑 NEW LOGIC: If profile_id is present, remove all other filters
+    if (cleanFilters.profile_id) {
+      // profile_id தவிர மற்ற எல்லா filter-களையும் நீக்கிறோம்.
+      cleanFilters = {
+        profile_id: cleanFilters.profile_id,
+      };
+      toast.info(`Searching for Profile ID: ${cleanFilters.profile_id}`);
+    } else {
+      delete cleanFilters.profile_id;
+      toast.info("Check below profiles based on filters");
+    }
 
     dispatch(searchMatches(cleanFilters));
-    toast.info("Check below profiles");
   };
 
   // Helper function to format data display

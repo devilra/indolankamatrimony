@@ -16,7 +16,7 @@ const Admin = sequalize.define(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      // **DELETE THIS LINE: unique: true,**
       validate: {
         isEmail: true,
       },
@@ -41,6 +41,14 @@ const Admin = sequalize.define(
   {
     timestamps: true,
     tableName: "admins",
+    // 💡 Intha `indexes` block ah ADD pannunga
+    indexes: [
+      {
+        unique: true,
+        fields: ["email"], // 'email' field-ku Unique key
+        name: "admin_email_unique", // Oru koot index name
+      },
+    ],
   }
 );
 

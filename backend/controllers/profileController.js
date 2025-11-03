@@ -818,8 +818,114 @@ exports.getProfileById = async (req, res) => {
   }
 };
 
+// exports.searchMatches = async (req, res) => {
+//   console.log(req.query);
+
+// Not included ID based search
+//   try {
+//     const { query } = req;
+
+//     // --- 1. Basic Filters Parsing ---
+//     const looking_for = query.looking_for ? query.looking_for.trim() : ""; // Partner Gender
+//     const religion = query.religion ? query.religion.trim() : "";
+//     const caste = query.caste ? query.caste.trim() : "";
+//     const mother_tongue = query.mother_tongue ? query.mother_tongue.trim() : "";
+//     // --- 2. Range Filters Parsing (Age) ---
+//     const age_from = Number(query.age_from);
+//     const age_to = Number(query.age_to);
+
+//     // --- 3. Single Height Filter Parsing ---
+//     const selected_height = query.selected_height
+//       ? query.selected_height.trim()
+//       : "";
+
+//     let whereCondition = {};
+
+//     // ---------------------------------------------
+//     // 🔍 FILTER LOGIC
+//     // ---------------------------------------------
+
+//     // 1. 🚻 Gender Filter
+//     if (looking_for) {
+//       if (looking_for.toLowerCase() === "bride") {
+//         whereCondition.gender = "Female";
+//       } else if (looking_for.toLowerCase() === "groom") {
+//         whereCondition.gender = "Male";
+//       } else {
+//         whereCondition.gender = looking_for;
+//       }
+//     }
+
+//     // 2. 🎂 Age Range Filter
+//     if (
+//       !isNaN(age_from) &&
+//       !isNaN(age_to) &&
+//       age_from > 0 &&
+//       age_to >= age_from
+//     ) {
+//       whereCondition.age = {
+//         [Op.between]: [`${age_from}`, `${age_to}`],
+//       };
+//     }
+
+//     // 3. 📏 Single Height Exact Match Filter 🎯
+
+//     if (selected_height) {
+//       whereCondition.height = selected_height;
+//     }
+
+//     // 4. ⚜️ Caste and Religion Filters (Direct Match)
+
+//     if (caste) {
+//       whereCondition.caste = caste;
+//     }
+//     if (religion) {
+//       whereCondition.religion = religion;
+//     }
+
+//     // 5. 🗣️ Mother Tongue Filter (NEW Logic)
+//     // Query-la 'mother_tongue' value irundhaa, adha use panni filter pannum.
+
+//     if (mother_tongue) {
+//       // Unga DB field name: mothertongue
+//       whereCondition.mothertongue = mother_tongue;
+//     }
+
+//     // --- 3. Execute Query ---
+
+//     const profiles = await Profile.findAll({
+//       where: whereCondition,
+//       order: [["id", "DESC"]],
+//       // ... pagination settings
+//     });
+
+//     // --- 4. Handle Results ---
+//     if (profiles.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No matches found for your partner preference 💔",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Potential matches fetched successfully! ✨",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching matches:", error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while searching for matches ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
 exports.searchMatches = async (req, res) => {
   console.log(req.query);
+  // new add new ID based unique search code
   try {
     const { query } = req;
 
@@ -828,6 +934,9 @@ exports.searchMatches = async (req, res) => {
     const religion = query.religion ? query.religion.trim() : "";
     const caste = query.caste ? query.caste.trim() : "";
     const mother_tongue = query.mother_tongue ? query.mother_tongue.trim() : "";
+    // 🚩 NEW: Profile ID Parsing
+    const profile_id = query.profile_id ? query.profile_id.trim() : "";
+
     // --- 2. Range Filters Parsing (Age) ---
     const age_from = Number(query.age_from);
     const age_to = Number(query.age_to);
@@ -842,52 +951,65 @@ exports.searchMatches = async (req, res) => {
     // ---------------------------------------------
     // 🔍 FILTER LOGIC
     // ---------------------------------------------
+    // 🛑 CRITICAL NEW LOGIC: ID Search Override
+    // profile_id கொடுக்கப்பட்டால், அதுவே ஒரே filter ஆக இருக்க வேண்டும்.
 
-    // 1. 🚻 Gender Filter
-    if (looking_for) {
-      if (looking_for.toLowerCase() === "bride") {
-        whereCondition.gender = "Female";
-      } else if (looking_for.toLowerCase() === "groom") {
-        whereCondition.gender = "Male";
-      } else {
-        whereCondition.gender = looking_for;
+    if (profile_id) {
+      // ID யை uppercase ஆக மாற்றி search செய்கிறோம். (உங்களுடைய Front-end logic-ஐப் போலவே)
+      whereCondition.id = profile_id.toUpperCase();
+      // இந்த இடத்தில் return செய்தால், கீழே உள்ள மற்ற filter logic-ஐத் தவிர்க்கலாம்
+    } else {
+      // --- ID கொடுக்கப்படவில்லை, மற்ற filters-ஐ apply செய்யலாம் ---
+      // 1. 🚻 Gender Filter
+      if (looking_for) {
+        if (looking_for.toLowerCase() === "bride") {
+          whereCondition.gender = "Female";
+        } else if (looking_for.toLowerCase() === "groom") {
+          whereCondition.gender = "Male";
+        } else {
+          whereCondition.gender = looking_for;
+        }
       }
-    }
 
-    // 2. 🎂 Age Range Filter
-    if (
-      !isNaN(age_from) &&
-      !isNaN(age_to) &&
-      age_from > 0 &&
-      age_to >= age_from
-    ) {
-      whereCondition.age = {
-        [Op.between]: [`${age_from}`, `${age_to}`],
-      };
-    }
+      // 2. 🎂 Age Range Filter
+      if (
+        !isNaN(age_from) &&
+        !isNaN(age_to) &&
+        age_from > 0 &&
+        age_to >= age_from
+      ) {
+        whereCondition.age = {
+          [Op.between]: [`${age_from}`, `${age_to}`],
+        };
+      }
 
-    // 3. 📏 Single Height Exact Match Filter 🎯
+      // 3. 📏 Single Height Exact Match Filter 🎯
 
-    if (selected_height) {
-      whereCondition.height = selected_height;
-    }
+      if (selected_height) {
+        whereCondition.height = selected_height;
+      }
 
-    // 4. ⚜️ Caste and Religion Filters (Direct Match)
+      // 4. ⚜️ Caste and Religion Filters (Direct Match)
 
-    if (caste) {
-      whereCondition.caste = caste;
-    }
-    if (religion) {
-      whereCondition.religion = religion;
-    }
+      if (caste) {
+        whereCondition.caste = caste;
+      }
+      if (religion) {
+        whereCondition.religion = religion;
+      }
 
-    // 5. 🗣️ Mother Tongue Filter (NEW Logic)
-    // Query-la 'mother_tongue' value irundhaa, adha use panni filter pannum.
+      // 5. 🗣️ Mother Tongue Filter (NEW Logic)
+      // Query-la 'mother_tongue' value irundhaa, adha use panni filter pannum.
 
-    if (mother_tongue) {
-      // Unga DB field name: mothertongue
-      whereCondition.mothertongue = mother_tongue;
-    }
+      if (mother_tongue) {
+        // Unga DB field name: mothertongue
+        whereCondition.mothertongue = mother_tongue;
+      }
+    } // End of else (if not profile_id)
+
+    // --- 3. Execute Query ---
+    // Note: profile_id இருந்தால், whereCondition = { id: '...' } ஆக இருக்கும்.
+    // இல்லாவிட்டால், மற்ற filters இருக்கும்.
 
     // --- 3. Execute Query ---
 
@@ -899,6 +1021,18 @@ exports.searchMatches = async (req, res) => {
 
     // --- 4. Handle Results ---
     if (profiles.length === 0) {
+      // End of else (if not profile_id)
+
+      // --- 3. Execute Query ---
+      // Note: profile_id இருந்தால், whereCondition = { id: '...' } ஆக இருக்கும்.
+      // இல்லாவிட்டால், மற்ற filters இருக்கும்.
+      if (profile_id) {
+        return res.status(404).json({
+          success: false,
+          message: `Profile ID ${profile_id} not found.`,
+        });
+      }
+
       return res.status(404).json({
         success: false,
         message: "No matches found for your partner preference 💔",
