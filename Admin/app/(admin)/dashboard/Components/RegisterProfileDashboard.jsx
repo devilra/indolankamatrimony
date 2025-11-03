@@ -1446,11 +1446,11 @@ export default function RegisterProfileDashboard() {
       });
       setDobDate(null);
       setImage(null);
-      //   sessionStorage.setItem(
-      //     "registrationSuccess",
-      //     JSON.stringify({ id: data.id, name: data.pname })
-      //   );
-      //   router.push("/success");
+      sessionStorage.setItem(
+        "registrationSuccess",
+        JSON.stringify({ id: data.id, name: data.pname })
+      );
+      router.push("/success");
     } else {
       // Use result.payload?.message if available, otherwise a generic error
       toast.error(result.payload?.message || "Profile Registered Failed", {

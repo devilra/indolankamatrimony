@@ -924,7 +924,7 @@ exports.getProfileById = async (req, res) => {
 // };
 
 exports.searchMatches = async (req, res) => {
-  console.log(req.query);
+  //console.log(req.query);
   // new add new ID based unique search code
   try {
     const { query } = req;
