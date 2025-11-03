@@ -32,17 +32,31 @@ const transporter = nodemailer.createTransport({
 const adminMailOptions = (data) => ({
   from: `Contact Form <${process.env.EMAIL_USER}>`,
   to: process.env.ADMIN_EMAIL,
-  subject: `New Contact Enquiry from ${data.name}`,
+  replyTo: data.email,
+  subject: `🚨 NEW ENQUIRY: ${data.name}`, // Subject-a update pannirukken
   html: `
-    <h2>New Contact Form Submission</h2>
-    <p>Details of the enquiry:</p>
-    <ul>
-      <li><strong>Name:</strong> ${data.name}</li>
-      <li><strong>Email:</strong> ${data.email}</li>
-      <li><strong>Phone:</strong> ${data.phone}</li>
-    </ul>
-    <h3>Message:</h3>
-    <p>${data.message}</p>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; max-width: 600px; margin: 20px auto; border: 1px solid #dddddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #007bff; color: #ffffff; padding: 20px; text-align: center;">
+            <h2 style="margin: 0; font-size: 24px;">New Contact Form Submission</h2>
+        </div>
+        <div style="padding: 25px;">
+            <p style="font-size: 16px;"><strong>Details of the enquiry:</strong></p>
+            
+            <div style="border: 1px solid #f0f0f0; padding: 15px; border-radius: 6px; margin-bottom: 20px; background-color: #f9f9f9;">
+                <p style="margin: 5px 0;"><strong>Name:</strong> <span style="color: #007bff; font-weight: bold;">${data.name}</span></p>
+                <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${data.email}" style="color: #007bff; text-decoration: none;">${data.email}</a></p>
+                <p style="margin: 5px 0;"><strong>Phone:</strong> <span style="color: #007bff;">${data.phone}</span></p>
+            </div>
+            
+            <h3 style="color: #007bff; border-bottom: 2px solid #eeeeee; padding-bottom: 5px;">Message:</h3>
+            <p style="background-color: #eeeeee; padding: 15px; border-radius: 4px; border-left: 5px solid #007bff;">${data.message}</p>
+            
+            <p style="margin-top: 30px; font-size: 14px; color: #777777;">Please respond to this customer promptly.</p>
+        </div>
+        <div style="background-color: #f0f0f0; padding: 15px; text-align: center; font-size: 12px; color: #777777;">
+            This email was sent from the Indolankamatrimony contact form.
+        </div> 
+    </div>
   `,
 });
 
@@ -53,14 +67,37 @@ const adminMailOptions = (data) => ({
  */
 
 const userMailOptions = (data) => ({
-  from: `[indolanka matrimonial services] ${process.env.EMAIL_USER}`,
+  from: `Indolankamatrimony <${process.env.EMAIL_USER}>`,
   to: data.email,
-  subject: `Thank you for your enquiry, ${data.name}!`,
+  subject: `✅ We received your enquiry, ${data.name}!`, // Subject-a update pannirukken
   html: `
-    <h2>Thank you for contacting us!</h2>
-    <p>Dear ${data.name},</p>
-    <p>We have successfully received your enquiry. Our team will review your message and get back to you shortly.</p>
-    <p>Regards,<br/>The Indolankamatrimony Team</p>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; max-width: 600px; margin: 20px auto; border: 1px solid #dddddd; border-radius: 8px; overflow: hidden;">
+        <div style="background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center;">
+            <h2 style="margin: 0; font-size: 24px;">Thank You for Contacting Us!</h2>
+        </div>
+        <div style="padding: 25px;">
+            <p style="font-size: 16px;">Dear <strong>${data.name}</strong>,</p>
+            
+            <div style="background-color: #e6ffe6; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 5px solid #4CAF50;">
+                <p style="margin: 0;">We have successfully received your enquiry. Our team is already reviewing your message and we aim to get back to you within 24 hours.</p>
+            </div>
+            
+            <h4 style="color: #4CAF50;">Your Submitted Details:</h4>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li><strong>Name:</strong> ${data.name}</li>
+                <li><strong>Message:</strong> "${data.message.substring(
+                  0,
+                  50
+                )}..."</li>
+            </ul>
+            
+            <p style="margin-top: 30px;">Regards,<br/>The <strong>Indolankamatrimony Team</strong></p>
+        </div>
+        <div style="background-color: #f0f0f0; padding: 15px; text-align: center; font-size: 12px; color: #777777;">
+            <p style="margin: 0;">&copy; ${new Date().getFullYear()} Indolankamatrimony Services. All rights reserved.</p>
+            <p style="margin: 5px 0 0 0;">Visit our site: <a href="[Your Website URL]" style="color: #007bff; text-decoration: none;">[Your Website URL]</a></p>
+        </div>
+    </div>
   `,
 });
 
