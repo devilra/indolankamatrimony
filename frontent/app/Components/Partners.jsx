@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProfiles, searchProfiles } from "../redux/profileSlice";
 import { Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import Autoplay from "embla-carousel-autoplay";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Carousel,
@@ -211,10 +212,16 @@ const Partners = () => {
       ) : (
         // Carousel display
         <Carousel
+          plugins={[
+            Autoplay({
+              delay: 2500,
+              stopOnInteraction: false,
+            }),
+          ]}
           opts={{
             align: "start",
             // Loop only if there's enough profiles to loop, or disable loop
-            loop: profiles.length > 4,
+            loop: profiles.length > 4 || true,
           }}
           className="w-full max-w-6xl mx-auto md:overflow-hidden lg:overflow-visible"
         >

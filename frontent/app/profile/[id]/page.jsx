@@ -314,7 +314,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         Search Your Partner
       </h2>
       {/* Profile ID Search (Input Box) */}
-      {/* <div className="mb-4 w-full">
+      <div className="mb-4 w-full">
         <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
           Search by Profile ID
         </label>
@@ -326,7 +326,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
           onChange={handleInputChange}
           className="h-10"
         />
-      </div> */}
+      </div>
 
       {/* Filter Boxes Grid (Mobile/Tablet: Column, Desktop: Grid) */}
       <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2">
@@ -741,7 +741,7 @@ const page = () => {
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
-        <div className="p-6 rounded-lg  flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between  mb-0">
+        <div className="p-6 rounded-lg  flex flex-col w-full  md:flex-row lg:flex-row lg:justify-start lg:gap-20  mb-0">
           <div className="flex flex-col  md:items-start pb-6">
             <div className="w-full md:w-3/4 lg:w-full mb-4 md:mb-0 md:mr-6">
               <img
