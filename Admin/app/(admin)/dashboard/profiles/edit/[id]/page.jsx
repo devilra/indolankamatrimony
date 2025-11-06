@@ -1247,7 +1247,73 @@ const EditProfile = () => {
   };
 
   // 📅 Date Select Handler
+
+  // 🎯 புதுப்பிப்பு 1: 18 வயது சரிபார்ப்புக்கு ஒரு புதிய ஃபங்ஷன்
+  const isAgeValid = (dob, minAge = 18) => {
+    if (!dob) return true;
+    const now = new Date();
+    const birthDate = new Date(dob);
+
+    // 18 வயது ஆவதற்குத் தேவையான தேதி
+    const requiredDate = new Date(
+      birthDate.getFullYear() + minAge,
+      birthDate.getMonth(),
+      birthDate.getDate()
+    );
+
+    console.log(requiredDate);
+    console.log(now);
+
+    // தேவையான தேதி, இன்றைய தேதியை விட குறைவாகவோ அல்லது சமமாகவோ இருக்க வேண்டும்.
+    return requiredDate <= now;
+  };
+
+  // const handleDateSelect = (date) => {
+  //   if (!isAgeValid(date, 18)) {
+  //     toast.error("You must be at least 18 years old to register.");
+
+  //     // 18 வயதுக்குக் குறைவாக இருந்தால், DOB, age state-களை செட் செய்யாமல், Calendar-ஐ மூடிவிடவும்.
+  //     setDobDate(null);
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       dob: "",
+  //       age: "",
+  //     }));
+
+  //     setIsCalendarOpen(false);
+  //     return;
+  //   }
+
+  //   setDobDate(date); // Date format for backend (as per first code)
+  //   const formattedDate = format(date, "yyyy-MM-dd");
+
+  //   // Calculate Age and update age in state (Required Update)
+  //   const calculatedAge = calculateAge(date);
+
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     dob: formattedDate,
+  //     age: calculatedAge, // Age updated automatically
+  //   }));
+  //   setIsCalendarOpen(false);
+  // };
+
   const handleDateSelect = (date) => {
+    if (!isAgeValid(date, 18)) {
+      toast.error("You must be at least 18 years old to register.");
+
+      // 18 வயதுக்குக் குறைவாக இருந்தால், DOB, age state-களை செட் செய்யாமல், Calendar-ஐ மூடிவிடவும்.
+      setDobDate(null);
+      setFormData((prev) => ({
+        ...prev,
+        dob: "",
+        age: "",
+      }));
+
+      setIsCalendarOpen(false);
+      return;
+    }
+
     if (date) {
       // 1. Update calendar state
       setDobDate(date);
@@ -1274,6 +1340,7 @@ const EditProfile = () => {
   };
 
   // 🏞️ Image Upload Handler
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -1500,7 +1567,7 @@ const EditProfile = () => {
                           handleSelectChange(fieldName, val)
                         }
                       >
-                        <SelectTrigger className="w-full py-[15px]">
+                        <SelectTrigger className="w-full py-[15px] border-black rounded">
                           <SelectValue placeholder={`Select ${field.label}`} />
                         </SelectTrigger>
                         <SelectContent>
@@ -1552,7 +1619,10 @@ const EditProfile = () => {
                         onOpenChange={setIsCalendarOpen} // Toggle calendar open state
                         className=""
                       >
-                        <PopoverTrigger className="w-full" asChild>
+                        <PopoverTrigger
+                          className="w-full border-black rounded"
+                          asChild
+                        >
                           <Button
                             variant="outline"
                             className="justify-start py-[15px]"
@@ -1596,6 +1666,7 @@ const EditProfile = () => {
                         value={formData[fieldName] || ""}
                         placeholder={`Enter ${field.label}`}
                         onChange={handleChange}
+                        className="border-black rounded"
                       />
                     </div>
                   </div>
@@ -1617,7 +1688,7 @@ const EditProfile = () => {
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className={`py-[8px]`}
+                        className={`py-[8px] border-black rounded`}
                       />
 
                       {/* 🏞️ NEW: Display the image from backend/newly selected file */}
@@ -1661,7 +1732,7 @@ const EditProfile = () => {
                         readOnly={isAgeField}
                         disabled={isAgeField && formData.age === ""}
                         maxLength={isPhoneNumberField ? 10 : undefined}
-                        className={`h-[32px]`}
+                        className={`h-[32px] border-black rounded`}
                       />
                     </div>
                   </div>

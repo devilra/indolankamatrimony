@@ -1152,9 +1152,9 @@ const fieldOrder = [
 const calculateAge = (dob) => {
   if (!dob) return "";
   const today = new Date();
-  console.log("Today", today);
+  //console.log("Today", today);
   const birthDate = new Date(dob);
-  console.log("birthDate", birthDate);
+  //console.log("birthDate", birthDate);
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDifference = today.getMonth() - birthDate.getMonth();
 
@@ -1282,7 +1282,42 @@ export default function RegisterProfileDashboard() {
     }
   };
 
+  // 🎯 புதுப்பிப்பு 1: 18 வயது சரிபார்ப்புக்கு ஒரு புதிய ஃபங்ஷன்
+  const isAgeValid = (dob, minAge = 18) => {
+    if (!dob) return true;
+    const now = new Date();
+    const birthDate = new Date(dob);
+
+    // 18 வயது ஆவதற்குத் தேவையான தேதி
+    const requiredDate = new Date(
+      birthDate.getFullYear() + minAge,
+      birthDate.getMonth(),
+      birthDate.getDate()
+    );
+
+    console.log(requiredDate);
+    console.log(now);
+
+    // தேவையான தேதி, இன்றைய தேதியை விட குறைவாகவோ அல்லது சமமாகவோ இருக்க வேண்டும்.
+    return requiredDate <= now;
+  };
+
   const handleDateSelect = (date) => {
+    if (!isAgeValid(date, 18)) {
+      toast.error("You must be at least 18 years old to register.");
+
+      // 18 வயதுக்குக் குறைவாக இருந்தால், DOB, age state-களை செட் செய்யாமல், Calendar-ஐ மூடிவிடவும்.
+      setDobDate(null);
+      setFormData((prev) => ({
+        ...prev,
+        dob: "",
+        age: "",
+      }));
+
+      setIsCalendarOpen(false);
+      return;
+    }
+
     setDobDate(date); // Date format for backend (as per first code)
     const formattedDate = format(date, "yyyy-MM-dd");
 
@@ -1521,7 +1556,7 @@ export default function RegisterProfileDashboard() {
                           }
                         >
                           {/* 🔴 Select Trigger Border Update */}
-                          <SelectTrigger className="w-full py-[15px]">
+                          <SelectTrigger className="w-full py-[15px] border-black rounded">
                             <SelectValue
                               placeholder={`Select ${field.label}`}
                             />
@@ -1574,7 +1609,7 @@ export default function RegisterProfileDashboard() {
                         }
                       >
                         <SelectTrigger
-                          className={`w-full py-[15px]  ${
+                          className={`w-full py-[15px] border-black rounded  ${
                             isInValid
                               ? "border-red-500 ring-red-500 focus:ring-red-500"
                               : ""
@@ -1615,7 +1650,10 @@ export default function RegisterProfileDashboard() {
                         onOpenChange={setIsCalendarOpen}
                         className=""
                       >
-                        <PopoverTrigger className="w-full" asChild>
+                        <PopoverTrigger
+                          className="w-full border-black rounded"
+                          asChild
+                        >
                           <Button
                             variant="outline"
                             className="justify-start py-[15px]"
@@ -1678,7 +1716,7 @@ export default function RegisterProfileDashboard() {
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
-                        className={`py-[8px] ${
+                        className={`py-[8px] border-black rounded ${
                           validation.image
                             ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
                             : ""
@@ -1730,7 +1768,7 @@ export default function RegisterProfileDashboard() {
                         // ✅ NEW: MaxLength for Phone/Whatsapp
                         maxLength={isPhoneNumberField ? 10 : undefined}
                         // 🔴 Input Border Update
-                        className={`h-[32px] ${
+                        className={`h-[32px] border-black rounded ${
                           isInValid
                             ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
                             : ""

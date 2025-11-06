@@ -2,6 +2,286 @@ const Profile = require("../models/profile");
 const { Op, Sequelize } = require("sequelize");
 const nodemailer = require("nodemailer");
 
+// exports.registerProfile = async (req, res) => {
+//   //console.log(req.file);
+//   try {
+//     // multer upload file path
+//     // const imagePath = req.file ? req.file.path : null;
+
+//     // ✅ Cloudinary-la ulla image data extract pannanum
+//     const imagePath = req.file ? req.file.path : null; // Full Cloudinary URL
+//     const publicId = req.file ? req.file.filename : null; // Unique ID for management
+
+//     //console.log(publicId);
+
+//     console.log(imagePath);
+//     console.log(req.body);
+
+//     let {
+//       mprofile,
+//       pname,
+//       dob,
+//       age,
+//       pbrith,
+//       tbrith,
+//       rasi,
+//       nakshatram,
+//       laknam,
+//       height,
+//       weight,
+//       color,
+//       maritalstatus,
+//       gender,
+//       education,
+//       occupation,
+//       annualincome,
+//       mothertongue,
+//       religion,
+//       caste,
+//       subcaste,
+//       fname,
+//       foccupation,
+//       mname,
+//       moccupation,
+//       sister,
+//       brother,
+//       children,
+//       rplace,
+//       whatsappno,
+//       email,
+//       addressdetails,
+//       phonenumber,
+//     } = req.body;
+
+//     if (Array.isArray(education)) {
+//       education = education.join(", ");
+//     }
+
+//     const now = new Date();
+//     const created_day = now.getDate().toString().padStart(2, "0");
+//     const created_month = (now.getMonth() + 1).toString().padStart(2, "0");
+//     const created_year = now.getFullYear().toString();
+
+//     //console.log(imagePath);
+
+//     //console.log(req.body);
+
+//     // ✅ Check if email or phone number already exists
+
+//     const existingProfile = await Profile.findOne({
+//       where: {
+//         // Sequelize OR condition
+//         [Op.or]: [{ email }, { phonenumber }],
+//       },
+//     });
+
+//     if (existingProfile) {
+//       // Decide which field is duplicated
+//       let message = "";
+//       if (
+//         existingProfile.email === email &&
+//         existingProfile.phonenumber === phonenumber &&
+//         existingProfile.whatsappno === whatsappno
+//       ) {
+//         message = "Email and phone number already exist";
+//       } else if (existingProfile.email === email) {
+//         message = "Email already exists";
+//       } else {
+//         message = "Phone number already exists";
+//       }
+
+//       return res.status(400).json({
+//         success: false,
+//         message,
+//       });
+//     }
+
+//     // ✅ Create new profile
+
+//     const newProfile = await Profile.create({
+//       mprofile,
+//       pname,
+//       dob,
+//       age,
+//       pbrith,
+//       tbrith,
+//       rasi,
+//       nakshatram,
+//       laknam,
+//       height,
+//       weight,
+//       color,
+//       maritalstatus,
+//       gender,
+//       education,
+//       occupation,
+//       annualincome,
+//       mothertongue,
+//       religion,
+//       caste,
+//       subcaste,
+//       fname,
+//       foccupation,
+//       mname,
+//       moccupation,
+//       sister,
+//       brother,
+//       children,
+//       rplace,
+//       whatsappno,
+//       email,
+//       addressdetails,
+//       phonenumber,
+//       //image: imagePath ? imagePath.replace(/\\/g, "/") : null, // multer store  path
+//       // Cloudinary URL Image
+//       image: imagePath,
+//       // Cloudinary Public_id
+//       imagePublicId: publicId,
+//       created_day,
+//       created_month,
+//       created_year,
+//     });
+
+//     res.status(201).json({
+//       success: true,
+//       message: "Profile registered successfully ✅",
+//       // Response Cloudinary URL
+//       imageUrl: imagePath,
+//       data: newProfile,
+//     });
+
+//     try {
+//       // 🔥 Nodemailer Setup
+//       // ----------------------------
+
+//       const transporter = nodemailer.createTransport({
+//         host: process.env.EMAIL_HOST,
+//         port: process.env.EMAIL_PORT,
+//         secure: true,
+//         auth: {
+//           user: process.env.EMAIL_USER,
+//           pass: process.env.EMAIL_PASS,
+//         },
+//       });
+
+//       // Email to registered user
+
+//       const userMailOptions = {
+//         from: process.env.EMAIL_USER,
+//         to: email,
+//         subject: "Profile Registration Successful ✅",
+//         html: `<h3>Hello ${pname},</h3>
+//              <p>Your matrimony profile has been successfully registered.</p>
+//              <p>We will contact to soon.</p>
+//              <p>Thank you for registering!</p>`,
+//       };
+
+//       // Email to admin
+//       const adminMailOptions = {
+//         from: process.env.EMAIL_USER,
+//         to: process.env.ADMIN_EMAIL,
+//         subject: "New Profile Registered ✅",
+//         html: `<h3>New Profile Registered</h3>
+//              <p>Name: ${pname}</p>
+//              <p>Email: ${email}</p>
+//              <p>Phone: ${phonenumber}</p>
+//              <p>Profile Type: ${mprofile}</p>`,
+//       };
+
+//       // Send emails (FIRE AND FORGET - NO AWAIT)
+//       // The promise will resolve/reject in the background, not blocking the main thread.
+
+//       // Send emails
+//       //console.log("Email send Start");
+//       transporter
+//         .sendMail(userMailOptions)
+//         .then(() => console.log(`SUCCESS: User email sent to ${email}`))
+//         .catch((err) =>
+//           console.log("ERROR: Failed to send admin email.", err.message)
+//         );
+//       //console.log("Email Send UserEmail");
+//       transporter
+//         .sendMail(adminMailOptions)
+//         .then(() => console.log("SUCCESS: Admin email sent."))
+//         .catch((err) =>
+//           console.error("ERROR: Failed to send admin email.", err.message)
+//         );
+//       //console.log("Email Send End finish");
+//     } catch (emailError) {
+//       console.error(
+//         "CRITICAL ERROR: Email setup failed, emails not sent.",
+//         emailError
+//       );
+//     }
+//   } catch (error) {
+//     console.error("Registration Error:", error.message);
+
+//     // // 🔥 Multer/Size/File Type error handling
+//     if (error instanceof multer.MulterError) {
+//       let message = "Image upload failed.";
+//       if (error.code === "LIMIT_FILE_SIZE") {
+//         message = "Image size exceeds the 500 KB limit! 😞";
+//       }
+//       return res.status(400).json({ success: false, message });
+//     }
+//     // File Filter error handling
+//     if (error.message.includes("Only image files are allowed")) {
+//       return res.status(400).json({ success: false, message: error.message });
+//     }
+
+//     // Handle Sequelize unique constraint error just in case
+//     if (error.name === "SequelizeUniqueConstraintError") {
+//       const field = error.errors[0].path; // email or phonenumber
+//       return res.status(400).json({
+//         success: false,
+//         message: `${field} already exists ❌`,
+//       });
+//     }
+
+//     res.status(500).json({
+//       success: false,
+//       message: "Profile registration failed ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// exports.getAllProfiles = async (req, res) => {
+//   try {
+//     const profiles = await Profile.findAll({
+//       order: [["id", "DESC"]],
+//     });
+
+//     // no data check
+//     if (profiles.length === 0) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "No profiles found ❌",
+//       });
+//     }
+
+//     console.log(profiles);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "All profiles fetched successfully ✅",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching profiles:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while fetching profiles ❌",
+//       error: error.message,
+//     });
+//   }
+// };
+
+// ✅ Get Single Profile by ID
+
+// { 'user@example.com': { otp: '123456', profileData: { ... }, timestamp: 1678886400000 } }
+
 exports.registerProfile = async (req, res) => {
   //console.log(req.file);
   try {
@@ -62,10 +342,6 @@ exports.registerProfile = async (req, res) => {
     const created_month = (now.getMonth() + 1).toString().padStart(2, "0");
     const created_year = now.getFullYear().toString();
 
-    //console.log(imagePath);
-
-    //console.log(req.body);
-
     // ✅ Check if email or phone number already exists
 
     const existingProfile = await Profile.findOne({
@@ -90,13 +366,14 @@ exports.registerProfile = async (req, res) => {
         message = "Phone number already exists";
       }
 
+      // 🛑 Error: Profile already exists. Response sent here.
       return res.status(400).json({
         success: false,
         message,
       });
     }
 
-    // ✅ Create new profile
+    // ✅ Create new profile (Step 1: Database Write)
 
     const newProfile = await Profile.create({
       mprofile,
@@ -132,7 +409,6 @@ exports.registerProfile = async (req, res) => {
       email,
       addressdetails,
       phonenumber,
-      //image: imagePath ? imagePath.replace(/\\/g, "/") : null, // multer store  path
       // Cloudinary URL Image
       image: imagePath,
       // Cloudinary Public_id
@@ -142,20 +418,18 @@ exports.registerProfile = async (req, res) => {
       created_year,
     });
 
-    res.status(201).json({
-      success: true,
-      message: "Profile registered successfully ✅",
-      // Response Cloudinary URL
-      imageUrl: imagePath,
-      data: newProfile,
-    });
+    // ----------------------------------------------------------------------------------
+    // ✅ NEW ORDER: Step 2: Send Email (MUST BE AHEAD OF final response)
+    // ----------------------------------------------------------------------------------
+
+    let emailMessage = "Profile registered successfully. Email is sending..."; // Default success message
 
     try {
       // 🔥 Nodemailer Setup
-      // ----------------------------
-
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
@@ -163,56 +437,135 @@ exports.registerProfile = async (req, res) => {
       });
 
       // Email to registered user
-
       const userMailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: "Profile Registration Successful ✅",
-        html: `<h3>Hello ${pname},</h3>
-             <p>Your matrimony profile has been successfully registered.</p>
-             <p>We will contact to soon.</p>
-             <p>Thank you for registering!</p>`,
+        subject: "🎉 Profile Registration Successful!",
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+            
+            <div style="background-color: #B02E2E; color: white; padding: 20px; text-align: center;">
+                <h1 style="margin: 0; font-size: 24px;">Welcome</h1>
+            </div>
+
+            <div style="padding: 25px; color: #333333;">
+                <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-top: 0;">Hello ${pname}, Congratulations!</h2>
+                
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Your Matrimony profile has been successfully registered with us. We are excited to help you find your perfect life partner!
+                </p>
+
+                <div style="background-color: #f4f4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                    <p style="margin: 0; font-weight: bold; color: #B02E2E;">Profile Details:</p>
+                    <ul style="list-style-type: none; padding: 0; margin: 10px 0 0 0;">
+                        <li style="margin-bottom: 5px;"><strong>Name:</strong> ${pname}</li>
+                        <li style="margin-bottom: 5px;"><strong>Registered Email:</strong> ${email}</li>
+                        <li style="margin-bottom: 5px;"><strong>Profile Type:</strong> ${mprofile}</li>
+                    </ul>
+                </div>
+                
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Our team will review your profile shortly. We will contact you soon on your registered phone number (${phonenumber}) to discuss the next steps.
+                </p>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="[Your Website Profile Link]" target="_blank" style="display: inline-block; padding: 12px 25px; background-color: #B02E2E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View Your Profile</a>
+                </div>
+                
+                <p style="margin-top: 40px; font-size: 15px;">
+                    Thank you for trusting us. <br>
+                    Warm Regards, <br>
+                    The Indolankamatrimony Team.
+                </p>
+            </div>
+
+            <div style="background-color: #333333; color: #aaaaaa; padding: 15px; text-align: center; font-size: 12px;">
+                <p style="margin: 0;">© ${new Date().getFullYear()} Indolankamatrimony. All rights reserved.</p>
+            </div>
+        </div>
+    `,
       };
 
       // Email to admin
       const adminMailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.ADMIN_EMAIL,
-        subject: "New Profile Registered ✅",
-        html: `<h3>New Profile Registered</h3>
-             <p>Name: ${pname}</p>
-             <p>Email: ${email}</p>
-             <p>Phone: ${phonenumber}</p>
-             <p>Profile Type: ${mprofile}</p>`,
+        subject: `🔔 ACTION REQUIRED: New Matrimony Profile Registered - ${pname}`,
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; border: 1px solid #ffcc00; border-radius: 8px; overflow: hidden; background-color: #fffaf0;">
+            
+            <div style="background-color: #ffcc00; color: #333333; padding: 15px; text-align: center; border-bottom: 3px solid #ff9900;">
+                <h2 style="margin: 0; font-size: 20px;">🚨 New Profile Registration Alert 🚨</h2>
+            </div>
+
+            <div style="padding: 20px; color: #333333;">
+                <p style="font-size: 16px; font-weight: bold;">A new user has registered a profile. Please verify and approve the details.</p>
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold; width: 35%;">Name</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${pname}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Email</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${email}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Phone Number</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${phonenumber}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Profile Type</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${mprofile}</td>
+                    </tr>
+                </table>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="[Your Admin Panel Link to Profile List]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #B02E2E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View/Approve Profile</a>
+                </div>
+
+                <p style="margin-top: 25px; font-size: 14px; color: #666666;">
+                    This is an automated notification. Please do not reply to this email.
+                </p>
+            </div>
+
+            <div style="background-color: #333333; color: #aaaaaa; padding: 10px; text-align: center; font-size: 11px;">
+                Matrimony Admin System
+            </div>
+        </div>
+    `,
       };
+      // ✅ Await both emails to ensure they are sent before sending the final response
+      await Promise.all([
+        transporter.sendMail(userMailOptions),
+        transporter.sendMail(adminMailOptions),
+      ]);
 
-      // Send emails (FIRE AND FORGET - NO AWAIT)
-      // The promise will resolve/reject in the background, not blocking the main thread.
-
-      // Send emails
-      //console.log("Email send Start");
-      transporter
-        .sendMail(userMailOptions)
-        .then(() => console.log(`SUCCESS: User email sent to ${email}`))
-        .catch((err) =>
-          console.log('ERROR: Failed to send admin email.", err')
-        );
-      //console.log("Email Send UserEmail");
-      transporter
-        .sendMail(adminMailOptions)
-        .then(() => console.log("SUCCESS: Admin email sent."))
-        .catch((err) =>
-          console.error("ERROR: Failed to send admin email.", err)
-        );
-      //console.log("Email Send End finish");
+      console.log(`SUCCESS: User email sent to ${email} and Admin email sent.`);
+      emailMessage =
+        "Profile registered successfully and confirmation email sent! ✅";
     } catch (emailError) {
+      // Email fail ஆனா, Registration Success-ன்னு காட்டலாம், ஆனா Email Fail-ஆச்சுன்னு log பண்ணுவோம்.
       console.error(
-        "CRITICAL ERROR: Email setup failed, emails not sent.",
-        emailError
+        "WARNING: Email sending failed. The user was registered, but mail delivery failed. Check SMTP settings.",
+        emailError.message
       );
+      // Email fail ஆனாலும் registration successful தான், ஆனா response message மாத்திருவோம்.
+      emailMessage =
+        "Profile registered successfully, but failed to send confirmation email. Please check your email settings. ⚠️";
     }
+
+    // ----------------------------------------------------------------------------------
+    // ✅ FINAL STEP: Send success response to the client
+    // ----------------------------------------------------------------------------------
+    res.status(201).json({
+      success: true,
+      message: emailMessage, // Updated message based on email status
+      imageUrl: imagePath,
+      data: newProfile,
+    });
   } catch (error) {
-    console.error("Registration Error:", error.messafe);
+    console.error("Registration Error:", error.message);
 
     // // 🔥 Multer/Size/File Type error handling
     if (error instanceof multer.MulterError) {
@@ -243,42 +596,6 @@ exports.registerProfile = async (req, res) => {
     });
   }
 };
-
-// exports.getAllProfiles = async (req, res) => {
-//   try {
-//     const profiles = await Profile.findAll({
-//       order: [["id", "DESC"]],
-//     });
-
-//     // no data check
-//     if (profiles.length === 0) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "No profiles found ❌",
-//       });
-//     }
-
-//     console.log(profiles);
-
-//     res.status(200).json({
-//       success: true,
-//       message: "All profiles fetched successfully ✅",
-//       count: profiles.length,
-//       data: profiles,
-//     });
-//   } catch (error) {
-//     console.error("❌ Error fetching profiles:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Something went wrong while fetching profiles ❌",
-//       error: error.message,
-//     });
-//   }
-// };
-
-// ✅ Get Single Profile by ID
-
-// { 'user@example.com': { otp: '123456', profileData: { ... }, timestamp: 1678886400000 } }
 
 const otpStorage = {};
 const OTP_EXPIRY_MINUTES = 5;
