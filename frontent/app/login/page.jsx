@@ -92,10 +92,7 @@ const page = () => {
             Admin Login
           </CardTitle>
           <CardContent>
-            <form
-              //onSubmit={handleSubmit}
-              className="space-y-5"
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-3">
                 <Label htmlFor="email">Email Address</Label>
                 <Input

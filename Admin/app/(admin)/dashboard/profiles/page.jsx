@@ -100,14 +100,86 @@ const AllProfiles = () => {
     // key: profile ஆப்ஜெக்ட்டில் உள்ள key-ஐ குறிக்கிறது
     // header: தலைப்பு (TH)
     // render: (Optional) சிக்கலான உள்ளடக்கத்தை (Image, Custom Formatting) ரெண்டர் செய்ய பயன்படுத்தலாம்.
-    { key: "index", header: "Joining", widthClass: "min-w-[60px]" },
+    {
+      key: "index",
+      header: "Joining",
+      widthClass: "min-w-[60px]", // width-ஐ சற்று அதிகரிக்கப்பட்டுள்ளது
+      render: (profile) => {
+        // 7 நாட்களுக்கான மில்லிசெகண்ட்ஸ்
+        const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+        // உங்கள் Schema-வில் உள்ள Day, Month, Year-ஐப் பயன்படுத்தி Date Object-ஐ உருவாக்குதல்
+        // ISO 8601 Format: YYYY-MM-DD (Date object-ஐ சரியாக உருவாக்க)
+        const registrationDateStr = `${profile.created_year}-${profile.created_month}-${profile.created_day}`;
+        const registrationDate = new Date(registrationDateStr);
+
+        const now = new Date();
+        const timeDiff = now.getTime() - registrationDate.getTime();
+
+        // 7 நாட்களுக்கு குறைவாக இருந்தால் NEW
+        const isNew = timeDiff <= SEVEN_DAYS_MS;
+
+        return (
+          <td
+            key="index"
+            className="px-4 py-3 text-sm text-gray-500 relative" // relative added here for absolute positioning inside
+          >
+            <span className="whitespace-nowrap">
+              {`${profile.created_year}-${profile.created_month}-${profile.created_day}`}
+            </span>
+            {/* ✅ New Label UI with Absolute Positioning */}
+            {isNew && (
+              <span className="absolute top-1 right-1 bg-green-100 text-green-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                ✨ NEW
+              </span>
+            )}
+          </td>
+        );
+      },
+    },
     { key: "id", header: "ID", widthClass: "min-w-[100px]" },
     {
       key: "mprofile",
       header: "Matrimony Profile",
       widthClass: "min-w-[100px]",
     },
-    { key: "pname", header: "Name", widthClass: "min-w-[120px]" },
+    {
+      key: "pname",
+      header: "Name",
+      widthClass: "min-w-[120px]",
+      // render: (profile) => {
+      //   // 7 நாட்களுக்கான மில்லிசெகண்ட்ஸ்
+      //   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+      //   // உங்கள் Schema-வில் உள்ள Day, Month, Year-ஐப் பயன்படுத்தி Date Object-ஐ உருவாக்குதல்
+      //   // ISO 8601 Format: YYYY-MM-DD (Date object-ஐ சரியாக உருவாக்க)
+      //   const registrationDateStr = `${profile.created_year}-${profile.created_month}-${profile.created_day}`;
+      //   const registrationDate = new Date(registrationDateStr);
+
+      //   const now = new Date();
+      //   const timeDiff = now.getTime() - registrationDate.getTime();
+
+      //   // 7 நாட்களுக்கு குறைவாக இருந்தால் NEW
+      //   const isNew = timeDiff <= SEVEN_DAYS_MS;
+
+      //   return (
+      //     <td
+      //       key="pname"
+      //       className="px-4 py-3 text-sm font-medium text-gray-900"
+      //     >
+      //       <div className="flex items-center gap-2">
+      //         <span className="whitespace-nowrap">
+      //           {profile.pname || "N/A"}
+      //         </span>
+      //         {/* ✅ New Label UI */}
+      //         {isNew && (
+      //           <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap">
+      //             ✨ NEW
+      //           </span>
+      //         )}
+      //       </div>
+      //     </td>
+      //   );
+      // },
+    },
     { key: "dob", header: "DOB", widthClass: "min-w-[100px]" },
     { key: "age", header: "Age", widthClass: "min-w-[60px]" },
     { key: "pbrith", header: "Place of Birth", widthClass: "min-w-[120px]" },
