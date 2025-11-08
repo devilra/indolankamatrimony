@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
  */
 
 const adminMailOptions = (data) => ({
-  from: `Contact Form <${process.env.EMAIL_USER}>`,
+  from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
   to: process.env.ADMIN_EMAIL,
   replyTo: data.email,
   subject: `🚨 NEW ENQUIRY: ${data.name}`, // Subject-a update pannirukken
@@ -67,7 +67,7 @@ const adminMailOptions = (data) => ({
  */
 
 const userMailOptions = (data) => ({
-  from: `Indolankamatrimony <${process.env.EMAIL_USER}>`,
+  from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
   to: data.email,
   subject: `✅ We received your enquiry, ${data.name}!`, // Subject-a update pannirukken
   html: `

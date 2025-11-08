@@ -32,9 +32,9 @@ import { CalendarIcon, Check, Loader2, X } from "lucide-react";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerProfile } from "../redux/profileSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { registerProfile } from "@/app/redux/adminSlices/profileSlice";
 
 const REQUIRED_FIELDS = [
   "phonenumber",
@@ -1053,14 +1053,13 @@ const dropdownData = {
   "Father's Occupation": uniqueFatherOccupations,
   "Mother's Occupation": uniqueMotherOccupations,
   Height: [
-    "4ft 6in - 137cm",
-    "4ft 7in - 139cm",
+    // ✨ Practical Minimum
     "4ft 8in - 142cm",
     "4ft 9in - 144cm",
     "4ft 10in - 147cm",
     "4ft 11in - 149cm",
     "5ft - 152cm",
-    "5ft 1in - 154cm",
+    "5ft 1in - 155cm",
     "5ft 2in - 157cm",
     "5ft 3in - 160cm",
     "5ft 4in - 162cm",
@@ -1083,6 +1082,7 @@ const dropdownData = {
     "6ft 9in - 205cm",
     "6ft 10in - 208cm",
     "6ft 11in - 210cm",
+    // ✨ Practical Maximum
     "7ft - 213cm",
   ],
 };
@@ -1152,9 +1152,9 @@ const fieldOrder = [
 const calculateAge = (dob) => {
   if (!dob) return "";
   const today = new Date();
-  console.log("Today", today);
+  //console.log("Today", today);
   const birthDate = new Date(dob);
-  console.log("birthDate", birthDate);
+  //console.log("birthDate", birthDate);
   let age = today.getFullYear() - birthDate.getFullYear();
   const monthDifference = today.getMonth() - birthDate.getMonth();
 
@@ -1169,10 +1169,10 @@ const calculateAge = (dob) => {
   return age >= 0 ? age.toString() : "";
 };
 
-export default function RegisterProfile() {
+export default function RegisterProfileDashboard() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { loading } = useSelector((state) => state.profile);
+  const { loading } = useSelector((state) => state.adminProfile);
   // Error Tracking State
   const [validation, setValidation] = useState({});
   // ✅ NEW: Regex for Validation
@@ -1219,8 +1219,6 @@ export default function RegisterProfile() {
     addressdetails: "",
     phonenumber: "",
   });
-
-  console.log(formData);
 
   const [image, setImage] = useState(null);
   const [dobDate, setDobDate] = useState(null);
@@ -1297,8 +1295,8 @@ export default function RegisterProfile() {
       birthDate.getDate()
     );
 
-    //console.log(requiredDate);
-    //console.log(now);
+    console.log(requiredDate);
+    console.log(now);
 
     // தேவையான தேதி, இன்றைய தேதியை விட குறைவாகவோ அல்லது சமமாகவோ இருக்க வேண்டும்.
     return requiredDate <= now;
@@ -1487,7 +1485,7 @@ export default function RegisterProfile() {
         "registrationSuccess",
         JSON.stringify({ id: data.id, name: data.pname })
       );
-      router.push("/success");
+      router.push("/adminSuccess");
     } else {
       // Use result.payload?.message if available, otherwise a generic error
       toast.error(result.payload?.message || "Profile Registered Failed", {
@@ -1499,23 +1497,23 @@ export default function RegisterProfile() {
   };
 
   return (
-    <div className="max-w-8xl mx-auto   shadow-lg rounded-2xl ">
+    <div className="max-w-8xl mx-auto  shadow-lg rounded-2xl ">
       {/* <h1 className="text-3xl font-bold text-center mb-10 text-[#4a2f1c]">
         Matrimony Profile Registration
       </h1> */}
 
-      <div className="lg:max-w-5xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3  lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
-        <div className="hidden md:hidden lg:block">
+      <div className="lg:max-w-3xl lg:mx-auto lg:bg-white lg:shadow-2xl lg:px-3  lg:pb-10 lg:gap-10 rounded-2xl lg:flex">
+        {/* <div className="hidden md:hidden lg:block">
           <img
             src="/register/r1.jpg"
             alt="Love"
             className="h-[300px] lg:pt-5"
           />
-        </div>
+        </div> */}
 
         <form
           onSubmit={handleSubmit} // grid-cols-1 added for mobile/default view
-          className="md:grid  flex flex-col md:grid-cols-2 lg:flex  lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[670px] lg:grid-cols-1 gap-2 md:gap-3 lg:gap-2"
+          className="md:grid  flex flex-col p-4 md:grid-cols-2 lg:flex  lg:flex-col pt-10 md:pt-15 lg:pt-5 lg:w-[670px] lg:mx-auto lg:grid-cols-1 gap-2 md:gap-3 lg:gap-2"
         >
           <h1 className="bg-neutral-600/70 col-span-1 font-semibold md:col-span-2 py-3 px-2 text-2xl text-white">
             Profile details
@@ -1578,7 +1576,7 @@ export default function RegisterProfile() {
                         formData.education.map((item, index) => (
                           <span
                             key={index}
-                            className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
+                            className="bg-neutral-200 text-neutral-800 px-2  rounded-full text-[10px] flex items-center gap-1"
                           >
                             {item}
 
@@ -1611,7 +1609,7 @@ export default function RegisterProfile() {
                         }
                       >
                         <SelectTrigger
-                          className={`w-full py-[15px] border-black rounded ${
+                          className={`w-full py-[15px] border-black rounded  ${
                             isInValid
                               ? "border-red-500 ring-red-500 focus:ring-red-500"
                               : ""
@@ -1652,10 +1650,13 @@ export default function RegisterProfile() {
                         onOpenChange={setIsCalendarOpen}
                         className=""
                       >
-                        <PopoverTrigger className="w-full" asChild>
+                        <PopoverTrigger
+                          className="w-full border-black rounded"
+                          asChild
+                        >
                           <Button
                             variant="outline"
-                            className="justify-start py-[15px] border-black rounded"
+                            className="justify-start py-[15px]"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {dobDate
@@ -1695,7 +1696,6 @@ export default function RegisterProfile() {
                         value={formData[fieldName]}
                         placeholder={`Enter ${field.label}`}
                         onChange={handleChange}
-                        className="border-black rounded"
                       />
                     </div>
                   </div>

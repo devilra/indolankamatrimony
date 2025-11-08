@@ -1,5 +1,7 @@
 import React from "react";
 import RegisterProfile from "../Components/RegisterProfile";
+import SendOtpRegisterProfile from "../Components/SendOTPRegisterProfile";
+import SendOtpRegister from "../Components/SendOtpRegister";
 
 const Register = () => {
   return (
@@ -31,6 +33,8 @@ const Register = () => {
       </section> */}
       <section className="bg-gradient-to-r from-amber-50/20 to-amber-100/50">
         <RegisterProfile />
+
+        {/* <SendOtpRegister /> */}
       </section>
     </div>
   );

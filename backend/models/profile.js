@@ -357,17 +357,25 @@ const Profile = sequelize.define(
 
     indexes: [
       // ... (Your existing unique and search indexes)
+      {
+        name: "idx_email", // பெயர் மாற்றப்பட்டுள்ளது
+        fields: ["email"], // unique: true - நீக்கப்பட்டது
+      },
+      {
+        name: "idx_phonenumber", // பெயர் மாற்றப்பட்டுள்ளது
+        fields: ["phonenumber"], // unique: true - நீக்கப்பட்டது
+      },
 
-      {
-        name: "unique_email",
-        unique: true,
-        fields: ["email"],
-      },
-      {
-        name: "unique_phonenumber",
-        unique: true,
-        fields: ["phonenumber"],
-      },
+      // {
+      //   name: "unique_email",
+      //   unique: true,
+      //   fields: ["email"],
+      // },
+      // {
+      //   name: "unique_phonenumber",
+      //   unique: true,
+      //   fields: ["phonenumber"],
+      // },
       {
         name: "search_pname",
         fields: ["pname"],

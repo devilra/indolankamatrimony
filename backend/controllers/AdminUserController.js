@@ -119,3 +119,160 @@ exports.logout = async (req, res) => {
 
   res.status(200).json({ message: "Logout successful" });
 };
+
+exports.updateName = async (req, res) => {
+  try {
+    const { newName } = req.body;
+    const adminId = req.adminId; // Auth Middleware-ல் இருந்து வருகிறது
+
+    if (!newName || newName.trim() === "") {
+      return res.status(400).json({ message: "New name cannot be empty." });
+    }
+
+    const admin = await Admin.findByPk(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    admin.name = newName;
+    await admin.save();
+
+    res.status(200).json({
+      message: "Admin name updated successfully.",
+      name: admin.name,
+    });
+  } catch (error) {
+    console.error("Admin Name Update Error:", error.message);
+    res.status(500).json({ message: "Server error during name update." });
+  }
+};
+
+// 2. Admin Email-ஐ மட்டும் அப்டேட் செய்ய
+
+exports.updateEmail = async (req, res) => {
+  try {
+    const { newEmail } = req.body;
+    const adminId = req.adminId;
+
+    if (!newEmail) {
+      return res.status(400).json({ message: "New email cannot be empty." });
+    }
+    // ✅ 1. புதிய Email ஏற்கெனவே உள்ளதா எனச் சரிபார்க்க
+
+    const existingProfile = await Admin.findOne({
+      where: {
+        email: newEmail,
+        id: {
+          [Op.ne]: adminId,
+        },
+      },
+    });
+
+    if (existingAdmin) {
+      return res
+        .status(400)
+        .json({ message: "This email is already taken by another admin." });
+    }
+
+    const admin = await Admin.findByPk(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    admin.email = newEmail;
+    await admin.save();
+
+    // 💡 பாதுகாப்பு காரணங்களுக்காக, ஈமெயில் மாற்றப்பட்டால், புதிய டோக்கன் அனுப்ப வேண்டும்
+    // பழைய டோக்கனை invalidate செய்ய, log out செய்துவிடலாம்.
+
+    res.clearCookie("admin_auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.status(200).json({
+      message:
+        "Admin email updated successfully. Please log in again with the new email.",
+      email: admin.email,
+    });
+  } catch (error) {
+    console.error("Admin Email Update Error:", error.message);
+    res.status(500).json({ message: "Server error during email update." });
+  }
+};
+
+// 3. Admin Password-ஐ மட்டும் அப்டேட் செய்ய
+exports.updatePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    const adminId = req.adminId;
+
+    if (!oldPassword || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Please provide old and new passwords." });
+    }
+
+    const admin = await Admin.findByPk(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    // ✅ பழைய கடவுச்சொல்லைச் சரிபார்க்க
+    const isMatch = await bcrypt.compare(oldPassword, admin.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect old password." });
+    }
+
+    // ✅ புதிய கடவுச்சொல்லை ஹேஷ் (Hash) செய்ய
+    const salt = await bcrypt.genSalt(10);
+    admin.password = bcrypt.hash(newPassword, salt);
+
+    // 💡 கடவுச்சொல் மாற்றப்பட்டதால், பாதுகாப்புக்காக Logout செய்யப்படுகிறது
+    res.clearCookie("admin_auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.status(200).json({
+      message: "Password updated successfully. Please log in again.",
+    });
+  } catch (error) {
+    console.error("Admin Password Update Error:", error.message);
+    res.status(500).json({ message: "Server error during password update." });
+  }
+};
+
+// 4. Admin Account-ஐ நீக்க (Delete)
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const adminId = req.adminId;
+    const admin = await Admin.findByPk(adminId);
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    // ✅ அட்மின் அக்கவுண்ட்டை நீக்க
+
+    await admin.destroy();
+
+    // 💡 அக்கவுண்ட் நீக்கப்பட்டதால், Cookie-ஐ நீக்க
+    res.clearCookie("admin_auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    res.status(200).json({
+      message: "Admin account deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Admin Delete Error:", error.message);
+    res.status(500).json({ message: "Server error during account deletion." });
+  }
+};

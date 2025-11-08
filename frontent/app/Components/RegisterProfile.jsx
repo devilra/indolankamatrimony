@@ -1220,7 +1220,7 @@ export default function RegisterProfile() {
     phonenumber: "",
   });
 
-  console.log(formData);
+  //console.log(formData);
 
   const [image, setImage] = useState(null);
   const [dobDate, setDobDate] = useState(null);

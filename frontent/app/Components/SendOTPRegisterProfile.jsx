@@ -1113,7 +1113,7 @@ const calculateAge = (dob) => {
   return age >= 0 ? age.toString() : "";
 };
 
-export default function RegisterProfile() {
+export default function SendOtpRegisterProfile() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading } = useSelector((state) => state.profile);

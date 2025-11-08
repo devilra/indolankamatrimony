@@ -344,34 +344,34 @@ exports.registerProfile = async (req, res) => {
 
     // ✅ Check if email or phone number already exists
 
-    const existingProfile = await Profile.findOne({
-      where: {
-        // Sequelize OR condition
-        [Op.or]: [{ email }, { phonenumber }],
-      },
-    });
+    // const existingProfile = await Profile.findOne({
+    //   where: {
+    //     // Sequelize OR condition
+    //     [Op.or]: [{ email }, { phonenumber }],
+    //   },
+    // });
 
-    if (existingProfile) {
-      // Decide which field is duplicated
-      let message = "";
-      if (
-        existingProfile.email === email &&
-        existingProfile.phonenumber === phonenumber &&
-        existingProfile.whatsappno === whatsappno
-      ) {
-        message = "Email and phone number already exist";
-      } else if (existingProfile.email === email) {
-        message = "Email already exists";
-      } else {
-        message = "Phone number already exists";
-      }
+    // if (existingProfile) {
+    //   // Decide which field is duplicated
+    //   let message = "";
+    //   if (
+    //     existingProfile.email === email &&
+    //     existingProfile.phonenumber === phonenumber &&
+    //     existingProfile.whatsappno === whatsappno
+    //   ) {
+    //     message = "Email and phone number already exist";
+    //   } else if (existingProfile.email === email) {
+    //     message = "Email already exists";
+    //   } else {
+    //     message = "Phone number already exists";
+    //   }
 
-      // 🛑 Error: Profile already exists. Response sent here.
-      return res.status(400).json({
-        success: false,
-        message,
-      });
-    }
+    //   // 🛑 Error: Profile already exists. Response sent here.
+    //   return res.status(400).json({
+    //     success: false,
+    //     message,
+    //   });
+    // }
 
     // ✅ Create new profile (Step 1: Database Write)
 
@@ -438,7 +438,7 @@ exports.registerProfile = async (req, res) => {
 
       // Email to registered user
       const userMailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "🎉 Profile Registration Successful!",
         html: `
@@ -461,6 +461,10 @@ exports.registerProfile = async (req, res) => {
                         <li style="margin-bottom: 5px;"><strong>Name:</strong> ${pname}</li>
                         <li style="margin-bottom: 5px;"><strong>Registered Email:</strong> ${email}</li>
                         <li style="margin-bottom: 5px;"><strong>Profile Type:</strong> ${mprofile}</li>
+                        <li style="margin-bottom: 5px;"><strong>Profile ID:</strong> ${
+                          newProfile.id
+                        }</li>
+                     
                     </ul>
                 </div>
                 
@@ -488,7 +492,7 @@ exports.registerProfile = async (req, res) => {
 
       // Email to admin
       const adminMailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
         to: process.env.ADMIN_EMAIL,
         subject: `🔔 ACTION REQUIRED: New Matrimony Profile Registered - ${pname}`,
         html: `
@@ -517,6 +521,10 @@ exports.registerProfile = async (req, res) => {
                     <tr>
                         <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Profile Type</td>
                         <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${mprofile}</td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Profile ID</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${newProfile.id}</td>
                     </tr>
                 </table>
 
@@ -611,8 +619,8 @@ const createMailTransporter = () => {
   return nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: "rockraja91338@gmail.com",
+      pass: "kgdngrwjibulofxh",
     },
   });
 };
@@ -657,19 +665,19 @@ exports.sendOtp = async (req, res) => {
 
     // --- Check if email or phone number already exists in DB ---
 
-    const existingProfile = await Profile.findOne({
-      where: { [Op.or]: [{ email }, { phonenumber }] },
-    });
+    // const existingProfile = await Profile.findOne({
+    //   where: { [Op.or]: [{ email }, { phonenumber }] },
+    // });
 
-    console.log(profileData);
+    //console.log(profileData);
 
-    if (existingProfile) {
-      let message =
-        existingProfile.email === email
-          ? "Email already exists ❌"
-          : "Phone number already exists ❌";
-      return res.status(400).json({ success: false, message });
-    }
+    // if (existingProfile) {
+    //   let message =
+    //     existingProfile.email === email
+    //       ? "Email already exists ❌"
+    //       : "Phone number already exists ❌";
+    //   return res.status(400).json({ success: false, message });
+    // }
 
     // --- Generate OTP and Save Data Temporarily ---
     const otp = generateOTP();
@@ -694,7 +702,7 @@ exports.sendOtp = async (req, res) => {
     const transporter = createMailTransporter();
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: "rockraja91338@gmail.com",
       to: email,
       subject: "Your Profile Verification OTP",
       html: `<h3>Hello ${pname},</h3>
@@ -787,17 +795,17 @@ exports.verifyOtpAndRegister = async (req, res) => {
     const profileData = storedData.profileData;
 
     // Final check to prevent duplicate submission just in case
-    const existingProfile = await Profile.findOne({
-      where: { email },
-    });
+    // const existingProfile = await Profile.findOne({
+    //   where: { email },
+    // });
 
-    if (existingProfile) {
-      delete otpStorage[email];
-      return res.status(400).json({
-        success: false,
-        message: "Profile already exists in the indolankamatrimony",
-      });
-    }
+    // if (existingProfile) {
+    //   delete otpStorage[email];
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Profile already exists in the indolankamatrimony",
+    //   });
+    // }
 
     const newProfile = await Profile.create(profileData);
 

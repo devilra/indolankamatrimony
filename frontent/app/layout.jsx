@@ -10,6 +10,8 @@ import Footer from "./Components/Footer";
 import ReduxProvider from "./ReduxProvider";
 import { Toaster } from "@/components/ui/sonner";
 import RevealProvider from "./Components/RevealProvider";
+import FooterWrapper from "./Components/FooterWrapper";
+import NavbarProvider from "./NavbarProvider/NavbarProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,21 +47,22 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} ${playfairDisplay.variable} antialiased`}
       >
         <ReduxProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster
-            toastOptions={{
-              className: "rounded-2xl border shadow-lg",
-              style: {
-                //background: "#1e1e1e",
-                // color: "#fff",
-                fontSize: "16px",
-                //color: "white",
-                borderLeft: "10px solid ",
-              },
-            }}
-          />
+          <NavbarProvider>
+            {children}
+            <FooterWrapper />
+            <Toaster
+              toastOptions={{
+                className: "rounded-2xl border shadow-lg",
+                style: {
+                  //background: "#1e1e1e",
+                  // color: "#fff",
+                  fontSize: "16px",
+                  //color: "white",
+                  borderLeft: "10px solid ",
+                },
+              }}
+            />
+          </NavbarProvider>
         </ReduxProvider>
       </body>
     </html>
