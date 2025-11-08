@@ -309,10 +309,10 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
   };
 
   return (
-    <div className="p-4  rounded-lg border-2 border-black text-black bg-white shadow-xl">
+    <div className="p-4  rounded-lg  text-black bg-white shadow-xl">
       {/* Profile ID Search (Input Box) */}
       <div className="mb-4 w-full">
-        <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+        <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
           Profile ID
         </label>
         <Input
@@ -321,7 +321,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
           placeholder="Enter Profile ID"
           value={filters.profile_id}
           onChange={handleInputChange}
-          className="h-10 placeholder:text-neutral-800 border-2 border-black"
+          className="h-10 placeholder:text-neutral-800  border-2 border-black/35"
         />
       </div>
       <h2 className="text-[14px] font-bold mb-4 text-center text-[#4a2f1c] border-b pb-2">
@@ -329,16 +329,16 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
       </h2>
 
       {/* Filter Boxes Grid (Mobile/Tablet: Column, Desktop: Grid) */}
-      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 lg:gap-7 gap-2">
         <div className="col-span-2  sm:col-span-1">
-          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Looking for
           </label>
           <Select
             value={filters.looking_for}
             onValueChange={(v) => handleSelectChange("looking_for", v)}
           >
-            <SelectTrigger className="h-20 py-4 border-2 border-black">
+            <SelectTrigger className="h-20 py-4 border-2 w-full border-black/35">
               <SelectValue placeholder="Select Gender" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
@@ -354,14 +354,14 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         {/* Height (Single Select) */}
 
         <div className="col-span-2 sm:col-span-1">
-          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Height
           </label>
           <Select
             value={filters.height}
             onValueChange={(v) => handleSelectChange("height", v)}
           >
-            <SelectTrigger className="h-10 py-4 border-2 border-black">
+            <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35">
               <SelectValue placeholder="Select Height" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
@@ -383,9 +383,9 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         </div>
 
         {/* Age Range */}
-        <div className="col-span-2 flex items-end space-x-2">
+        <div className="col-span-2 flex items-end space-x-7">
           <div className="w-1/2">
-            <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+            <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
               Age From
             </label>
             <Select
@@ -393,7 +393,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
               className="text-[#4a2f1c]"
               onValueChange={(v) => handleSelectChange("age_from", v)}
             >
-              <SelectTrigger className="h-10 py-4 border-2 border-black">
+              <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35">
                 <SelectValue placeholder="Min Age" />
               </SelectTrigger>
               <SelectContent className="text-[#4a2f1c]">
@@ -410,12 +410,14 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
             </Select>
           </div>
           <div className="w-1/2">
-            <label className="text-[13px]  text-[#4a2f1c] mb-1 block">To</label>
+            <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
+              To
+            </label>
             <Select
               value={filters.age_to}
               onValueChange={(v) => handleSelectChange("age_to", v)}
             >
-              <SelectTrigger className="h-10 py-4 border-2 border-black">
+              <SelectTrigger className="h-10 py-4 w-full border-2 border-black/35">
                 <SelectValue placeholder="Max Age" />
               </SelectTrigger>
               <SelectContent className="text-[#4a2f1c]">
@@ -437,14 +439,14 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
 
         {/* Religion */}
         <div className="col-span-2 sm:col-span-1">
-          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Religion
           </label>
           <Select
             value={filters.religion}
             onValueChange={(v) => handleSelectChange("religion", v)}
           >
-            <SelectTrigger className="h-10 py-4 border-2 border-black">
+            <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35">
               <SelectValue placeholder="Choose a Religion" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
@@ -468,14 +470,14 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         {/* Caste */}
 
         <div className="col-span-2 sm:col-span-1">
-          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Caste
           </label>
           <Select
             value={filters.caste}
             onValueChange={(v) => handleSelectChange("caste", v)}
           >
-            <SelectTrigger className="h-10 py-4 border-2 border-black">
+            <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35">
               <SelectValue placeholder="Choose a Caste" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
@@ -498,7 +500,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
 
         {/* Mother Tongue */}
         <div className="col-span-2 sm:col-span-2">
-          <label className="text-[13px]  text-[#4a2f1c] mb-1 block">
+          <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Mother Tongue
           </label>
           <Select
@@ -506,7 +508,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
             onValueChange={(v) => handleSelectChange("mother_tongue", v)}
             className=""
           >
-            <SelectTrigger className="h-10 py-4 border-2 border-black ">
+            <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35 ">
               <SelectValue placeholder="Choose a Language" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c] ">
@@ -769,7 +771,7 @@ const page = () => {
     <div className="bg-gradient-to-r from-amber-20/50 to-amber-100/30 pb-10 pt-20  lg:pt-36 ">
       <div className="max-w-6xl mx-auto  px-4">
         {/* Profile Header */}
-        <div className="p-6 rounded-lg  flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between lg:gap-20  mb-0">
+        <div className="p-6 rounded-lg  flex flex-col w-full  md:flex-row lg:flex-row lg:justify-between lg:gap-10  mb-0">
           <div className="flex flex-col  md:items-start pb-6">
             <div className="w-full md:w-3/4 lg:w-full mb-4 md:mb-0 md:mr-6">
               <img
