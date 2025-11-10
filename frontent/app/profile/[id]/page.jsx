@@ -16,6 +16,8 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import { BsFillSearchHeartFill } from "react-icons/bs";
+import { BsSearchHeart } from "react-icons/bs";
 
 const ageOptions = Array.from({ length: 33 }, (_, i) => 18 + i);
 const heightOptions = [
@@ -315,14 +317,19 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
           Profile ID
         </label>
-        <Input
-          type="text"
-          name="profile_id"
-          placeholder="Enter Profile ID"
-          value={filters.profile_id}
-          onChange={handleInputChange}
-          className="h-10 placeholder:text-neutral-800  border-2 border-black/35"
-        />
+        <div className="flex items-center ">
+          <Input
+            type="text"
+            name="profile_id"
+            placeholder="Enter Profile ID"
+            value={filters.profile_id}
+            onChange={handleInputChange}
+            className="h-10 placeholder:text-neutral-800 rounded-tr-none rounded-br-none border-2 border-black/35"
+          />
+          <span className="border-2 border-l-0 p-[8px] cursor-pointer hover:bg-black/5 border-black/35">
+            <BsSearchHeart size={20} onClick={handleSearch} />
+          </span>
+        </div>
       </div>
       <h2 className="text-[14px] font-bold mb-4 text-center text-[#4a2f1c] border-b pb-2">
         Search Your Life Partner
