@@ -80,12 +80,39 @@ const AllProfiles = () => {
     router.push(`/dashboard/profiles/edit/${id}`);
   };
 
+  // const handleDelete = (id) => {
+  //   const isConfirmed = window.confirm(
+  //     `Are you sure you want to permanently delete profile ID: ${id}? This action cannot be undone.`
+  //   );
+  //   if (isConfirmed) {
+  //     dispatch(adminDeleteProfile(id));
+  //   }
+  // };
+
+  // Double Checkup delete confirmation
+
   const handleDelete = (id) => {
-    const isConfirmed = window.confirm(
-      `Are you sure you want to permanently delete profile ID: ${id}? This action cannot be undone.`
+    // 1. முதல் உறுதிப்படுத்தல் (First Confirmation)
+    const isConfirmedFirst = window.confirm(
+      `⚠️ Warning: Profile ID ${id} will be permanently deleted. Are you sure you want to continue?`
     );
-    if (isConfirmed) {
-      dispatch(adminDeleteProfile(id));
+
+    if (isConfirmedFirst) {
+      // 2. Second / Final Confirmation
+      const isConfirmedFinal = window.confirm(
+        `🔥 FINAL WARNING! Are you absolutely sure you want to delete Profile ID ${id}? This action cannot be undone.`
+      );
+
+      if (isConfirmedFinal) {
+        // Only dispatch if both confirmations are OK
+        dispatch(adminDeleteProfile(id));
+      } else {
+        // Cancelled at second confirmation
+        toast.info("Delete operation cancelled. Profile remains safe.");
+      }
+    } else {
+      // Cancelled at first confirmation
+      toast.info("Delete operation cancelled.");
     }
   };
 
