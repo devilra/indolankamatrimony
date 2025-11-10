@@ -33,11 +33,11 @@ import { MdAppRegistration } from "react-icons/md";
 const DASHBOARD_BASE_PATH = "/dashboard";
 
 const navItems = [
-  {
-    href: `/`,
-    label: "Home",
-    icon: House,
-  },
+  // {
+  //   href: `/`,
+  //   label: "Home",
+  //   icon: House,
+  // },
   {
     href: `${DASHBOARD_BASE_PATH}`,
     label: "Register Profile",

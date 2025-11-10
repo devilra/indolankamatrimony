@@ -78,28 +78,28 @@ const Navbar = () => {
       );
     }
 
-    if (isAuthenticated) {
-      return (
-        <Link
-          href="/dashboard"
-          className="hover:text-black transition"
-          onClick={isMobile ? toggleMenu : undefined}
-        >
-          DASHBOARD
-        </Link>
-      );
-    }
+    // if (isAuthenticated) {
+    //   return (
+    //     <Link
+    //       href="/dashboard"
+    //       className="hover:text-black transition"
+    //       onClick={isMobile ? toggleMenu : undefined}
+    //     >
+    //       DASHBOARD
+    //     </Link>
+    //   );
+    // }
 
     // 3. isAuthenticated = false என்றால்: REGISTER & LOGIN-ஐக் காட்டு
-    return (
-      <Link
-        href="/login"
-        className="hover:text-black transition"
-        onClick={isMobile ? toggleMenu : undefined}
-      >
-        LOGIN
-      </Link>
-    );
+    // return (
+    //   <Link
+    //     href="/login"
+    //     className="hover:text-black transition"
+    //     onClick={isMobile ? toggleMenu : undefined}
+    //   >
+    //     LOGIN
+    //   </Link>
+    // );
   };
 
   return (
