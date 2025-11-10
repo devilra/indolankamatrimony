@@ -713,7 +713,7 @@ exports.getAllProfiles = async (req, res) => {
     const maritalStatus = query.maritalStatus ? query.maritalStatus.trim() : "";
     const caste = query.caste ? query.caste.trim() : ""; // ✅ New Caste Filter
 
-    console.log(search);
+    //console.log(gender);
 
     let whereCondition = {}; // 1. 🔍 Search Filter (pname and id)
 
@@ -1024,6 +1024,10 @@ exports.searchMatches = async (req, res) => {
     const age_from = Number(query.age_from);
     const age_to = Number(query.age_to);
 
+    // 🚩 NEW: Height Range Parsing (Front-end-லிருந்து cm மதிப்புகள் வரும்)
+    const height_from = query.height_from ? Number(query.height_from) : null;
+    const height_to = query.height_to ? Number(query.height_to) : null;
+
     // --- 3. Single Height Filter Parsing ---
     const selected_height = query.selected_height
       ? query.selected_height.trim()
@@ -1068,8 +1072,31 @@ exports.searchMatches = async (req, res) => {
 
       // 3. 📏 Single Height Exact Match Filter 🎯
 
-      if (selected_height) {
-        whereCondition.height = selected_height;
+      // if (selected_height) {
+      //   whereCondition.height = selected_height;
+      // }
+
+      // 🛑 NEW: Height Range Filter (DB String-ல் இருந்து CM Extract செய்தல்)
+      if (height_from && height_to) {
+        // height string-ல் இருந்து 'cm' மதிப்பை பிரித்தெடுக்க வேண்டியிருக்கும்.
+        // Sequelize Literal-ஐப் பயன்படுத்தி SQL function-களைப் பயன்படுத்துவோம்.
+
+        // height field format: "5ft 8in - 172cm"
+        // SPLIT_PART(height, ' - ', 2) -> '172cm'
+        // REPLACE(..., 'cm', '') -> '172'
+        // CAST(AS INTEGER) -> 172
+
+        const heightExtractionSql = `CAST(REPLACE(SUBSTRING_INDEX(height, ' - ', -1), 'cm', '') AS UNSIGNED)`;
+
+        whereCondition[Op.and] = [
+          ...(whereCondition[Op.and] || []),
+
+          // Min Height Check: Extracted CM >= height_from
+          Profile.sequelize.literal(`${heightExtractionSql} >= ${height_from}`),
+
+          // Max Height Check: Extracted CM <= height_to
+          Profile.sequelize.literal(`${heightExtractionSql} <= ${height_to}`),
+        ];
       }
 
       // 4. ⚜️ Caste and Religion Filters (Direct Match)
@@ -1137,3 +1164,130 @@ exports.searchMatches = async (req, res) => {
     });
   }
 };
+
+// exports.searchMatches = async (req, res) => {
+//   // Op-ஐ require செய்திருப்பீர்கள் என்று நம்புகிறேன்
+//   // const { Op } = require("sequelize");
+//   // ... (Profile Model import செய்யப்பட்டிருக்க வேண்டும்)
+
+//   console.log(req.query);
+//   try {
+//     const { query } = req;
+
+//     // --- 1. Basic Filters Parsing ---
+//     const looking_for = query.looking_for ? query.looking_for.trim() : "";
+//     const religion = query.religion ? query.religion.trim() : "";
+//     const caste = query.caste ? query.caste.trim() : "";
+//     const mother_tongue = query.mother_tongue ? query.mother_tongue.trim() : "";
+//     const profile_id = query.profile_id ? query.profile_id.trim() : "";
+
+//     // --- 2. Range Filters Parsing (Age) ---
+//     const age_from = Number(query.age_from);
+//     const age_to = Number(query.age_to);
+
+//     // 🚩 NEW: Height Range Parsing (Front-end-லிருந்து cm மதிப்புகள் வரும்)
+//     const height_from = query.height_from ? Number(query.height_from) : null;
+//     const height_to = query.height_to ? Number(query.height_to) : null;
+
+//     let whereCondition = {};
+
+//     // ---------------------------------------------
+//     // 🔍 FILTER LOGIC
+//     // ---------------------------------------------
+
+//     if (profile_id) {
+//       whereCondition.id = profile_id.toUpperCase();
+//     } else {
+//       // --- ID கொடுக்கப்படவில்லை, மற்ற filters-ஐ apply செய்யலாம் ---
+
+//       // 1. 🚻 Gender Filter
+//       if (looking_for) {
+//         if (looking_for.toLowerCase() === "bride") {
+//           whereCondition.gender = "Female";
+//         } else if (looking_for.toLowerCase() === "groom") {
+//           whereCondition.gender = "Male";
+//         } else {
+//           whereCondition.gender = looking_for;
+//         }
+//       }
+
+//       // 2. 🎂 Age Range Filter
+//       if (
+//         !isNaN(age_from) &&
+//         !isNaN(age_to) &&
+//         age_from > 0 &&
+//         age_to >= age_from
+//       ) {
+//         whereCondition.age = {
+//           [Op.between]: [age_from, age_to], // Number-ஆக அனுப்பலாம்
+//         };
+//       }
+
+//       // 🛑 NEW: Height Range Filter (DB String-ல் இருந்து CM Extract செய்தல்)
+//       if (height_from && height_to) {
+//         // ✅ இதுவே MySQL/MariaDB-க்கான சரியான SQL Logic
+//         const heightExtractionSql = `CAST(REPLACE(SUBSTRING_INDEX(height, ' - ', -1), 'cm', '') AS UNSIGNED)`;
+
+//         whereCondition[Op.and] = [
+//           ...(whereCondition[Op.and] || []),
+
+//           // Min Height Check: Extracted CM >= height_from
+//           Profile.sequelize.literal(`${heightExtractionSql} >= ${height_from}`),
+
+//           // Max Height Check: Extracted CM <= height_to
+//           Profile.sequelize.literal(`${heightExtractionSql} <= ${height_to}`),
+//         ];
+//       }
+
+//       // 4. ⚜️ Caste and Religion Filters (Direct Match)
+//       if (caste) {
+//         whereCondition.caste = caste;
+//       }
+//       if (religion) {
+//         whereCondition.religion = religion;
+//       }
+
+//       // 5. 🗣️ Mother Tongue Filter
+//       if (mother_tongue) {
+//         // Unga DB field name: mothertongue
+//         whereCondition.mothertongue = mother_tongue;
+//       }
+//     } // End of else (if not profile_id)
+
+//     // --- 3. Execute Query ---
+//     const profiles = await Profile.findAll({
+//       where: whereCondition,
+//       order: [["id", "DESC"]],
+//       // ... pagination settings
+//     });
+
+//     // --- 4. Handle Results ---
+//     if (profiles.length === 0) {
+//       if (profile_id) {
+//         return res.status(404).json({
+//           success: false,
+//           message: `Profile ID ${profile_id} not found.`,
+//         });
+//       }
+
+//       return res.status(404).json({
+//         success: false,
+//         message: "No matches found for your partner preference 💔",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Potential matches fetched successfully! ✨",
+//       count: profiles.length,
+//       data: profiles,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching matches:", error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: "Something went wrong while searching for matches ❌",
+//       error: error.message,
+//     });
+//   }
+// };

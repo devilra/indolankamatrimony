@@ -20,6 +20,8 @@ import { BsFillSearchHeartFill } from "react-icons/bs";
 import { BsSearchHeart } from "react-icons/bs";
 
 const ageOptions = Array.from({ length: 33 }, (_, i) => 18 + i);
+const heightCmOptions = Array.from({ length: 122 }, (_, i) => 100 + i); // 100cm to 220cm (121 options)
+
 const heightOptions = [
   "4ft 6in - 137cm",
   "4ft 7in - 139cm",
@@ -293,7 +295,9 @@ const initialFilters = {
   looking_for: "Bride",
   age_from: "18",
   age_to: "30",
-  height: "all", // Changed from '' to 'all'
+  // height: "all", // Changed from '' to 'all'
+  height_from: "100", // Start from 100cm
+  height_to: "200", // End at 220cm
   religion: "all", // Changed from '' to 'all'
   caste: "all", // Changed from '' to 'all'
   mother_tongue: "all", // Changed from '' to 'all'
@@ -339,7 +343,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
       </h2>
 
       {/* Filter Boxes Grid (Mobile/Tablet: Column, Desktop: Grid) */}
-      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 lg:gap-7 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 lg:gap-3 gap-2">
         <div className="col-span-2  sm:col-span-1">
           <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Looking for
@@ -363,7 +367,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
         </div>
         {/* Height (Single Select) */}
 
-        <div className="col-span-2 sm:col-span-1">
+        {/* <div className="col-span-2 sm:col-span-1">
           <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
             Height
           </label>
@@ -375,7 +379,7 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
               <SelectValue placeholder="Select Height" />
             </SelectTrigger>
             <SelectContent className="text-[#4a2f1c]">
-              {/* 🚩 FIX: Changed value="" to value="all" */}
+      
               <SelectItem value="all" className="text-[#4a2f1c]">
                 Any Height
               </SelectItem>
@@ -390,6 +394,62 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
               ))}
             </SelectContent>
           </Select>
+        </div> */}
+
+        {/* Height Range */}
+        <div className="col-span-2 flex items-end space-x-7 ">
+          {" "}
+          {/* mt-4 (margin-top) சேர்க்கப்பட்டுள்ளது */}
+          <div className="w-1/2">
+            <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
+              Height From (cm)
+            </label>
+            <Select
+              value={filters.height_from}
+              onValueChange={(v) => handleSelectChange("height_from", v)}
+            >
+              <SelectTrigger className="h-10 py-4 border-2 w-full border-black/35">
+                <SelectValue placeholder="Min Height" />
+              </SelectTrigger>
+              <SelectContent className="text-[#4a2f1c]">
+                {heightCmOptions.map((h) => (
+                  <SelectItem
+                    key={h}
+                    value={String(h)}
+                    className="text-[#4a2f1c] text-[13px]"
+                  >
+                    {h}cm
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="w-1/2">
+            <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
+              To (cm)
+            </label>
+            <Select
+              value={filters.height_to}
+              onValueChange={(v) => handleSelectChange("height_to", v)}
+            >
+              <SelectTrigger className="h-10 py-4 w-full border-2 border-black/35">
+                <SelectValue placeholder="Max Height" />
+              </SelectTrigger>
+              <SelectContent className="text-[#4a2f1c]">
+                {heightCmOptions
+                  .filter((h) => h >= Number(filters.height_from)) // 'From' விட குறைவாக உள்ள options-ஐ நீக்குகிறோம்
+                  .map((h) => (
+                    <SelectItem
+                      key={h}
+                      value={String(h)}
+                      className="text-[#4a2f1c] text-[13px]"
+                    >
+                      {h}cm
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Age Range */}
@@ -563,7 +623,7 @@ const page = () => {
   // 🚩 ADDED STATE: Search panna aacha illaiya nu track panna
   const [hasSearched, setHasSearched] = useState(false);
 
-  console.log(filters);
+  //console.log(filters);
 
   // 🚩 HIGHLIGHT: Filters Initial State
   // Default empty/any-ku 'all' use panrom
@@ -720,7 +780,7 @@ const page = () => {
     );
   }
 
-  //console.log(singleProfileData);
+  console.log(singleProfileData);
 
   //   Details Display Logic
   const p = profileData;
