@@ -108,7 +108,7 @@ const AllProfiles = () => {
         dispatch(adminDeleteProfile(id));
       } else {
         // Cancelled at second confirmation
-        toast.info("Delete operation cancelled. Profile remains safe.");
+        toast.info("Delete operation cancelled. Profile remains safe...");
       }
     } else {
       // Cancelled at first confirmation
