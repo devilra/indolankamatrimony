@@ -326,9 +326,12 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
             onChange={handleInputChange}
             className="h-10 placeholder:text-neutral-800 rounded-tr-none rounded-br-none border-2 border-black/35"
           />
-          <span className="border-2 border-l-0 p-[8px] cursor-pointer hover:bg-black/5 border-black/35">
+          <button
+            disabled={filters.profile_id.length === 0}
+            className={`border-2 border-l-0 p-[8px] cursor-pointer hover:bg-black/5 border-black/35 disabled:cursor-not-allowed disabled:opacity-50`}
+          >
             <BsSearchHeart size={20} onClick={handleSearch} />
-          </span>
+          </button>
         </div>
       </div>
       <h2 className="text-[14px] font-bold mb-4 text-center text-[#4a2f1c] border-b pb-2">
@@ -618,6 +621,7 @@ const page = () => {
       cleanFilters = {
         profile_id: cleanFilters.profile_id,
       };
+      setFilters({ ...filters, profile_id: "" });
       toast.info(`Searching for Profile ID: ${cleanFilters.profile_id}`);
     } else {
       delete cleanFilters.profile_id;
