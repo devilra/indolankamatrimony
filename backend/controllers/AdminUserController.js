@@ -168,7 +168,7 @@ exports.updateEmail = async (req, res) => {
       },
     });
 
-    if (existingAdmin) {
+    if (existingProfile) {
       return res
         .status(400)
         .json({ message: "This email is already taken by another admin." });
@@ -274,5 +274,62 @@ exports.deleteAdmin = async (req, res) => {
   } catch (error) {
     console.error("Admin Delete Error:", error.message);
     res.status(500).json({ message: "Server error during account deletion." });
+  }
+};
+
+exports.getAllAdmins = async (req, res) => {
+  try {
+    // 💡 பாதுகாப்பு காரணங்களுக்காக, கடவுச்சொல்லை (password) தவிர்த்துவிட்டு மற்ற விவரங்களை மட்டுமே Fetch செய்கிறோம்.
+    const admins = await Admin.findAll({
+      attributes: {
+        exclude: ["password"], // கடவுச்சொல்லை விலக்குகிறோம்
+      },
+    });
+
+    if (!admins || admins.length === 0) {
+      return res.status(404).json({ message: "No admins found." });
+    }
+
+    res.status(200).json({
+      status: true,
+      count: admins.length,
+      admins: admins,
+    });
+  } catch (error) {
+    console.error("Get All Admins Error:", error);
+    res
+      .status(500)
+      .json({ message: "Server error while fetching all admins." });
+  }
+};
+
+// Super Admin-ஆல் மற்ற Admin-ன் பெயரை மாற்ற
+exports.updateOtherAdminName = async (req, res) => {
+  try {
+    const { newName } = req.body;
+    const adminIdToUpdate = req.params.id; // URL Parameter-ல் வரும் Admin ID
+
+    if (!newName || newName.trim() === "") {
+      return res.status(400).json({ message: "New name cannot be empty." });
+    }
+
+    // நாம் மாற்றப்போகும் Admin-ஐ கண்டுபிடிக்க
+    const admin = await Admin.findByPk(adminIdToUpdate);
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found." });
+    }
+
+    admin.name = newName;
+    await admin.save();
+
+    res.status(200).json({
+      message: `Admin (ID: ${adminIdToUpdate}) name updated successfully by Super Admin.`,
+      name: admin.name,
+    });
+  } catch (error) {
+    console.error("Super Admin Update Other Admin Name Error:", error.message);
+    res
+      .status(500)
+      .json({ message: "Server error during other admin name update." });
   }
 };

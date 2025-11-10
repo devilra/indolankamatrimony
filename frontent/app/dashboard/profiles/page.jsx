@@ -5,12 +5,15 @@ import {
   adminGetAllProfiles,
   resetAdminState,
 } from "@/app/redux/adminSlices/adminSlice";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { FaEdit, FaTrashAlt, FaSearch } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaSearch, FaTimes } from "react-icons/fa";
 import ProfileTableSkeleton from "../Components/ProfileTableSkeleton";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { LuZoomIn } from "react-icons/lu";
+import { LuZoomOut } from "react-icons/lu";
 
 // ----------------------------------------------------
 // Dummy Data for Filter Options
@@ -35,6 +38,16 @@ const AllProfiles = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterMaritalStatus, setFilterMaritalStatus] = useState("All");
   const [filterGender, setFilterGender] = useState("All");
+
+  // 🌟 புதிய States: Image Modal-ஐக் கையாள
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // 🌟 புதிய States: Zoom மற்றும் Drag கையாள
+  const [zoomLevel, setZoomLevel] = useState(1); // Default zoom level 1 (100%)
+  const constraintsRef = useRef(null); // Drag boundary-க்காக
+  const imageRef = useRef(null); // Image size-ஐ அளக்க
+
   const router = useRouter();
 
   // Dummy Handlers (Uncomment the actual logic when implemented)
@@ -42,6 +55,31 @@ const AllProfiles = () => {
   const { profiles, loading, error, profileCount, deleteSuccess } = useSelector(
     (state) => state.admin
   );
+
+  const handleImageClick = (imageUrl, profileName) => {
+    if (!imageUrl || imageUrl === "null") return;
+    setSelectedImage({
+      url: imageUrl,
+      name: profileName,
+    });
+    setZoomLevel(1); // Modal திறக்கும்போது zoom-ஐ reset செய்கிறது
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+    setZoomLevel(1); // Modal மூடும்போது zoom-ஐ reset செய்கிறது
+  };
+
+  // 🌟 புதிய Functions: Zoom In & Zoom Out
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev - 0.2, 5)); // அதிகபட்சம் 5x வரை zoom
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - 0.2, 1)); // குறைந்தபட்சம் 1x வரை zoom out
+  };
 
   //console.log(profiles);
 
@@ -281,7 +319,8 @@ const AllProfiles = () => {
             <img
               src={profile.image}
               alt={profile.pname || "Profile Image"}
-              className="h-10 w-10 rounded-md"
+              //onClick={() => handleImageClick(profile.image, profile.pname)}
+              className="h-10 w-10 rounded-md cursor-pointer hover:shadow-lg transition duration-200"
             />
           )}
         </td>
@@ -506,6 +545,101 @@ const AllProfiles = () => {
           )}
         </div>
       )}
+
+      <AnimatePresence>
+        {isModalOpen && selectedImage && (
+          // Modal Background Overlay
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={handleCloseModal}
+            className="fixed inset-0 z-[9999] bg-black/80 flex justify-center items-center p-4 cursor-pointer"
+          >
+            {/* 🌟 Constraints Container: Drag-ஐ கட்டுப்படுத்த */}
+            <div
+              ref={constraintsRef}
+              className="w-full h-full relative flex justify-center items-center"
+            >
+              {/* Modal Content / Image Container */}
+              <motion.div
+                ref={imageRef} // Image container-ஐ ரெஃபர் செய்ய
+                className="relative max-w-full max-h-full cursor-grab"
+                initial={{ scale: 0.8, y: 50 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: 50 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  title="Close Image"
+                  onClick={handleCloseModal}
+                  className="absolute top-[-40px] right-0 md:top-[-30px] md:right-[-50px] p-2 bg-white rounded-full text-gray-800 hover:text-red-500 transition shadow-lg z-50"
+                >
+                  <FaTimes className="w-6 h-6" />
+                </button>
+
+                {/* 🌟 Zoom Controls - Modal-ன் மேலே/பக்கத்தில் வைக்கவும் */}
+                {/* <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full flex space-x-2 p-2 rounded-lg bg-gray-800 bg-opacity-70 z-50">
+                  <button
+                    onClick={handleZoomIn}
+                    disabled={zoomLevel >= 5}
+                    className="p-2 text-white bg-indigo-600 rounded-full disabled:bg-gray-500"
+                    title="Zoom In"
+                  >
+                    +
+                  </button>
+                  <span className="text-white p-2 font-mono text-sm">
+                    {Math.round(zoomLevel * 100)}%
+                  </span>
+                  <button
+                    onClick={handleZoomOut}
+                    disabled={zoomLevel <= 1}
+                    className="p-2 text-white bg-indigo-600 rounded-full disabled:bg-gray-500"
+                    title="Zoom Out"
+                  >
+                    -
+                  </button>
+                </div> */}
+
+                {/* 🌟 Dragable Image Wrapper */}
+                <motion.div
+                  drag={zoomLevel > 1 ? true : false} // Zoom 1-க்கு மேல் இருந்தால் மட்டுமே Drag செய்ய முடியும்
+                  dragConstraints={constraintsRef}
+                  dragElastic={0.1}
+                  className="relative"
+                  // Zoom level-ஐ Scale property-க்கு மாற்றுகிறது
+                  style={{ scale: zoomLevel }}
+                  animate={{ scale: zoomLevel }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  // Drag செய்யும்போது cursor-ஐ மாற்றுவதற்கு
+                  onDragStart={(e) => {
+                    if (zoomLevel > 1) {
+                      e.currentTarget.style.cursor = "grabbing";
+                    }
+                  }}
+                  onDragEnd={(e) => {
+                    if (zoomLevel > 1) {
+                      e.currentTarget.style.cursor = "grab";
+                    }
+                  }}
+                >
+                  {/* Displayed Image */}
+                  <img
+                    src={selectedImage.url}
+                    alt={selectedImage.name || "Expanded Profile Image"}
+                    className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transition-transform duration-300"
+                  />
+                </motion.div>
+                {/* Optional: Profile Name Caption */}
+                <p className="mt-2 text-center text-white text-lg font-semibold">
+                  {selectedImage.name}
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

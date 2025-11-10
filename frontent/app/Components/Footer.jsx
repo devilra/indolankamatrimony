@@ -110,9 +110,13 @@ const Footer = () => {
         </p>
         <p className="text-gray-600 text-sm">
           Copyright © 2025{" "}
-          <a href="#" className="text-[#0077B5] hover:underline font-semibold">
-            AmigoWebster
-          </a>{" "}
+          <a
+            href="https://amigowebster.com"
+            target="_blank"
+            className="text-[#0077B5] hover:underline font-semibold"
+          >
+            amigowebster{" "}
+          </a>
           All rights reserved.
         </p>
       </div>
