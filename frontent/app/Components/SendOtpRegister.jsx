@@ -2110,7 +2110,7 @@ export default function SendOtpRegister() {
   const isFormLoading = loading || isOTPSending || isOTPVerifying;
 
   return (
-    <div className="max-w-8xl mx-auto  shadow-lg rounded-2xl md:p-5 lg:p-0">
+    <div className="max-w-8xl mx-auto  shadow-lg rounded-2xl px-4 md:p-5 lg:p-0">
       {/* <h1 className="text-3xl font-bold text-center mb-10 text-[#4a2f1c]">
         Matrimony Profile Registration
       </h1> */}
