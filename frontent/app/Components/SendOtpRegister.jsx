@@ -1995,7 +1995,7 @@ export default function SendOtpRegister() {
                   : formData[fieldName]
               }
               onValueChange={(val) => handleSelectChange(fieldName, val)}
-              disabled={showCustomInput && !isEducation} // Disable SELECT if Custom Input is active (except for multi-select education)
+              //disabled={showCustomInput && !isEducation} // Disable SELECT if Custom Input is active (except for multi-select education)
             >
               <SelectTrigger
                 className={`w-full py-[15px] border-black rounded ${
