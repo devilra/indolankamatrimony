@@ -1985,17 +1985,17 @@ export default function SendOtpRegister() {
             <Label className="text-sm py-2">{field.label}</Label>
           </div>
           <div className="lg:w-[900px]">
-            {/* 1. Select Component (Disable if Custom Input is active for single select fields) */}
+            {/* 1. Select Component */}
             <Select
               value={
                 isEducation
-                  ? "" // Multi-select value is managed by placeholder, not the value prop
+                  ? ""
                   : formData[fieldName] === "" && showCustomInput
-                  ? "Other" // Show "Other" in trigger if custom input is visible
+                  ? "Other"
                   : formData[fieldName]
               }
               onValueChange={(val) => handleSelectChange(fieldName, val)}
-              //disabled={showCustomInput && !isEducation} // Disable SELECT if Custom Input is active (except for multi-select education)
+              //disabled={showCustomInput && !isEducation}
             >
               <SelectTrigger
                 className={`w-full py-[15px] border-black rounded ${
@@ -2039,21 +2039,27 @@ export default function SendOtpRegister() {
 
             {/* 2. Custom Input Field (Enabled/Displayed only if 'Other' is selected) */}
             {showCustomInput && (
-              <Input
-                type="text"
-                name={fieldName} // Use fieldName for the input
-                value={OtherValue[fieldName]}
-                onChange={handleChange}
-                placeholder={`Please specify your ${field.label}`}
-                className={`mt-2 h-[32px] border-black rounded ${
-                  isInValid
-                    ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
-                    : ""
-                }`}
-                // Multi-select education needs the input only if 'Other' is in the array
-                // Adhanal, educationArray use pannalaam
-                //disabled={isEducation && !educationArray.includes("Other")}
-              />
+              <div className="flex items-center gap-2 mt-2">
+                {/* 🛑 NEW: Identifier label for the custom input */}
+                <span className="text-xs font-semibold text-neutral-600 whitespace-nowrap">
+                  Custom:
+                </span>
+
+                <Input
+                  type="text"
+                  name={fieldName} // Use fieldName for the input
+                  value={OtherValue[fieldName]}
+                  onChange={handleChange}
+                  placeholder={`Please specify your ${field.label}`}
+                  className={`h-[32px] border-black rounded w-full ${
+                    // Changed class for flex layout
+                    isInValid
+                      ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }`}
+                  //disabled={isEducation && !educationArray.includes("Other")}
+                />
+              </div>
             )}
           </div>
         </div>
@@ -2061,7 +2067,7 @@ export default function SendOtpRegister() {
         {/* 3. Multi-Select Tags for Education */}
         {isEducation && (
           <div className="flex flex-wrap gap-1 mt-2 md:col-span-2">
-            {/* ✅ FIX HERE: Map pannum munbu educationArray use pannirukku */}
+            {/* ... (Education Tags Logic remains the same) ... */}
             {educationArray.length > 0 &&
               educationArray.map((item, index) => {
                 const displayItem =
