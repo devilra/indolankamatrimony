@@ -32,9 +32,9 @@ const Register = () => {
         </div>
       </section> */}
       <section className="bg-gradient-to-r from-amber-50/20 to-amber-100/50">
-        <RegisterProfile />
+        {/* <RegisterProfile /> */}
 
-        {/* <SendOtpRegister /> */}
+        <SendOtpRegister />
       </section>
     </div>
   );
