@@ -2098,7 +2098,10 @@ export default function SendOtpRegister() {
 
         {/* 4. Validation Message */}
         {isInValid && (
-          <p className="text-red-500 text-xs mt-1">{validation[fieldName]}</p>
+          <p className="text-red-500 text-xs mt-1 flex items-center">
+            <AlertCircle className="h-4 w-4 mr-1" />
+            {validation[fieldName] || "This field is required."}
+          </p>
         )}
       </div>
     );
