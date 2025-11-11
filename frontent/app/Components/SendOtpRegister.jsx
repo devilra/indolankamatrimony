@@ -2212,7 +2212,10 @@ export default function SendOtpRegister() {
                           onOpenChange={setIsCalendarOpen}
                           className=""
                         >
-                          <PopoverTrigger className="w-full" asChild>
+                          <PopoverTrigger
+                            className="w-full border-black rounded"
+                            asChild
+                          >
                             <Button
                               variant="outline"
                               className="justify-start py-[15px]"
@@ -2223,7 +2226,7 @@ export default function SendOtpRegister() {
                                 : "Select Date of Birth"}
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0 " align="start">
                             <Calendar
                               selected={dobDate}
                               onSelect={handleDateSelect}
@@ -2254,6 +2257,7 @@ export default function SendOtpRegister() {
                           value={formData?.[fieldName]}
                           placeholder={`Enter ${field.label}`}
                           onChange={handleChange}
+                          className="border-black rounded"
                         />
                       </div>
                     </div>
@@ -2274,6 +2278,7 @@ export default function SendOtpRegister() {
                           type="file"
                           accept="image/*"
                           onChange={handleImageChange}
+                          className="border-black rounded"
                         />
                       </div>
                     </div>
@@ -2311,7 +2316,7 @@ export default function SendOtpRegister() {
                         placeholder={`Enter ${field.label}`}
                         disabled={fieldName === "age"} // Age is auto-calculated
                         readOnly={fieldName === "age"}
-                        className={`${
+                        className={`border-black rounded${
                           isInValid
                             ? "border-red-500 ring-red-500 focus:ring-red-500"
                             : ""
@@ -2340,7 +2345,7 @@ export default function SendOtpRegister() {
                 ) : (
                   <Check size={20} className="mr-1" />
                 )}
-                Confirm Profile
+                Submit
               </Button>
             </div>
           </form>
