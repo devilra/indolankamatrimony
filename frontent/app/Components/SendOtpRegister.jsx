@@ -2346,10 +2346,8 @@ export default function SendOtpRegister() {
                 disabled={isFormLoading}
                 className="px-8 py-5 text-lg"
               >
-                {isFormLoading ? (
+                {isFormLoading && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Check size={20} className="mr-1" />
                 )}
                 Submit
               </Button>
