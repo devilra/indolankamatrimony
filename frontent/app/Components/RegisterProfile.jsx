@@ -200,6 +200,7 @@ const Occupations = [
   "Courier",
   "bluedart",
   "Diploma catering",
+  "Other",
 ];
 
 const uniqueOccupations = [...new Set(Occupations)];
@@ -391,13 +392,13 @@ const FatherOccupations = [
   "Photo / Videographer",
   "Surveyor",
   "Tailor",
-  "Others",
 
   // DOCTOR
   "Doctor",
   "Dentist",
   "Surgeon",
   "Veterinary Doctor",
+  "Other",
 ];
 
 const uniqueFatherOccupations = [...new Set(FatherOccupations)];
@@ -588,13 +589,13 @@ const MotherOccupations = [
   "Photo / Videographer",
   "Surveyor",
   "Tailor",
-  "Others",
 
   // DOCTOR
   "Doctor",
   "Dentist",
   "Surgeon",
   "Veterinary Doctor",
+  "Other",
 ];
 
 const uniqueMotherOccupations = [...new Set(MotherOccupations)];
@@ -746,28 +747,28 @@ const dropdownData = {
     "BPharm",
     "BPT",
     "B.Sc. Nursing",
-    "Other Bachelor Degree in Medicine",
+    // "Other Bachelor Degree in Medicine",
     "M.Pharm",
     "MPT",
-    "Other Master Degree in Medicine",
+    // "Other Master Degree in Medicine",
     "BGL",
     "B.L.",
     "LL.B.",
-    "Other Bachelor Degree in Legal",
+    // "Other Bachelor Degree in Legal",
     "LL.M.",
     "M.L.",
-    "Other Master Degree in Legal",
+    // "Other Master Degree in Legal",
     "CA",
     "CFA (Chartered Financial Analyst)",
     "CS",
     "ICWA",
-    "Other Degree in Finance",
+    // "Other Degree in Finance",
     "IAS",
     "IES",
     "IFS",
     "IRS",
     "IPS",
-    "Other Degree in Service",
+    // "Other Degree in Service",
     "Ph.D.",
     "DM",
     "Postdoctoral fellow",
@@ -775,9 +776,10 @@ const dropdownData = {
     "Diploma",
     "Polytechnic",
     "Trade School",
-    "Others in Diploma",
+    // "Others in Diploma",
     "Higher Secondary School / High School",
     "Diploma catering",
+    "Other",
   ], // Note: First code-la irundha short list
 
   Occupation: uniqueOccupations,
@@ -1182,7 +1184,23 @@ export default function RegisterProfile() {
   // ✅ NEW: Max file size (500 KB in bytes)
   const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB * 1024 bytes/KB
 
-  console.log(validation);
+  // 🌟 NEW: State to manage which 'Other' input is active
+  const [otherInputs, setOtherInputs] = useState({
+    education: false,
+    occupation: false,
+    foccupation: false,
+    moccupation: false,
+  });
+
+  // 🌟 NEW: State to manage the value of the 'Other' custom input
+  const [OtherValue, setOtherValue] = useState({
+    education: "",
+    occupation: "",
+    foccupation: "",
+    moccupation: "",
+  });
+
+  //console.log(validation);
 
   const [formData, setFormData] = useState({
     mprofile: "",
@@ -1226,9 +1244,19 @@ export default function RegisterProfile() {
   const [dobDate, setDobDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
+  console.log(formData.education);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // 🌟 NEW: Custom Input Field value update logic
+    if (name in OtherValue) {
+      setOtherValue((prev) => ({ ...prev, [name]: value }));
+      // Custom Input-ல டைப் பண்ணா, அதுவே formData-க்கும் போக வேண்டும் (Submission-க்கு)
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
     // Validation error Clear state
     if (validation[name]) {
       setValidation((prev) => ({ ...prev, [name]: false }));
@@ -1266,15 +1294,82 @@ export default function RegisterProfile() {
   };
 
   const handleSelectChange = (name, value) => {
-    if (name === "education") {
-      // Logic for multi-select (as per first code)
-      setFormData((prev) => ({
-        ...prev,
-        education: prev.education.includes(value)
-          ? prev.education.filter((v) => v !== value)
-          : [...prev.education, value],
-      }));
+    console.log("handleSelectChange called with:", name, value);
+    // 🌟 CORE LOGIC: "Other" Selection Handling
+
+    const isOtherSelected = value === "Other";
+
+    // 🛑 FIX 1: education field-a single select 'Other' fields-ilirundhu pirithal.
+    const isSingleSelectOtherField =
+      name in otherInputs && name !== "education";
+
+    if (isSingleSelectOtherField) {
+      if (isOtherSelected) {
+        // Single Select "Other" is selected
+        setOtherInputs((prev) => ({ ...prev, [name]: true }));
+        setFormData((prev) => ({ ...prev, [name]: "" }));
+        setOtherValue((prev) => ({ ...prev, [name]: "" }));
+      } else {
+        // Single Select Standard option selected
+        setOtherInputs((prev) => ({ ...prev, [name]: false }));
+        setOtherValue((prev) => ({ ...prev, [name]: "" }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+    // ✅ Education Multi-select Logic
+    else if (name === "education") {
+      console.log("Eduction true - Multi-select Logic Activated!");
+
+      // 🛑 FIX 3: setFormData callback-kku ulla prev state-a use panni update seithal.
+      setFormData((prev) => {
+        // Safety check for array: String-aah irundhalum, empty array-aah maatri kollum.
+        const prevEducation = Array.isArray(prev.education)
+          ? prev.education
+          : [];
+        let updatedEducation;
+
+        if (value === "Other") {
+          const isCurrentlyOther = prevEducation.includes("Other");
+
+          if (isCurrentlyOther) {
+            // 1. Deselect 'Other': remove 'Other', disable custom input
+            setOtherInputs((p) => ({ ...p, education: false }));
+            setOtherValue((p) => ({ ...p, education: "" }));
+            updatedEducation = prevEducation.filter((v) => v !== "Other");
+          } else {
+            // 2. ✅ Select 'Other': Clear existing tags and enable input
+            setOtherInputs((p) => ({ ...p, education: true }));
+            setOtherValue((p) => ({ ...p, education: "" })); // Clear custom value
+            updatedEducation = ["Other"]; // Clear all previous selections and only keep 'Other'
+          }
+        } else {
+          // 3. Standard Education option (e.g., BCA): Toggle selection logic
+
+          // 🛑 NEW LOGIC: Standard option-a select (or deselect) pannum bodhu,
+          // 'Other' input field-a disable seiya vendum.
+          setOtherInputs((p) => ({ ...p, education: false }));
+          setOtherValue((p) => ({ ...p, education: "" })); // Custom input value-a clear seithu vidungal
+
+          updatedEducation = prevEducation.includes(value)
+            ? prevEducation.filter((v) => v !== value) // Deselect
+            : [...prevEducation, value]; // Select
+
+          // If 'Other' was previously selected, remove it when a standard option is chosen.
+          // Note: 'Other' logic in step 2 already clears other tags when 'Other' is selected.
+          // But if the user deselects 'Other' using the tag, the logic in step 1 handles it.
+          // If the user selects a standard option when 'Other' is present, the logic needs to clear 'Other'.
+
+          updatedEducation = updatedEducation.filter((v) => v !== "Other");
+        }
+
+        // Return the updated state
+        return {
+          ...prev,
+          education: updatedEducation, // Guaranteed to be an Array
+        };
+      });
     } else {
+      // Standard Select fields (not "Other" enabled and not 'education')
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
 
@@ -1283,7 +1378,6 @@ export default function RegisterProfile() {
       setValidation((prev) => ({ ...prev, [name]: false }));
     }
   };
-
   // 🎯 புதுப்பிப்பு 1: 18 வயது சரிபார்ப்புக்கு ஒரு புதிய ஃபங்ஷன்
   const isAgeValid = (dob, minAge = 18) => {
     if (!dob) return true;
@@ -1340,15 +1434,39 @@ export default function RegisterProfile() {
     const newValidation = {};
 
     REQUIRED_FIELDS.forEach((field) => {
-      const value = formData[field];
+      let value = formData[field];
+      const isCustomInputActive = otherInputs[field];
+
+      // Use Custom Input value if 'Other' is selected and custom input is visible/used
+      if (isCustomInputActive) {
+        value = OtherValue[field];
+      }
+
       const isMissing =
         !value ||
         (Array.isArray(value) && value.length === 0) ||
         (typeof value === "string" && value.trim() === "");
 
       if (isMissing) {
-        newValidation[field] = "This field is required.";
-        isValid = false;
+        // Special check for Education Multi-select with 'Other'
+        if (field === "education" && isCustomInputActive) {
+          if (OtherValue.education.trim() === "") {
+            newValidation[field] = "Please enter your custom education.";
+            isValid = false;
+          }
+        } else if (field === "education" && !isCustomInputActive) {
+          if (
+            Array.isArray(formData.education) &&
+            formData.education.length === 0
+          ) {
+            newValidation[field] = "This field is required.";
+            isValid = false;
+          }
+        } else {
+          newValidation[field] = "This field is required.";
+          isValid = false;
+        }
+
         return;
       }
 
@@ -1381,7 +1499,6 @@ export default function RegisterProfile() {
     if (!validateForm()) {
       toast.error("Some required fields are mandatory.", {
         icon: <X className="text-red-600 bg-red-200 rounded p-0.5" size={18} />,
-        //description: "Please fill the highlighted fields.",
         duration: 4000,
         classNames: {
           title: "text-red-900 font-bold",
@@ -1397,32 +1514,55 @@ export default function RegisterProfile() {
 
     if (validation.image) {
       toast.error(validation.image, {
-        // Show the specific image error message
         icon: <X className="text-red-600 bg-red-200 rounded p-0.5" size={18} />,
-        duration: 4000, // ... (rest of the toast settings)
+        duration: 4000,
       });
       return; // 🛑 Stop submission immediately if there is an image size error
     }
 
     const updated = { ...formData };
+
+    // 🌟 CORE LOGIC: Final value check for "Other" fields
+    for (let key in otherInputs) {
+      if (otherInputs[key] && OtherValue[key].trim() !== "") {
+        // If 'Other' input is active and has a value, use it for the field
+        updated[key] = OtherValue[key].trim();
+      } else if (otherInputs[key] && OtherValue[key].trim() === "") {
+        // This case should ideally be caught by validation, but as a fallback
+        // we'll treat it as missing/N/A if the custom field is visible but empty.
+        updated[key] = "N/A";
+      }
+    }
+
     for (let key in updated) {
       if (!updated[key] || updated[key].length === 0) {
         updated[key] = "N/A"; // Handle empty fields
       }
     }
 
+    // Special handling for Education Multi-select
     if (Array.isArray(updated.education) && updated.education.length === 0) {
       updated.education = "N/A";
-    } // Prepare FormData for API call
+    }
 
+    // Prepare FormData for API call
     const form = new FormData();
     for (let key in updated) {
       if (key === "education") {
         // Handle multi-select education field
         if (Array.isArray(updated.education) && updated.education.length > 0) {
-          updated.education.forEach((e) => form.append("education[]", e));
-        } else {
-          form.append(key, updated[key]); // Append "N/A" or empty array if needed
+          let educationValues = updated.education;
+
+          // If 'Other' was selected in multiselect, and custom value is present, replace 'Other' placeholder with custom value
+          if (otherInputs.education && OtherValue.education.trim() !== "") {
+            educationValues = educationValues.filter((v) => v !== "Other");
+            educationValues.push(OtherValue.education.trim());
+          }
+
+          educationValues.forEach((e) => form.append("education[]", e));
+        } else if (typeof updated.education === "string") {
+          // This handles the "N/A" case or if 'Other' was manually put into updated.education
+          form.append(key, updated[key]);
         }
       } else {
         form.append(key, updated[key]);
@@ -1430,6 +1570,8 @@ export default function RegisterProfile() {
     }
 
     if (image) form.append("image", image);
+
+    console.log(form);
 
     const result = await dispatch(registerProfile(form));
     if (registerProfile.fulfilled.match(result)) {
@@ -1443,10 +1585,9 @@ export default function RegisterProfile() {
         ),
         duration: 5000,
         descriptionClassName: "text-green-700",
-        // description: "Please check your profile for details.",
       });
+      // Reset logic (optional: keep it minimal or as per original logic)
       setFormData({
-        // Reset form after success
         mprofile: "",
         pname: "",
         dob: "",
@@ -1483,19 +1624,162 @@ export default function RegisterProfile() {
       });
       setDobDate(null);
       setImage(null);
+      setOtherInputs({
+        education: false,
+        occupation: false,
+        foccupation: false,
+        moccupation: false,
+      });
+      setOtherValue({
+        education: "",
+        occupation: "",
+        foccupation: "",
+        moccupation: "",
+      });
+
       sessionStorage.setItem(
         "registrationSuccess",
         JSON.stringify({ id: data.id, name: data.pname })
       );
       router.push("/success");
     } else {
-      // Use result.payload?.message if available, otherwise a generic error
       toast.error(result.payload?.message || "Profile Registered Failed", {
         icon: <X className="text-red-500 bg-red-200 rounded p-1" size={20} />,
         duration: 5000,
-        // description: "Please check your profile for details.",
       });
     }
+  };
+
+  // Utility component to render Select and potential Custom Input
+  const renderSelectWithOther = (field, fieldName, options) => {
+    const isInValid = validation[fieldName];
+    const isOtherField = fieldName in otherInputs;
+    const showCustomInput = isOtherField && otherInputs[fieldName];
+    const isEducation = fieldName === "education";
+
+    // ✅ FIX: Education kku innum simple aana array-check, error varaadhu
+    const educationArray = Array.isArray(formData.education)
+      ? formData.education
+      : [];
+
+    return (
+      <div key={field.label} className="flex flex-col">
+        <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+          <div className="w-full">
+            <Label className="text-sm py-2">{field.label}</Label>
+          </div>
+          <div className="lg:w-[900px]">
+            {/* 1. Select Component (Disable if Custom Input is active for single select fields) */}
+            <Select
+              value={
+                isEducation
+                  ? "" // Multi-select value is managed by placeholder, not the value prop
+                  : formData[fieldName] === "" && showCustomInput
+                  ? "Other" // Show "Other" in trigger if custom input is visible
+                  : formData[fieldName]
+              }
+              onValueChange={(val) => handleSelectChange(fieldName, val)}
+              disabled={showCustomInput && !isEducation} // Disable SELECT if Custom Input is active (except for multi-select education)
+            >
+              <SelectTrigger
+                className={`w-full py-[15px] border-black rounded ${
+                  isInValid
+                    ? "border-red-500 ring-red-500 focus:ring-red-500"
+                    : ""
+                }`}
+              >
+                <SelectValue
+                  placeholder={
+                    isEducation
+                      ? // ✅ FIX HERE: Array check. String-aah irundhaalum, error varaadhu.
+                        educationArray.length > 0
+                        ? educationArray.join(", ")
+                        : `Select ${field.label}`
+                      : `Select ${field.label}`
+                  }
+                />
+              </SelectTrigger>
+
+              <SelectContent>
+                {options.map((opt, index) => (
+                  <SelectItem
+                    key={`${opt}-${index}`}
+                    value={opt}
+                    // Multi-select education: visually mark selected items
+                    className={
+                      isEducation && educationArray.includes(opt)
+                        ? "bg-neutral-100 text-neutral-900 font-semibold"
+                        : ""
+                    }
+                  >
+                    {opt}
+                    {isEducation && educationArray.includes(opt) && (
+                      <TiTick className="float-right h-5 w-5 text-green-500" />
+                    )}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* 2. Custom Input Field (Enabled/Displayed only if 'Other' is selected) */}
+            {showCustomInput && (
+              <Input
+                type="text"
+                name={fieldName} // Use fieldName for the input
+                value={OtherValue[fieldName]}
+                onChange={handleChange}
+                placeholder={`Please specify your ${field.label}`}
+                className={`mt-2 h-[32px] border-black rounded ${
+                  isInValid
+                    ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }`}
+                // Multi-select education needs the input only if 'Other' is in the array
+                // Adhanal, educationArray use pannalaam
+                //disabled={isEducation && !educationArray.includes("Other")}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* 3. Multi-Select Tags for Education */}
+        {isEducation && (
+          <div className="flex flex-wrap gap-1 mt-2 md:col-span-2">
+            {/* ✅ FIX HERE: Map pannum munbu educationArray use pannirukku */}
+            {educationArray.length > 0 &&
+              educationArray.map((item, index) => {
+                const displayItem =
+                  item === "Other" && OtherValue.education.trim() !== ""
+                    ? OtherValue.education.trim()
+                    : item;
+                if (item === "Other" && OtherValue.education.trim() === "")
+                  return null; // Hide 'Other' tag if input is empty
+                return (
+                  <span
+                    key={index}
+                    className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
+                  >
+                    {displayItem}
+
+                    <X
+                      className="cursor-pointer h-10 w-3 text-neutral-600 hover:text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectChange(fieldName, item);
+                      }}
+                    />
+                  </span>
+                );
+              })}
+          </div>
+        )}
+
+        {/* 4. Validation Message */}
+        {isInValid && (
+          <p className="text-red-500 text-xs mt-1">{validation[fieldName]}</p>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -1543,100 +1827,7 @@ export default function RegisterProfile() {
 
               // Standard Select field (Includes mprofile, gender)
 
-              if (fieldName === "education") {
-                return (
-                  <div key={field.label} className="flex flex-col">
-                    <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
-                      <div className="w-full">
-                        <Label className="text-sm py-2">{field.label}</Label>
-                      </div>
-                      <div className="lg:w-[900px]">
-                        <Select
-                          className=""
-                          onValueChange={(val) =>
-                            handleSelectChange(fieldName, val)
-                          }
-                        >
-                          {/* 🔴 Select Trigger Border Update */}
-                          <SelectTrigger className="w-full py-[15px] border-black rounded">
-                            <SelectValue
-                              placeholder={`Select ${field.label}`}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {options.map((opt, index) => (
-                              <SelectItem key={`${opt}-${index}`} value={opt}>
-                                {opt}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {formData.education.length > 0 &&
-                        formData.education.map((item, index) => (
-                          <span
-                            key={index}
-                            className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
-                          >
-                            {item}
-
-                            <X // ⬅️ NEW: The 'X' icon for removal
-                              className="cursor-pointer h-10 w-3 text-neutral-600 hover:text-red-500"
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent select from closing
-                                // 🎯 Call handleSelectChange which toggles the item (removes it)
-                                handleSelectChange(fieldName, item);
-                              }}
-                            />
-                          </span>
-                        ))}
-                    </div>
-                  </div>
-                );
-              } // Standard Select field
-
-              return (
-                <div key={field.label} className="flex flex-col  ">
-                  <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
-                    <div className="w-full">
-                      <Label className="text-sm py-2">{field.label}</Label>
-                    </div>
-                    <div className="lg:w-[900px]">
-                      <Select
-                        value={formData[fieldName]}
-                        onValueChange={(val) =>
-                          handleSelectChange(fieldName, val)
-                        }
-                      >
-                        <SelectTrigger
-                          className={`w-full py-[15px] border-black rounded ${
-                            isInValid
-                              ? "border-red-500 ring-red-500 focus:ring-red-500"
-                              : ""
-                          }`}
-                        >
-                          <SelectValue placeholder={`Select ${field.label}`} />
-                        </SelectTrigger>
-
-                        <SelectContent>
-                          {options.map((opt, index) => (
-                            <SelectItem key={`${opt}-${index}`} value={opt}>
-                              {opt}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  {isInValid && (
-                    <p className="text-red-500 text-xs mt-1">
-                      This field is required.
-                    </p>
-                  )}
-                </div>
-              );
+              return renderSelectWithOther(field, fieldName, options);
             } // 2. DATE PICKER (acts as an input field in the flow)
 
             if (field.type === "date") {

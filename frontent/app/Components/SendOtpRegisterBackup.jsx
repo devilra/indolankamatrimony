@@ -884,6 +884,22 @@ export default function SendOtpRegister() {
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB * 1024 bytes/KB
 
+  // 🌟 NEW: State to manage which 'Other' input is active
+  const [otherInputs, setOtherInputs] = useState({
+    education: false,
+    occupation: false,
+    foccupation: false,
+    moccupation: false,
+  });
+
+  // 🌟 NEW: State to manage the value of the 'Other' custom input
+  const [OtherValue, setOtherValue] = useState({
+    education: "",
+    occupation: "",
+    foccupation: "",
+    moccupation: "",
+  });
+
   // Resend OTP Timer
   const RESEND_TIME_LIMIT = 60;
   const [resendTimer, setResendTimer] = useState(0); // Starts at 0, ready to send
@@ -907,7 +923,7 @@ export default function SendOtpRegister() {
     mprofile: "",
     pname: "",
     dob: "",
-    age: "",
+    age: "", // auto-calculated
     pbrith: "",
     tbrith: "",
     rasi: "",
@@ -970,7 +986,7 @@ export default function SendOtpRegister() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (validation[name]) {
-      setValidation((prev) => ({ ...prev, [name]: undefined })); // Clear validation error
+      setValidation((prev) => ({ ...prev, [name]: false })); // Clear validation error
     }
   };
 
@@ -1010,35 +1026,56 @@ export default function SendOtpRegister() {
     }
 
     if (validation[name]) {
-      setValidation((prev) => ({ ...prev, [name]: undefined }));
+      setValidation((prev) => ({ ...prev, [name]: false }));
     }
   };
 
+  // 🎯 புதுப்பிப்பு 1: 18 வயது சரிபார்ப்புக்கு ஒரு புதிய ஃபங்ஷன்
+  const isAgeValid = (dob, minAge = 18) => {
+    if (!dob) return true;
+    const now = new Date();
+    const birthDate = new Date(dob);
+
+    // 18 வயது ஆவதற்குத் தேவையான தேதி
+    const requiredDate = new Date(
+      birthDate.getFullYear() + minAge,
+      birthDate.getMonth(),
+      birthDate.getDate()
+    );
+
+    //console.log(requiredDate);
+    //console.log(now);
+
+    // தேவையான தேதி, இன்றைய தேதியை விட குறைவாகவோ அல்லது சமமாகவோ இருக்க வேண்டும்.
+    return requiredDate <= now;
+  };
+
   const handleDateSelect = (date) => {
-    setDobDate(date);
+    if (!isAgeValid(date, 18)) {
+      toast.error("You must be at least 18 years old to register.");
 
-    //console.log(date);
-    // 🎯 FIX: Check if date is null/undefined before calling format()
-    // if (!date) {
-    //   setFormData((prev) => ({
-    //     ...prev,
-    //     dob: "", // Clear dob field
-    //     age: "", // Clear age field
-    //   }));
-    //   setIsCalendarOpen(false);
-    //   return; // Important: Stop the function here
-    // }
+      // 18 வயதுக்குக் குறைவாக இருந்தால், DOB, age state-களை செட் செய்யாமல், Calendar-ஐ மூடிவிடவும்.
+      setDobDate(null);
+      setFormData((prev) => ({
+        ...prev,
+        dob: "",
+        age: "",
+      }));
 
-    // 747 | const formattedDate = format(date, "yyyy-MM-dd");
+      setIsCalendarOpen(false);
+      return;
+    }
+
+    setDobDate(date); // Date format for backend (as per first code)
     const formattedDate = format(date, "yyyy-MM-dd");
-    const calculatedAge = calculateAge(date);
 
-    //console.log(calculatedAge);
+    // Calculate Age and update age in state (Required Update)
+    const calculatedAge = calculateAge(date);
 
     setFormData((prev) => ({
       ...prev,
       dob: formattedDate,
-      age: calculatedAge,
+      age: calculatedAge, // Age updated automatically
     }));
     setIsCalendarOpen(false);
   };

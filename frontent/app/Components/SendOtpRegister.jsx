@@ -55,6 +55,8 @@ const Occupations = [
   "Software Professional",
   "Teaching / Academician",
   "Executive",
+  "Automobile",
+  "own business",
   "Doctor",
   "Manager",
   "Professor / Lecturer",
@@ -107,11 +109,110 @@ const Occupations = [
   "Navy",
   "Defence Services (Others)",
   "Air Force",
+  "Paramilitary",
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager6",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+  "Law Enforcement Officer",
+  "Police",
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+  "Mariner / Merchant Navy",
+  "Sailor",
+  "Scientist / Researcher",
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+  "Others",
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+  "Courier",
+  "bluedart",
+  "Diploma catering",
+  "Other",
 ];
 
 const uniqueOccupations = [...new Set(Occupations)];
 
 const FatherOccupations = [
+  // Common occupations
   "Software Professional",
   "Teaching / Academician",
   "Executive",
@@ -120,6 +221,8 @@ const FatherOccupations = [
   "Professor / Lecturer",
   "Officer",
   "Human Resources Professional",
+
+  // ADMINISTRATION
   "Manager",
   "Supervisor",
   "Officer",
@@ -128,13 +231,21 @@ const FatherOccupations = [
   "Clerk",
   "Human Resources Professional",
   "Secretary / Front Office",
+
+  // AGRICULTURE
   "Agriculture & Farming Professional",
   "Horticulturist",
+
+  // AIRLINE
   "Pilot",
   "Air Hostess / Flight Attendant",
   "Airline Professional",
+
+  // ARCHITECTURE & DESIGN
   "Architect",
   "Interior Designer",
+
+  // BANKING & FINANCE
   "Chartered Accountant",
   "Company Secretary",
   "Accounts / Finance Professional",
@@ -143,11 +254,157 @@ const FatherOccupations = [
   "Financial Accountant",
   "Financial Analyst / Planning",
   "Investment Professional",
+
+  // BEAUTY & FASHION
   "Fashion Designer",
   "Beautician",
   "Hair Stylist",
   "Jewellery Designer",
   "Designer (Others)",
+  "Makeup Artist",
+  // BPO & CUSTOMER SERVICE
+  "BPO / KPO / ITES Professional",
+  "Customer Service Professional",
+
+  // CIVIL SERVICES
+  "Civil Services (IAS / IPS / IRS / IES / IFS)",
+
+  // CORPORATE PROFESSIONALS
+  "Analyst",
+  "Consultant",
+  "Corporate Communication",
+  "Corporate Planning",
+  "Marketing Professional",
+  "Operations Management",
+  "Sales Professional",
+  "Senior Manager / Manager",
+  "Subject Matter Expert",
+  "Business Development Professional",
+  "Content Writer",
+
+  // DEFENCE
+  "Army",
+  "Navy",
+  "Defence Services (Others)",
+  "Air Force",
+  "Paramilitary",
+
+  // EDUCATION & TRAINING
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+
+  // ENGINEERING
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+
+  // HOSPITALITY
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+  // IT & SOFTWARE
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+
+  // LEGAL
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+
+  // POLICE / LAW ENFORCEMENT
+  "Law Enforcement Officer",
+  "Police",
+
+  // MEDICAL & HEALTHCARE-OTHERS
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+
+  // MEDIA & ENTERTAINMENT
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+
+  // MERCHANT NAVY
+  "Mariner / Merchant Navy",
+  "Sailor",
+
+  // SCIENTIST
+  "Scientist / Researcher",
+
+  // SENIOR MANAGEMENT
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+  // OTHERS
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+
+  // DOCTOR
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+  "Other",
 ];
 
 const uniqueFatherOccupations = [...new Set(FatherOccupations)];
@@ -161,6 +418,8 @@ const MotherOccupations = [
   "Professor / Lecturer",
   "Officer",
   "Human Resources Professional",
+
+  // ADMINISTRATION
   "Manager",
   "Supervisor",
   "Officer",
@@ -169,8 +428,180 @@ const MotherOccupations = [
   "Clerk",
   "Human Resources Professional",
   "Secretary / Front Office",
+
+  // AGRICULTURE
   "Agriculture & Farming Professional",
   "Horticulturist",
+
+  // AIRLINE
+  "Pilot",
+  "Air Hostess / Flight Attendant",
+  "Airline Professional",
+
+  // ARCHITECTURE & DESIGN
+  "Architect",
+  "Interior Designer",
+
+  // BANKING & FINANCE
+  "Chartered Accountant",
+  "Company Secretary",
+  "Accounts / Finance Professional",
+  "Banking Professional",
+  "Auditor",
+  "Financial Accountant",
+  "Financial Analyst / Planning",
+  "Investment Professional",
+
+  // BEAUTY & FASHION
+  "Fashion Designer",
+  "Beautician",
+  "Hair Stylist",
+  "Jewellery Designer",
+  "Designer (Others)",
+  "Makeup Artist",
+
+  // BPO & CUSTOMER SERVICE
+  "BPO / KPO / ITES Professional",
+  "Customer Service Professional",
+
+  // CIVIL SERVICES
+  "Civil Services (IAS / IPS / IRS / IES / IFS)",
+
+  // CORPORATE PROFESSIONALS
+  "Analyst",
+  "Consultant",
+  "Corporate Communication",
+  "Corporate Planning",
+  "Marketing Professional",
+  "Operations Management",
+  "Sales Professional",
+  "Senior Manager / Manager",
+  "Subject Matter Expert",
+  "Business Development Professional",
+  "Content Writer",
+  // DEFENCE
+  "Army",
+  "Navy",
+  "Defence Services (Others)",
+  "Air Force",
+  "Paramilitary",
+
+  // EDUCATION & TRAINING
+  "Professor / Lecturer",
+  "Teaching / Academician",
+  "Education Professional",
+  "Training Professional",
+  "Research Assistant",
+  "Research Scholar",
+
+  // ENGINEERING
+  "Civil Engineer",
+  "Electronics / Telecom Engineer",
+  "Mechanical / Production Engineer",
+  "Quality Assurance Engineer - Non IT",
+  "Engineer - Non IT",
+  "Designer",
+  "Product Manager - Non IT",
+  "Project Manager - Non IT",
+
+  // HOSPITALITY
+  "Hotel / Hospitality Professional",
+  "Restaurant / Catering Professional",
+  "Chef / Cook",
+
+  // IT & SOFTWARE
+  "Software Professional",
+  "Hardware Professional",
+  "Product Manager",
+  "Project Manager",
+  "Program Manager",
+  "Animator",
+  "Cyber / Network Security",
+  "UI / UX Designer",
+  "Web / Graphic Designer",
+  "Software Consultant",
+  "Data Analyst",
+  "Data Scientist",
+  "Network Engineer",
+  "Quality Assurance Engineer",
+
+  // LEGAL
+  "Lawyer & Legal Professional",
+  "Legal Assistant",
+
+  // POLICE / LAW ENFORCEMENT
+  "Law Enforcement Officer",
+  "Police",
+
+  // MEDICAL & HEALTHCARE-OTHERS
+  "Healthcare Professional",
+  "Paramedical Professional",
+  "Nurse",
+  "Pharmacist",
+  "Physiotherapist",
+  "Psychologist",
+  "Therapist",
+  "Medical Transcriptionist",
+  "Dietician / Nutritionist",
+  "Lab Technician",
+  "Medical Representative",
+  "Journalist",
+  "Media Professional",
+  "Entertainment Professional",
+  "Event Management Professional",
+  "Advertising / PR Professional",
+  "Designer",
+  "Actor / Model",
+  "Artist",
+
+  // MERCHANT NAVY
+  "Mariner / Merchant Navy",
+  "Sailor",
+
+  // SCIENTIST
+  "Scientist / Researcher",
+
+  // SENIOR MANAGEMENT
+  "CXO / President, Director, Chairman",
+  "VP / AVP / GM / DGM / AGM",
+
+  // OTHERS
+  "Technician",
+  "Arts & Craftsman",
+  "Student",
+  "Librarian",
+  "Business Owner / Entrepreneur",
+  "Retired",
+  "Transportation / Logistics Professional",
+  "Agent / Broker / Trader",
+  "Contractor",
+  "Fitness Professional",
+  "Security Professional",
+  "Social Worker / Volunteer / NGO",
+  "Sportsperson",
+  "Travel Professional",
+  "Singer",
+  "Writer",
+  "Politician",
+  "Associate",
+  "Builder",
+  "Chemist",
+  "CNC Operator",
+  "Distributor",
+  "Driver",
+  "Freelancer",
+  "Mechanic",
+  "Musician",
+  "Photo / Videographer",
+  "Surveyor",
+  "Tailor",
+
+  // DOCTOR
+  "Doctor",
+  "Dentist",
+  "Surgeon",
+  "Veterinary Doctor",
+  "Other",
 ];
 
 const uniqueMotherOccupations = [...new Set(MotherOccupations)];
@@ -199,6 +630,7 @@ const dropdownData = {
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
   ],
+
   Nakshatram: [
     "அஸ்வினி (Ashwini)",
     "பரணி (Bharani)",
@@ -228,6 +660,7 @@ const dropdownData = {
     "உத்திரட்டாதி (Uttara Bhadrapada)",
     "ரேவதி (Revati)",
   ],
+
   Laknam: [
     "மேஷம் (Aries)",
     "ரிஷபம் (Taurus)",
@@ -241,7 +674,8 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
-  ],
+  ], // Note: First code-la irundha short list
+
   Color: ["Fair", "Black", "White", "Very Fair"],
   "Marital Status": [
     "UnMarried",
@@ -251,6 +685,7 @@ const dropdownData = {
     "Married",
     "Annulled",
   ],
+
   Gender: ["Male", "Female"],
   Education: [
     "SSLC",
@@ -317,28 +752,28 @@ const dropdownData = {
     "BPharm",
     "BPT",
     "B.Sc. Nursing",
-    "Other Bachelor Degree in Medicine",
+    // "Other Bachelor Degree in Medicine",
     "M.Pharm",
     "MPT",
-    "Other Master Degree in Medicine",
+    // "Other Master Degree in Medicine",
     "BGL",
     "B.L.",
     "LL.B.",
-    "Other Bachelor Degree in Legal",
+    // "Other Bachelor Degree in Legal",
     "LL.M.",
     "M.L.",
-    "Other Master Degree in Legal",
+    // "Other Master Degree in Legal",
     "CA",
     "CFA (Chartered Financial Analyst)",
     "CS",
     "ICWA",
-    "Other Degree in Finance",
+    // "Other Degree in Finance",
     "IAS",
     "IES",
     "IFS",
     "IRS",
     "IPS",
-    "Other Degree in Service",
+    // "Other Degree in Service",
     "Ph.D.",
     "DM",
     "Postdoctoral fellow",
@@ -346,11 +781,14 @@ const dropdownData = {
     "Diploma",
     "Polytechnic",
     "Trade School",
-    "Others in Diploma",
+    // "Others in Diploma",
     "Higher Secondary School / High School",
     "Diploma catering",
+    "Other",
   ], // Note: First code-la irundha short list
+
   Occupation: uniqueOccupations,
+
   "Annual Income": [
     "0 - 1 Lakh",
     "1 - 2 Lakhs",
@@ -380,6 +818,7 @@ const dropdownData = {
     "90 Lakhs - 1 Crore",
     "1 Crore & Above",
   ],
+
   "Mother Tongue": [
     "Tamil",
     "Telugu",
@@ -617,6 +1056,7 @@ const dropdownData = {
     "Yadav",
     "Yadava Naidu",
   ],
+
   "Father's Occupation": uniqueFatherOccupations,
   "Mother's Occupation": uniqueMotherOccupations,
   Height: [
@@ -884,6 +1324,22 @@ export default function SendOtpRegister() {
   const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const MAX_IMAGE_SIZE = 500 * 1024; // 500 KB * 1024 bytes/KB
 
+  // 🌟 NEW: State to manage which 'Other' input is active
+  const [otherInputs, setOtherInputs] = useState({
+    education: false,
+    occupation: false,
+    foccupation: false,
+    moccupation: false,
+  });
+
+  // 🌟 NEW: State to manage the value of the 'Other' custom input
+  const [OtherValue, setOtherValue] = useState({
+    education: "",
+    occupation: "",
+    foccupation: "",
+    moccupation: "",
+  });
+
   // Resend OTP Timer
   const RESEND_TIME_LIMIT = 60;
   const [resendTimer, setResendTimer] = useState(0); // Starts at 0, ready to send
@@ -968,9 +1424,18 @@ export default function SendOtpRegister() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // 🌟 NEW: Custom Input Field value update logic (Indha logic-a confirm seiyungal)
+    if (name in OtherValue) {
+      setOtherValue((prev) => ({ ...prev, [name]: value })); // ✅ Idhu OtherValue state-a update seithal dhaan custom value anuppa mudiyum.
+      // Custom input field-kku mattrum dhaan OtherValue-a update seiyum.
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+
+    // Validation error Clear state
     if (validation[name]) {
-      setValidation((prev) => ({ ...prev, [name]: false })); // Clear validation error
+      setValidation((prev) => ({ ...prev, [name]: false }));
     }
   };
 
@@ -998,17 +1463,86 @@ export default function SendOtpRegister() {
   };
 
   const handleSelectChange = (name, value) => {
-    if (name === "education") {
-      setFormData((prev) => ({
-        ...prev,
-        education: prev.education.includes(value)
-          ? prev.education.filter((v) => v !== value)
-          : [...prev.education, value],
-      }));
+    console.log("handleSelectChange called with:", name, value);
+    // 🌟 CORE LOGIC: "Other" Selection Handling
+
+    const isOtherSelected = value === "Other";
+
+    // 🛑 FIX 1: education field-a single select 'Other' fields-ilirundhu pirithal.
+    const isSingleSelectOtherField =
+      name in otherInputs && name !== "education";
+
+    if (isSingleSelectOtherField) {
+      if (isOtherSelected) {
+        // Single Select "Other" is selected
+        setOtherInputs((prev) => ({ ...prev, [name]: true }));
+        setFormData((prev) => ({ ...prev, [name]: "" }));
+        setOtherValue((prev) => ({ ...prev, [name]: "" }));
+      } else {
+        // Single Select Standard option selected
+        setOtherInputs((prev) => ({ ...prev, [name]: false }));
+        setOtherValue((prev) => ({ ...prev, [name]: "" }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
+      }
+    }
+    // ✅ Education Multi-select Logic
+    else if (name === "education") {
+      console.log("Eduction true - Multi-select Logic Activated!");
+
+      // 🛑 FIX 3: setFormData callback-kku ulla prev state-a use panni update seithal.
+      setFormData((prev) => {
+        // Safety check for array: String-aah irundhalum, empty array-aah maatri kollum.
+        const prevEducation = Array.isArray(prev.education)
+          ? prev.education
+          : [];
+        let updatedEducation;
+
+        if (value === "Other") {
+          const isCurrentlyOther = prevEducation.includes("Other");
+
+          if (isCurrentlyOther) {
+            // 1. Deselect 'Other': remove 'Other', disable custom input
+            setOtherInputs((p) => ({ ...p, education: false }));
+            setOtherValue((p) => ({ ...p, education: "" }));
+            updatedEducation = prevEducation.filter((v) => v !== "Other");
+          } else {
+            // 2. ✅ Select 'Other': Clear existing tags and enable input
+            setOtherInputs((p) => ({ ...p, education: true }));
+            setOtherValue((p) => ({ ...p, education: "" })); // Clear custom value
+            updatedEducation = ["Other"]; // Clear all previous selections and only keep 'Other'
+          }
+        } else {
+          // 3. Standard Education option (e.g., BCA): Toggle selection logic
+
+          // 🛑 NEW LOGIC: Standard option-a select (or deselect) pannum bodhu,
+          // 'Other' input field-a disable seiya vendum.
+          setOtherInputs((p) => ({ ...p, education: false }));
+          setOtherValue((p) => ({ ...p, education: "" })); // Custom input value-a clear seithu vidungal
+
+          updatedEducation = prevEducation.includes(value)
+            ? prevEducation.filter((v) => v !== value) // Deselect
+            : [...prevEducation, value]; // Select
+
+          // If 'Other' was previously selected, remove it when a standard option is chosen.
+          // Note: 'Other' logic in step 2 already clears other tags when 'Other' is selected.
+          // But if the user deselects 'Other' using the tag, the logic in step 1 handles it.
+          // If the user selects a standard option when 'Other' is present, the logic needs to clear 'Other'.
+
+          updatedEducation = updatedEducation.filter((v) => v !== "Other");
+        }
+
+        // Return the updated state
+        return {
+          ...prev,
+          education: updatedEducation, // Guaranteed to be an Array
+        };
+      });
     } else {
+      // Standard Select fields (not "Other" enabled and not 'education')
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
 
+    // Validation error Clear state
     if (validation[name]) {
       setValidation((prev) => ({ ...prev, [name]: false }));
     }
@@ -1065,37 +1599,62 @@ export default function SendOtpRegister() {
   };
 
   // 🔴 CORE UPDATE: Validation Logic for Step 1
-  const validateForm = (fieldsToValidate) => {
+  const validateForm = () => {
     let isValid = true;
     const newValidation = {};
 
-    fieldsToValidate.forEach((field) => {
-      const value = formData[field];
+    REQUIRED_FIELDS.forEach((field) => {
+      let value = formData[field];
+      const isCustomInputActive = otherInputs[field];
+
+      // Use Custom Input value if 'Other' is selected and custom input is visible/used
+      if (isCustomInputActive) {
+        value = OtherValue[field];
+      }
+
       const isMissing =
         !value ||
         (Array.isArray(value) && value.length === 0) ||
         (typeof value === "string" && value.trim() === "");
 
       if (isMissing) {
-        newValidation[field] = "This field is required.";
-        isValid = false;
+        // Special check for Education Multi-select with 'Other'
+        if (field === "education" && isCustomInputActive) {
+          if (OtherValue.education.trim() === "") {
+            newValidation[field] = "Please enter your custom education.";
+            isValid = false;
+          }
+        } else if (field === "education" && !isCustomInputActive) {
+          if (
+            Array.isArray(formData.education) &&
+            formData.education.length === 0
+          ) {
+            newValidation[field] = "This field is required.";
+            isValid = false;
+          }
+        } else {
+          newValidation[field] = "This field is required.";
+          isValid = false;
+        }
+
         return;
       }
 
-      // Phone Number & Whatsapp Number Validation
-      if (
-        (field === "phonenumber" || field === "whatsappno") &&
-        !PHONE_NUMBER_REGEX.test(value)
-      ) {
-        newValidation[field] = "Must be exactly 10 digits (numbers only).";
-        isValid = false;
+      // ✅ NEW: Phone Number & Whatsapp Number Validation (10 Digits Only)
+      if (field === "phonenumber" || field === "whatsappno") {
+        if (!PHONE_NUMBER_REGEX.test(value)) {
+          newValidation[field] = "Must be exactly 10 digits (numbers only).";
+          isValid = false;
+        }
       }
 
-      // Email Validation
-      if (field === "email" && !EMAIL_REGEX.test(value)) {
-        newValidation[field] =
-          "Please enter a valid email address (e.g., user@gmail.com).";
-        isValid = false;
+      // ✅ NEW: Email Validation (Using Regex)
+      if (field === "email") {
+        if (!EMAIL_REGEX.test(value)) {
+          newValidation[field] =
+            "Please enter a valid email address (e.g., user@gmail.com).";
+          isValid = false;
+        }
       }
     });
     setValidation(newValidation);
@@ -1119,22 +1678,68 @@ export default function SendOtpRegister() {
     setIsOTPSending(true);
     setValidation({});
 
-    const form = new FormData();
-    const updated = { ...formData };
+    let updated = { ...formData };
 
-    // Fill "N/A" for empty fields and append them
-    for (let key in updated) {
-      if (!updated[key] || updated[key].length === 0) {
+    // 🌟 1. CORE LOGIC: Final value check for Single Select "Other" fields (Occupation etc.)
+    for (let key in otherInputs) {
+      if (otherInputs[key] && OtherValue[key].trim() !== "") {
+        // If 'Other' input is active and has a value, use it for the field
+        updated[key] = OtherValue[key].trim();
+      } else if (otherInputs[key] && OtherValue[key].trim() === "") {
+        // If custom field is visible but empty, treat as missing/N/A
         updated[key] = "N/A";
       }
+    }
 
+    // 🌟 2. Handle general empty fields (excluding 'education')
+    for (let key in updated) {
+      // Education field-a skip seithu, adhai appuram handle seiyalam
+      if (key === "education") continue;
+
+      if (
+        !updated[key] ||
+        (typeof updated[key] === "string" && updated[key].length === 0)
+      ) {
+        updated[key] = "N/A"; // Handle other empty fields
+      }
+    }
+
+    // Prepare FormData for API call
+    const form = new FormData();
+
+    // 🌟 3. Append fields to FormData with Special education handling
+    for (let key in updated) {
       if (key === "education") {
+        // Handle multi-select education field
         if (Array.isArray(updated.education) && updated.education.length > 0) {
-          updated.education.forEach((e) => form.append("education[]", e));
+          let educationValues = updated.education;
+
+          // ✅ FIX CHECK: Replace 'Other' placeholder with custom value if present and enabled
+          if (otherInputs.education && OtherValue.education.trim() !== "") {
+            // Remove the 'Other' placeholder from the array
+            educationValues = educationValues.filter((v) => v !== "Other");
+            // Add the custom user input value
+            educationValues.push(OtherValue.education.trim());
+          } else if (
+            otherInputs.education &&
+            educationValues.includes("Other")
+          ) {
+            // If 'Other' selected but custom input empty, remove 'Other' placeholder before sending "N/A"
+            educationValues = educationValues.filter((v) => v !== "Other");
+          }
+
+          if (educationValues.length === 0) {
+            form.append(key, "N/A"); // Sends N/A if array is empty after cleanup
+          } else {
+            // Send as multiple fields (e.g., education[]=B.Tech&education[]=Custom)
+            educationValues.forEach((e) => form.append("education[]", e)); // ✅ Indha loop dhaan custom value-a anuppum.
+          }
         } else {
-          form.append(key, updated[key]); // Append "N/A"
+          // Case: updated.education is an empty array. Send "N/A".
+          form.append(key, "N/A");
         }
       } else {
+        // Other fields
         form.append(key, updated[key]);
       }
     }
@@ -1153,7 +1758,7 @@ export default function SendOtpRegister() {
         duration: 5000,
       });
       setResendTimer(RESEND_TIME_LIMIT);
-      return true; //
+      return true;
     } else {
       // RejectWithValue- error
       const error = result.payload || {
@@ -1165,7 +1770,7 @@ export default function SendOtpRegister() {
       });
       //
       setCurrentStep(1);
-      return false; //
+      return false;
     }
   };
 
@@ -1362,6 +1967,137 @@ export default function SendOtpRegister() {
   //   }
   // };
 
+  const renderSelectWithOther = (field, fieldName, options) => {
+    const isInValid = validation[fieldName];
+    const isOtherField = fieldName in otherInputs;
+    const showCustomInput = isOtherField && otherInputs[fieldName];
+    const isEducation = fieldName === "education";
+
+    // ✅ FIX: Education kku innum simple aana array-check, error varaadhu
+    const educationArray = Array.isArray(formData.education)
+      ? formData.education
+      : [];
+
+    return (
+      <div key={field.label} className="flex flex-col">
+        <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+          <div className="w-full">
+            <Label className="text-sm py-2">{field.label}</Label>
+          </div>
+          <div className="lg:w-[900px]">
+            {/* 1. Select Component (Disable if Custom Input is active for single select fields) */}
+            <Select
+              value={
+                isEducation
+                  ? "" // Multi-select value is managed by placeholder, not the value prop
+                  : formData[fieldName] === "" && showCustomInput
+                  ? "Other" // Show "Other" in trigger if custom input is visible
+                  : formData[fieldName]
+              }
+              onValueChange={(val) => handleSelectChange(fieldName, val)}
+              disabled={showCustomInput && !isEducation} // Disable SELECT if Custom Input is active (except for multi-select education)
+            >
+              <SelectTrigger
+                className={`w-full py-[15px] border-black rounded ${
+                  isInValid
+                    ? "border-red-500 ring-red-500 focus:ring-red-500"
+                    : ""
+                }`}
+              >
+                <SelectValue
+                  placeholder={
+                    isEducation
+                      ? // ✅ FIX HERE: Array check. String-aah irundhaalum, error varaadhu.
+                        educationArray.length > 0
+                        ? educationArray.join(", ")
+                        : `Select ${field.label}`
+                      : `Select ${field.label}`
+                  }
+                />
+              </SelectTrigger>
+
+              <SelectContent>
+                {options.map((opt, index) => (
+                  <SelectItem
+                    key={`${opt}-${index}`}
+                    value={opt}
+                    // Multi-select education: visually mark selected items
+                    className={
+                      isEducation && educationArray.includes(opt)
+                        ? "bg-neutral-100 text-neutral-900 font-semibold"
+                        : ""
+                    }
+                  >
+                    {opt}
+                    {isEducation && educationArray.includes(opt) && (
+                      <TiTick className="float-right h-5 w-5 text-green-500" />
+                    )}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* 2. Custom Input Field (Enabled/Displayed only if 'Other' is selected) */}
+            {showCustomInput && (
+              <Input
+                type="text"
+                name={fieldName} // Use fieldName for the input
+                value={OtherValue[fieldName]}
+                onChange={handleChange}
+                placeholder={`Please specify your ${field.label}`}
+                className={`mt-2 h-[32px] border-black rounded ${
+                  isInValid
+                    ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }`}
+                // Multi-select education needs the input only if 'Other' is in the array
+                // Adhanal, educationArray use pannalaam
+                //disabled={isEducation && !educationArray.includes("Other")}
+              />
+            )}
+          </div>
+        </div>
+
+        {/* 3. Multi-Select Tags for Education */}
+        {isEducation && (
+          <div className="flex flex-wrap gap-1 mt-2 md:col-span-2">
+            {/* ✅ FIX HERE: Map pannum munbu educationArray use pannirukku */}
+            {educationArray.length > 0 &&
+              educationArray.map((item, index) => {
+                const displayItem =
+                  item === "Other" && OtherValue.education.trim() !== ""
+                    ? OtherValue.education.trim()
+                    : item;
+                if (item === "Other" && OtherValue.education.trim() === "")
+                  return null; // Hide 'Other' tag if input is empty
+                return (
+                  <span
+                    key={index}
+                    className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
+                  >
+                    {displayItem}
+
+                    <X
+                      className="cursor-pointer h-10 w-3 text-neutral-600 hover:text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectChange(fieldName, item);
+                      }}
+                    />
+                  </span>
+                );
+              })}
+          </div>
+        )}
+
+        {/* 4. Validation Message */}
+        {isInValid && (
+          <p className="text-red-500 text-xs mt-1">{validation[fieldName]}</p>
+        )}
+      </div>
+    );
+  };
+
   const isFormLoading = loading || isOTPSending || isOTPVerifying;
 
   return (
@@ -1408,117 +2144,59 @@ export default function SendOtpRegister() {
               }
 
               // 1. SELECT FIELD (Education Multi-select)
-              if (field.type === "select" && fieldName === "education") {
-                const options = dropdownData[field.label];
-                if (!options) return null;
-                return (
-                  <div key={field.label} className="flex flex-col">
-                    <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
-                      <div className="w-full">
-                        <Label className="text-sm py-2">{field.label}</Label>
-                      </div>
-                      <div className="lg:w-[900px]">
-                        <Select
-                          onValueChange={(val) =>
-                            handleSelectChange(fieldName, val)
-                          }
-                        >
-                          <SelectTrigger
-                            className={`w-full py-[15px] ${
-                              isInValid
-                                ? "border-red-500 ring-red-500 focus:ring-red-500"
-                                : ""
-                            }`}
-                          >
-                            <SelectValue
-                              placeholder={`Select ${field.label}`}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {options.map((opt, index) => (
-                              <SelectItem key={`${opt}-${index}`} value={opt}>
-                                {opt}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    {/* Display selected items and error */}
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {formData.education.length > 0 &&
-                        formData.education.map((item, index) => (
-                          <span
-                            key={index}
-                            className="bg-neutral-200 text-neutral-800 px-2 py-1 rounded-full text-[10px] flex items-center gap-1"
-                          >
-                            {item}
-                            <span
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelectChange(fieldName, item);
-                              }}
-                              className="cursor-pointer text-neutral-600 font-bold"
-                            ></span>
-                          </span>
-                        ))}
-                    </div>
-                    {isInValid && (
-                      <p className="text-red-500 text-xs mt-1">
-                        This field is required.
-                      </p>
-                    )}
-                  </div>
-                );
-              }
-
-              // 1. SELECT FIELD (Standard)
               if (field.type === "select") {
                 const options = dropdownData[field.label];
                 if (!options) return null;
-
-                return (
-                  <div key={field.label} className="flex flex-col">
-                    <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
-                      <div className="w-full">
-                        <Label className="text-sm py-2">{field.label}</Label>
-                      </div>
-                      <div className="lg:w-[900px]">
-                        <Select
-                          value={formData?.[fieldName]}
-                          onValueChange={(val) =>
-                            handleSelectChange(fieldName, val)
-                          }
-                        >
-                          <SelectTrigger
-                            className={`w-full py-[15px] ${
-                              isInValid
-                                ? "border-red-500 ring-red-500 focus:ring-red-500"
-                                : ""
-                            }`}
-                          >
-                            <SelectValue
-                              placeholder={`Select ${field.label}`}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {options.map((opt, index) => (
-                              <SelectItem key={`${opt}-${index}`} value={opt}>
-                                {opt}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    {isInValid && (
-                      <p className="text-red-500 text-xs mt-1">
-                        This field is required.
-                      </p>
-                    )}
-                  </div>
-                );
+                return renderSelectWithOther(field, fieldName, options);
               }
+
+              // 1. SELECT FIELD (Standard)
+              // if (field.type === "select") {
+              //   const options = dropdownData[field.label];
+              //   if (!options) return null;
+
+              //   return (
+              //     <div key={field.label} className="flex flex-col">
+              //       <div className="lg:flex-row w-full lg:flex lg:center lg:gap-10">
+              //         <div className="w-full">
+              //           <Label className="text-sm py-2">{field.label}</Label>
+              //         </div>
+              //         <div className="lg:w-[900px]">
+              //           <Select
+              //             value={formData?.[fieldName]}
+              //             onValueChange={(val) =>
+              //               handleSelectChange(fieldName, val)
+              //             }
+              //           >
+              //             <SelectTrigger
+              //               className={`w-full py-[15px] ${
+              //                 isInValid
+              //                   ? "border-red-500 ring-red-500 focus:ring-red-500"
+              //                   : ""
+              //               }`}
+              //             >
+              //               <SelectValue
+              //                 placeholder={`Select ${field.label}`}
+              //               />
+              //             </SelectTrigger>
+              //             <SelectContent>
+              //               {options.map((opt, index) => (
+              //                 <SelectItem key={`${opt}-${index}`} value={opt}>
+              //                   {opt}
+              //                 </SelectItem>
+              //               ))}
+              //             </SelectContent>
+              //           </Select>
+              //         </div>
+              //       </div>
+              //       {isInValid && (
+              //         <p className="text-red-500 text-xs mt-1">
+              //           This field is required.
+              //         </p>
+              //       )}
+              //     </div>
+              //   );
+              // }
 
               // 2. DATE PICKER
               if (field.type === "date") {
