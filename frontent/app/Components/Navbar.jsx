@@ -28,14 +28,14 @@ const Navbar = () => {
     (state) => state.adminAuth
   );
 
-  // 🚀 Component Render ஆனவுடன் API Call
-  useEffect(() => {
-    // isAuthChecked False-ஆக இருந்தால் மட்டுமே API-ஐ அழைக்கவும்.
-    // இது, ஒரே Navbar Render-ல் பலமுறை API call ஆவதைத் தடுக்கும்.
-    if (!isAuthChecked) {
-      dispatch(fetchAdminDetailsOnLoad());
-    }
-  }, [dispatch, isAuthChecked]); // dispatch மாறாது, isAuthChecked மாறும் போது மீண்டும் பார்க்கவும்
+  // // 🚀 Component Render ஆனவுடன் API Call
+  // useEffect(() => {
+  //   // isAuthChecked False-ஆக இருந்தால் மட்டுமே API-ஐ அழைக்கவும்.
+  //   // இது, ஒரே Navbar Render-ல் பலமுறை API call ஆவதைத் தடுக்கும்.
+  //   if (!isAuthChecked) {
+  //     dispatch(fetchAdminDetailsOnLoad());
+  //   }
+  // }, [dispatch, isAuthChecked]); // dispatch மாறாது, isAuthChecked மாறும் போது மீண்டும் பார்க்கவும்
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,20 +64,19 @@ const Navbar = () => {
 
   const renderAuthLinks = (isMobile) => {
     // 1. API பதில் வரவில்லை என்றால் Skeleton-ஐக் காட்டு
-    if (!isAuthChecked) {
-      return (
-        <div
-          className={`flex ${
-            isMobile ? "flex-col space-y-3 w-full" : "space-x-8"
-          }`}
-        >
-          <LinkSkeleton isMobile={isMobile} />
-          {!isMobile && <LinkSkeleton isMobile={isMobile} />}
-          {/* Desktop-ல் Register & Login-க்கு 2 Skeleton */}
-        </div>
-      );
-    }
-
+    // if (!isAuthChecked) {
+    //   return (
+    //     <div
+    //       className={`flex ${
+    //         isMobile ? "flex-col space-y-3 w-full" : "space-x-8"
+    //       }`}
+    //     >
+    //       <LinkSkeleton isMobile={isMobile} />
+    //       {!isMobile && <LinkSkeleton isMobile={isMobile} />}
+    //       {/* Desktop-ல் Register & Login-க்கு 2 Skeleton */}
+    //     </div>
+    //   );
+    // }
     // if (isAuthenticated) {
     //   return (
     //     <Link
@@ -89,7 +88,6 @@ const Navbar = () => {
     //     </Link>
     //   );
     // }
-
     // 3. isAuthenticated = false என்றால்: REGISTER & LOGIN-ஐக் காட்டு
     // return (
     //   <Link
