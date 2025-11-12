@@ -784,7 +784,7 @@ const dropdownData = {
     // "Others in Diploma",
     "Higher Secondary School / High School",
     "Diploma catering",
-    "Other",
+    //"Other",
   ], // Note: First code-la irundha short list
 
   Occupation: uniqueOccupations,
