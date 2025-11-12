@@ -291,13 +291,28 @@ const motherTongueOptions = [
   "Wagdi",
 ];
 
+const extractCmValue = (heightString) => {
+  // Regular Expression மூலம் String-ல் உள்ள cm மதிப்பை பிரித்தெடுக்கிறோம்.
+  // e.g., "5ft 7in - 170cm" -> ['170cm', '170'] -> '170'
+  const cmMatch = heightString.match(/(\d+)cm/);
+  return cmMatch ? cmMatch[1] : null; // "170" என்ற string-ஐத் திருப்பியளிக்கும்
+};
+
+// முதல் மற்றும் கடைசி CM மதிப்புகளைப் பிரித்தெடுத்தல்
+const initial_height_from_cm = extractCmValue(heightOptions[0]); // "137"
+const initial_height_to_cm = extractCmValue(
+  heightOptions[heightOptions.length - 1]
+); // "213"
+// அல்லது நீங்கள் விரும்பும் வேறு ஒரு value: e.g., "205"
+
 const initialFilters = {
   looking_for: "Bride",
   age_from: "18",
   age_to: "30",
   // height: "all", // Changed from '' to 'all'
-  height_from: "100", // Start from 100cm
-  height_to: "200", // End at 220cm
+  height_from: initial_height_from_cm || "137", // e.g., "137"
+  // கடைசி Option-ன் CM மதிப்பு (அல்லது நீங்கள் விரும்பும் End value)
+  height_to: initial_height_to_cm || "213", // e.g., "213"
   religion: "all", // Changed from '' to 'all'
   caste: "all", // Changed from '' to 'all'
   mother_tongue: "all", // Changed from '' to 'all'
@@ -398,11 +413,11 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
 
         {/* Height Range */}
         <div className="col-span-2 flex items-end space-x-7 ">
-          {" "}
           {/* mt-4 (margin-top) சேர்க்கப்பட்டுள்ளது */}
+          {/* Height From */}
           <div className="w-1/2">
             <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
-              Height From (cm)
+              Height From
             </label>
             <Select
               value={filters.height_from}
@@ -412,21 +427,27 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
                 <SelectValue placeholder="Min Height" />
               </SelectTrigger>
               <SelectContent className="text-[#4a2f1c]">
-                {heightCmOptions.map((h) => (
-                  <SelectItem
-                    key={h}
-                    value={String(h)}
-                    className="text-[#4a2f1c] text-[13px]"
-                  >
-                    {h}cm
-                  </SelectItem>
-                ))}
+                {heightOptions.map((hString) => {
+                  const cmValue = extractCmValue(hString); // '137', '139', etc.
+                  if (!cmValue) return null; // cm மதிப்பு இல்லை என்றால் தவிர்க்கவும்
+
+                  return (
+                    <SelectItem
+                      key={cmValue}
+                      value={cmValue} // Backend-க்கு cm எண்ணை (string-ல்) அனுப்புகிறோம்: "137"
+                      className="text-[#4a2f1c] text-[13px]"
+                    >
+                      {hString}{" "}
+                      {/* UI-ல் முழு string-ஐயும் காட்டுகிறோம்: "4ft 6in - 137cm" */}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </div>
           <div className="w-1/2">
             <label className="text-[13px] pb-2 text-[#4a2f1c] mb-1 block">
-              To (cm)
+              To
             </label>
             <Select
               value={filters.height_to}
@@ -436,15 +457,27 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
                 <SelectValue placeholder="Max Height" />
               </SelectTrigger>
               <SelectContent className="text-[#4a2f1c]">
-                {heightCmOptions
-                  .filter((h) => h >= Number(filters.height_from)) // 'From' விட குறைவாக உள்ள options-ஐ நீக்குகிறோம்
+                {heightOptions
+                  .map((hString) => {
+                    const cmValue = extractCmValue(hString);
+                    if (!cmValue) return null;
+                    return {
+                      label: hString,
+                      value: cmValue,
+                      numericValue: Number(cmValue),
+                    };
+                  })
+                  .filter(
+                    (h) => h && h.numericValue >= Number(filters.height_from)
+                  ) // 'From' விட குறைவாக உள்ளதை நீக்குகிறோம்
                   .map((h) => (
                     <SelectItem
-                      key={h}
-                      value={String(h)}
+                      key={h.value}
+                      value={h.value} // Backend-க்கு cm எண்ணை (string-ல்) அனுப்புகிறோம்: "170"
                       className="text-[#4a2f1c] text-[13px]"
                     >
-                      {h}cm
+                      {h.label}{" "}
+                      {/* UI-ல் முழு string-ஐயும் காட்டுகிறோம்: "5ft 7in - 170cm" */}
                     </SelectItem>
                   ))}
               </SelectContent>
