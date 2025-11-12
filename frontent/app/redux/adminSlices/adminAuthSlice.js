@@ -15,7 +15,7 @@ export const fetchAdminDetailsOnLoad = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const adminResponse = await API.get("/adminAuth/getMe");
-      console.log(adminResponse);
+      //console.log(adminResponse);
       return adminResponse.data;
     } catch (error) {
       return thunkAPI.rejectWithValue("No valid admin session found.");
@@ -53,7 +53,7 @@ export const logoutAdmin = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await API.post("/adminAuth/logout");
-      console.log(response.data);
+      //console.log(response.data);
       return response.data?.message || "Logout successful";
     } catch (error) {
       const message =
@@ -70,7 +70,7 @@ export const registerAdmin = createAsyncThunk(
   async (adminData, thunkAPI) => {
     try {
       const response = await API.post("/adminAuth/register", adminData);
-      console.log(response.data);
+      //console.log(response.data);
       return response.data;
     } catch (error) {
       (error.response && error.response.data && error.response.data.message) ||

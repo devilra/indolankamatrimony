@@ -46,7 +46,7 @@ export const adminGetAllProfiles = createAsyncThunk(
 
       // Backend response structure: { data: profiles[] }
 
-      console.log(res.data);
+      //console.log(res.data);
       return res.data;
     } catch (error) {
       return rejectWithValue(

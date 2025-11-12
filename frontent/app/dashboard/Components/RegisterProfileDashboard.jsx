@@ -1244,7 +1244,7 @@ export default function RegisterProfile() {
   const [dobDate, setDobDate] = useState(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  console.log(formData.education);
+  //console.log(formData.education);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -1,6 +1,7 @@
 const Profile = require("../models/profile");
 const { Op, Sequelize } = require("sequelize");
 const nodemailer = require("nodemailer");
+const OtpTemp = require("../models/otptemp");
 
 // exports.getAllProfiles = async (req, res) => {
 //   try {
@@ -40,6 +41,7 @@ const nodemailer = require("nodemailer");
 
 exports.registerProfile = async (req, res) => {
   //console.log(req.file);
+  console.log(req.body);
   try {
     // multer upload file path
     // const imagePath = req.file ? req.file.path : null;
@@ -373,12 +375,26 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+// local server and render base server base gmail send
+// const createMailTransporter = () => {
+//   return nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: "rockraja91338@gmail.com",
+//       pass: "kgdngrwjibulofxh",
+//     },
+//   });
+// };
+
+// hosting cpanel custom mail send function
 const createMailTransporter = () => {
   return nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: true,
     auth: {
-      user: "rockraja91338@gmail.com",
-      pass: "kgdngrwjibulofxh",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 };
@@ -388,13 +404,14 @@ const createMailTransporter = () => {
 // =========================================================
 
 exports.sendOtp = async (req, res) => {
-  console.log("SERVER OTP START");
+  //console.log("SERVER OTP START");
   try {
     // Image and Profile Data extraction
     const imagePath = req.file ? req.file.path : null;
     const publicId = req.file ? req.file.path : null;
 
     let profileData = req.body;
+    //console.log(profileData);
 
     let { email, phonenumber, pname } = profileData;
 
@@ -413,6 +430,15 @@ exports.sendOtp = async (req, res) => {
 
     // Add calculated fields to the profileData object
     const now = new Date();
+
+    // Time for DB storage
+    const time = now.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    // Profile data-kku time/date-a add seiyungal (ungal original logic)
     profileData.created_day = now.getDate().toString().padStart(2, "0");
     profileData.created_month = (now.getMonth() + 1)
       .toString()
@@ -440,43 +466,93 @@ exports.sendOtp = async (req, res) => {
     // --- Generate OTP and Save Data Temporarily ---
     const otp = generateOTP();
 
-    otpStorage[email] = {
+    // otpStorage[email] = {
+    //   otp: otp,
+    //   profileData: profileData,
+    //   timestamp: Date.now(),
+    // };
+
+    // 🛑 DATABASE FIX: In-memory otpStorage-kku badhilaaga OtpTemp table-la save seiyungal
+
+    await OtpTemp.upsert({
+      email: email,
       otp: otp,
-      profileData: profileData,
-      timestamp: Date.now(),
-    };
+      profileData: JSON.stringify(profileData), // JSON object-a string-aah maatri save seiyungal
+      timestamp: Date.now(), // Current time in milliseconds for expiry check
+      created_time: time,
+      created_day: profileData.created_day,
+      created_month: profileData.created_month,
+      created_year: profileData.created_year,
+    });
 
     // ------5min Otp Expire--------
 
-    setTimeout(() => {
-      if (otpStorage[email] && otpStorage[email].otp === otp) {
-        delete otpStorage[email];
-        console.log(`INFO: OTP for ${email} expired and cleared.`);
-      }
-    }, OTP_EXPIRY_MINUTES * 60 * 1000);
+    // setTimeout(() => {
+    //   if (otpStorage[email] && otpStorage[email].otp === otp) {
+    //     delete otpStorage[email];
+    //     console.log(`INFO: OTP for ${email} expired and cleared.`);
+    //   }
+    // }, OTP_EXPIRY_MINUTES * 60 * 1000);
 
     // --- Send OTP Email ---
 
     const transporter = createMailTransporter();
 
     const mailOptions = {
+      //from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
       from: "rockraja91338@gmail.com",
       to: email,
-      subject: "Your Profile Verification OTP",
-      html: `<h3>Hello ${pname},</h3>
-                   <p>Your one-time password (OTP) for profile confirmation is:</p>
-                   <h1 style="color: #4CAF50; font-size: 24px;">${otp}</h1>
-                   <p>This code will expire in ${OTP_EXPIRY_MINUTES} minutes.</p>
-                   <p>Do not share this OTP with anyone.</p>`,
-    };
+      subject: "🔐 Your Profile Verification OTP - Indolankamatrimony",
+      // 🎨 Attractive, Branded HTML UI
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+            
+            <div style="background-color: #A91D3C; color: #ffffff; padding: 20px; text-align: center;">
+                <h2 style="margin: 0; font-size: 24px;">Indolankamatrimony Services</h2>
+            </div>
 
-    console.log("Mail Sending Started");
+            <div style="padding: 30px; color: #333333;">
+                
+                <h3 style="margin-top: 0; font-size: 18px; color: #333333;">Hello ${pname},</h3>
+                
+                <p style="font-size: 16px; line-height: 1.5;">
+                    Your One-Time Password (OTP) for profile confirmation is provided below. 
+                    Please enter this code in your application to complete the registration process.
+                </p>
+
+                <div style="text-align: center; margin: 30px 0; padding: 15px 20px; border: 1px dashed #A91D3C; background-color: #FFF0F5; border-radius: 6px;">
+                    <p style="font-size: 14px; color: #A91D3C; margin: 0 0 10px 0; font-weight: bold;">
+                        Verification Code:
+                    </p>
+                    <h1 style="color: #4CAF50; font-size: 32px; font-weight: bold; letter-spacing: 5px; margin: 0;">
+                        ${otp}
+                    </h1>
+                </div>
+
+                <p style="font-size: 14px; line-height: 1.4; color: #777777; margin-top: 20px;">
+                    ⚠️ This code will expire in **${OTP_EXPIRY_MINUTES} minutes**.
+                </p>
+                <p style="font-size: 14px; line-height: 1.4; color: #777777;">
+                    For security reasons, please do not share this OTP with anyone.
+                </p>
+            </div>
+
+            <div style="background-color: #f8f8f8; padding: 15px 30px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="font-size: 12px; color: #999999; margin: 0;">
+                    Thank you for choosing Indolankamatrimony services.
+                </p>
+            </div>
+        </div>
+    `,
+    };
+    //console.log("Mail Sending Started");
 
     await transporter.sendMail(mailOptions);
-    console.log(`SUCCESS: OTP sent to ${email}`);
+    //console.log(`SUCCESS: OTP sent to ${email}`);
 
     res.status(200).json({
       success: true,
+      //otpStorage,
       message: "OTP sent to your email successfully. Please check and verify.",
       // Front-end- OTP verification form-
       emailSent: true,
@@ -519,11 +595,31 @@ exports.verifyOtpAndRegister = async (req, res) => {
       .json({ success: false, message: "Email and OTP are required." });
   }
 
-  const storedData = otpStorage[email];
+  // 🛑 DATABASE FIX: Database-la irundhu record-a thedungal
+
+  const storedRecord = await OtpTemp.findOne({
+    where: {
+      email: email,
+    },
+  });
+  //const storedData = otpStorage[email];
+
+  //console.log(storedData);
 
   // 1. Storage Data  (Expired or Not Sent)
 
-  if (!storedData) {
+  // if (!storedData) {
+  //   return res.status(400).json({
+  //     storedData,
+  //     success: false,
+  //     message:
+  //       "Verification failed. OTP expired or not sent. Please resubmit profile form.",
+  //   });
+  // }
+
+  // 1. Storage Data (Expired or Not Sent)
+  if (!storedRecord) {
+    // otpStorage-a thevaiyillai
     return res.status(400).json({
       success: false,
       message:
@@ -531,10 +627,19 @@ exports.verifyOtpAndRegister = async (req, res) => {
     });
   }
 
+  // Stored data-vai JSON object-aah maatrungal
+
+  const storedData = {
+    otp: storedRecord.otp,
+    profileData: JSON.parse(storedRecord.profileData),
+    timestamp: storedRecord.timestamp,
+  };
+
   const timeElapsed = Date.now() - storedData.timestamp;
 
   if (timeElapsed > OTP_EXPIRY_MINUTES * 60 * 1000) {
-    delete otpStorage[email]; // Clear expired data
+    // 🛑 Database expiry: Expired aanal, database-la irundhu record-a delete seiyungal
+    await OtpTemp.destroy({ where: { email: email } });
     return res.status(400).json({
       success: false,
       message: "OTP has expired. Please resend the profile form.",
@@ -567,63 +672,186 @@ exports.verifyOtpAndRegister = async (req, res) => {
 
     const newProfile = await Profile.create(profileData);
 
-    delete otpStorage[email];
-
     // --- Final Success Response ---
-    res.status(201).json({
-      success: true,
-      message: "Profile verified and registered successfully!",
-      imageUrl: newProfile.image,
-      data: newProfile,
-    });
+    // res.status(201).json({
+    //   success: true,
+    //   message: "Profile verified and registered successfully!",
+    //   imageUrl: newProfile.image,
+    //   data: newProfile,
+    // });
 
-    console.log("Successful Registered");
+    // 🛑 Success: Database-la irundhu OtpTemp record-a delete seiyungal
+    await OtpTemp.destroy({ where: { email: email } });
+
+    // console.log("Successful Registered");
+    let emailMessage = "Profile registered successfully. Email is sending...";
 
     try {
       // --- Admin/User Notification Email ---
       const transporter = createMailTransporter();
 
+      //console.log(email);
+
       // Email to registered user
       const userMailOptions = {
-        from: process.env.EMAIL_USER,
+        //from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
+        from: "rockraja91338@gmail.com",
         to: email,
-        subject: "Profile Registration Successful and Verified ✅",
-        html: `<h3>Hello ${profileData.pname},</h3>
-                    <p>Your matrimony profile has been successfully registered and verified.</p>
-                    <p>Thank you for registering!</p>`,
+        subject: "🎉 Profile Registration Successful!",
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+            
+            <div style="background-color: #B02E2E; color: white; padding: 20px; text-align: center;">
+                <h1 style="margin: 0; font-size: 24px;">Welcome</h1>
+            </div>
+
+            <div style="padding: 25px; color: #333333;">
+                <h2 style="color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 10px; margin-top: 0;">Hello ${
+                  newProfile.pname
+                }, Congratulations!</h2>
+                
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Your Matrimony profile has been successfully registered with us. We are excited to help you find your perfect life partner!
+                </p>
+
+                <div style="background-color: #f4f4f4; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                    <p style="margin: 0; font-weight: bold; color: #B02E2E;">Profile Details:</p>
+                    <ul style="list-style-type: none; padding: 0; margin: 10px 0 0 0;">
+                        <li style="margin-bottom: 5px;"><strong>Name:</strong> ${
+                          newProfile.pname
+                        }</li>
+                        <li style="margin-bottom: 5px;"><strong>Registered Email:</strong> ${
+                          newProfile.email
+                        }</li>
+                        <li style="margin-bottom: 5px;"><strong>Profile Type:</strong> ${
+                          newProfile.mprofile
+                        }</li>
+                        <li style="margin-bottom: 5px;"><strong>Profile ID:</strong> ${
+                          newProfile.id
+                        }</li>
+                     
+                    </ul>
+                </div>
+                
+                <p style="font-size: 16px; line-height: 1.6;">
+                    Our team will review your profile shortly. We will contact you soon on your registered phone number (${
+                      newProfile.phonenumber
+                    }) to discuss the next steps.
+                </p>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://www.indolankamatrimony.com/profile/${
+                      newProfile.id
+                    }" target="_blank" style="display: inline-block; padding: 12px 25px; background-color: #B02E2E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View Your Profile</a>
+                </div>
+                
+                <p style="margin-top: 40px; font-size: 15px;">
+                    Thank you for trusting us. <br>
+                    Warm Regards, <br>
+                    The Indolankamatrimony Team.
+                </p>
+            </div>
+
+            <div style="background-color: #333333; color: #aaaaaa; padding: 15px; text-align: center; font-size: 12px;">
+                <p style="margin: 0;">© ${new Date().getFullYear()} Indolankamatrimony. All rights reserved.</p>
+            </div>
+        </div>
+    `,
       };
 
       // Email to admin
       const adminMailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.ADMIN_EMAIL,
-        subject: "New Profile Registered and Verified ✅",
-        html: `<h3>New Profile Registered</h3>
-                     <p>Name: ${profileData.pname}</p>
-                     <p>Email: ${email}</p>
-                     <p>Phone: ${profileData.phonenumber}</p>
-                     <p>Profile Type: ${profileData.mprofile}</p>`,
+        //from: `Indolankamatrimony services <${process.env.EMAIL_USER}>`,
+        from: "rockraja91338@gmail.com",
+        to: "rockerraja906@gmail.com",
+        //to: process.env.ADMIN_EMAIL,
+        subject: `🔔 ACTION REQUIRED: New Matrimony Profile Registered - ${newProfile.pname}`,
+        html: `
+        <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; border: 1px solid #ffcc00; border-radius: 8px; overflow: hidden; background-color: #fffaf0;">
+            
+            <div style="background-color: #ffcc00; color: #333333; padding: 15px; text-align: center; border-bottom: 3px solid #ff9900;">
+                <h2 style="margin: 0; font-size: 20px;">🚨 New Profile Registration Alert 🚨</h2>
+            </div>
+
+            <div style="padding: 20px; color: #333333;">
+                <p style="font-size: 16px; font-weight: bold;">A new user has registered a profile. Please verify and approve the details.</p>
+
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold; width: 35%;">Name</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${newProfile.pname}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Email</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${email}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Phone Number</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${newProfile.phonenumber}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Profile Type</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${newProfile.mprofile}</td>
+                    </tr>
+                     <tr>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #ffffff; font-weight: bold;">Profile ID</td>
+                        <td style="padding: 10px; border: 1px solid #e0e0e0; background-color: #f9f9f9;">${newProfile.id}</td>
+                    </tr>
+                </table>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="[Your Admin Panel Link to Profile List]" target="_blank" style="display: inline-block; padding: 10px 20px; background-color: #B02E2E; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">View/Approve Profile</a>
+                </div>
+
+                <p style="margin-top: 25px; font-size: 14px; color: #666666;">
+                    This is an automated notification. Please do not reply to this email.
+                </p>
+            </div>
+
+            <div style="background-color: #333333; color: #aaaaaa; padding: 10px; text-align: center; font-size: 11px;">
+                Matrimony Admin System
+            </div>
+        </div>
+    `,
       };
 
       // Send emails in the background
-      transporter
-        .sendMail(userMailOptions)
-        .then(() => console.log("Email Send SuccessFully"))
-        .catch((err) => console.error("User success email failed:", err));
-      transporter
-        .sendMail(adminMailOptions)
-        .then(() => console.log("Email Send SuccessFully"))
-        .catch((err) => console.error("Admin notification email failed:", err));
+      await Promise.all([
+        transporter.sendMail(userMailOptions),
+        transporter.sendMail(adminMailOptions),
+      ]);
+
+      //console.log(`SUCCESS: User email sent to ${email} and Admin email sent.`);
+      emailMessage =
+        "Profile registered successfully and confirmation email sent! ✅";
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({
-        message: "Email Send Faild",
-      });
+      console.error(
+        "WARNING: Email sending failed. The user was registered, but mail delivery failed. Check SMTP settings.",
+        error.message
+      );
+      // Email fail ஆனாலும் registration successful தான், ஆனா response message மாத்திருவோம்.
+      emailMessage =
+        "Profile registered successfully, but failed to send confirmation email. Please check your email settings. ⚠️";
     }
-  } catch (error) {
-    console.error("❌ DB Registration Error:", error);
 
     delete otpStorage[email];
+
+    // ----------------------------------------------------------------------------------
+    // ✅ FINAL STEP: Send success response to the client
+    // ----------------------------------------------------------------------------------
+    res.status(201).json({
+      success: true,
+      message: emailMessage, // Updated message based on email status
+      imageUrl: newProfile.image,
+      data: newProfile,
+    });
+  } catch (error) {
+    console.error("❌ DB Registration Error:", error.message);
+
+    // 🛑 Error aanal, database-la irundhu record-a delete seiyungal
+    if (email) {
+      await OtpTemp.destroy({ where: { email: email } });
+    }
 
     res.status(500).json({
       success: false,
@@ -1164,130 +1392,3 @@ exports.searchMatches = async (req, res) => {
     });
   }
 };
-
-// exports.searchMatches = async (req, res) => {
-//   // Op-ஐ require செய்திருப்பீர்கள் என்று நம்புகிறேன்
-//   // const { Op } = require("sequelize");
-//   // ... (Profile Model import செய்யப்பட்டிருக்க வேண்டும்)
-
-//   console.log(req.query);
-//   try {
-//     const { query } = req;
-
-//     // --- 1. Basic Filters Parsing ---
-//     const looking_for = query.looking_for ? query.looking_for.trim() : "";
-//     const religion = query.religion ? query.religion.trim() : "";
-//     const caste = query.caste ? query.caste.trim() : "";
-//     const mother_tongue = query.mother_tongue ? query.mother_tongue.trim() : "";
-//     const profile_id = query.profile_id ? query.profile_id.trim() : "";
-
-//     // --- 2. Range Filters Parsing (Age) ---
-//     const age_from = Number(query.age_from);
-//     const age_to = Number(query.age_to);
-
-//     // 🚩 NEW: Height Range Parsing (Front-end-லிருந்து cm மதிப்புகள் வரும்)
-//     const height_from = query.height_from ? Number(query.height_from) : null;
-//     const height_to = query.height_to ? Number(query.height_to) : null;
-
-//     let whereCondition = {};
-
-//     // ---------------------------------------------
-//     // 🔍 FILTER LOGIC
-//     // ---------------------------------------------
-
-//     if (profile_id) {
-//       whereCondition.id = profile_id.toUpperCase();
-//     } else {
-//       // --- ID கொடுக்கப்படவில்லை, மற்ற filters-ஐ apply செய்யலாம் ---
-
-//       // 1. 🚻 Gender Filter
-//       if (looking_for) {
-//         if (looking_for.toLowerCase() === "bride") {
-//           whereCondition.gender = "Female";
-//         } else if (looking_for.toLowerCase() === "groom") {
-//           whereCondition.gender = "Male";
-//         } else {
-//           whereCondition.gender = looking_for;
-//         }
-//       }
-
-//       // 2. 🎂 Age Range Filter
-//       if (
-//         !isNaN(age_from) &&
-//         !isNaN(age_to) &&
-//         age_from > 0 &&
-//         age_to >= age_from
-//       ) {
-//         whereCondition.age = {
-//           [Op.between]: [age_from, age_to], // Number-ஆக அனுப்பலாம்
-//         };
-//       }
-
-//       // 🛑 NEW: Height Range Filter (DB String-ல் இருந்து CM Extract செய்தல்)
-//       if (height_from && height_to) {
-//         // ✅ இதுவே MySQL/MariaDB-க்கான சரியான SQL Logic
-//         const heightExtractionSql = `CAST(REPLACE(SUBSTRING_INDEX(height, ' - ', -1), 'cm', '') AS UNSIGNED)`;
-
-//         whereCondition[Op.and] = [
-//           ...(whereCondition[Op.and] || []),
-
-//           // Min Height Check: Extracted CM >= height_from
-//           Profile.sequelize.literal(`${heightExtractionSql} >= ${height_from}`),
-
-//           // Max Height Check: Extracted CM <= height_to
-//           Profile.sequelize.literal(`${heightExtractionSql} <= ${height_to}`),
-//         ];
-//       }
-
-//       // 4. ⚜️ Caste and Religion Filters (Direct Match)
-//       if (caste) {
-//         whereCondition.caste = caste;
-//       }
-//       if (religion) {
-//         whereCondition.religion = religion;
-//       }
-
-//       // 5. 🗣️ Mother Tongue Filter
-//       if (mother_tongue) {
-//         // Unga DB field name: mothertongue
-//         whereCondition.mothertongue = mother_tongue;
-//       }
-//     } // End of else (if not profile_id)
-
-//     // --- 3. Execute Query ---
-//     const profiles = await Profile.findAll({
-//       where: whereCondition,
-//       order: [["id", "DESC"]],
-//       // ... pagination settings
-//     });
-
-//     // --- 4. Handle Results ---
-//     if (profiles.length === 0) {
-//       if (profile_id) {
-//         return res.status(404).json({
-//           success: false,
-//           message: `Profile ID ${profile_id} not found.`,
-//         });
-//       }
-
-//       return res.status(404).json({
-//         success: false,
-//         message: "No matches found for your partner preference 💔",
-//       });
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Potential matches fetched successfully! ✨",
-//       count: profiles.length,
-//       data: profiles,
-//     });
-//   } catch (error) {
-//     console.error("❌ Error fetching matches:", error.message);
-//     res.status(500).json({
-//       success: false,
-//       message: "Something went wrong while searching for matches ❌",
-//       error: error.message,
-//     });
-//   }
-// };

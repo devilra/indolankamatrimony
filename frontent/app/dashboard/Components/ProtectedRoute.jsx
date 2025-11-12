@@ -12,22 +12,22 @@ const ProtectedRoute = ({ children }) => {
     (state) => state.adminAuth
   );
 
-  console.log(
-    "isAuthenticated :",
-    isAuthenticated,
-    "isAuthChecked",
-    isAuthChecked
-  );
+  // console.log(
+  //   "isAuthenticated :",
+  //   isAuthenticated,
+  //   "isAuthChecked",
+  //   isAuthChecked
+  // );
 
   useEffect(() => {
     if (!isAuthenticated) {
-      console.log("Push Login pAge Start");
+      //console.log("Push Login pAge Start");
       router.push("/login");
     }
   }, [isAuthChecked, isAuthenticated, router]);
 
   if (!isAuthChecked) {
-    console.log("AuthChecked Running");
+    //console.log("AuthChecked Running");
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="animate-spin h-6 w-6 text-gray-500" />
