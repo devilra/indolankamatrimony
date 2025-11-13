@@ -813,7 +813,7 @@ const page = () => {
     );
   }
 
-  console.log(singleProfileData);
+  //console.log(singleProfileData);
 
   //   Details Display Logic
   const p = profileData;
@@ -910,7 +910,7 @@ const page = () => {
               </div>
             </div>
           </div>
-          <div className="">
+          <div className="hidden md:block lg:block">
             <div className="w-full">
               <FilterForm
                 filters={filters}
@@ -921,7 +921,7 @@ const page = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="hidden md:block lg:block">
           {/* 🚩 NEW LOGIC: Search panna apuram mattum results-a show pannanum */}
           {hasSearched && (
             <>
@@ -982,29 +982,6 @@ const page = () => {
                                 <span className="font-medium">Age:</span>
                                 <span>{p.age || "N/A"}</span>
                               </div>
-                              {/* <div className="flex justify-between text-[#4a2f1c]">
-                                <span className="font-medium">Height:</span>
-                              
-                                <span>{p.height}</span>
-                              </div> */}
-                              {/* <div className="flex justify-between text-[#4a2f1c]">
-                                <span className="font-medium">Caste:</span>
-                                <span className="truncate max-w-[50%]">
-                                  {p.caste || "N/A"}
-                                </span>
-                              </div> */}
-                              {/* <div className="flex justify-between text-[#4a2f1c]">
-                                <span className="font-medium">Religion:</span>
-                                <span className="truncate max-w-[50%]">
-                                  {p.religion || "N/A"}
-                                </span>
-                              </div> */}
-                              {/* <div className="flex justify-between text-[#4a2f1c]">
-                                <span className="font-medium">M.Tongue:</span>
-                                <span className="truncate max-w-[50%]">
-                                  {p.mothertongue || "N/A"}
-                                </span>
-                              </div> */}
                             </div>
                           </div>
                         ))}
@@ -1054,6 +1031,89 @@ const page = () => {
             ))}
           </div>
         </DetailBox>
+      </div>
+
+      <div className="px-10 py-5 md:hidden lg:hidden ">
+        <div className="w-full">
+          <FilterForm
+            filters={filters}
+            setFilters={setFilters}
+            handleSearch={handleSearch}
+            loading={loading}
+          />
+        </div>
+      </div>
+      <div className="md:hidden lg:hidden">
+        {/* 🚩 NEW LOGIC: Search panna apuram mattum results-a show pannanum */}
+        {hasSearched && (
+          <>
+            {/* Loading State */}
+            {loading && (
+              <div className="flex justify-center items-center h-48 p-6 border rounded-lg bg-white shadow-md">
+                <Loader2 className="animate-spin h-6 w-6 text-[#4a2f1c]" /> 
+                <span className="ml-2 text-lg text-gray-700">
+                  Searching for Matches...
+                </span>
+              </div>
+            )}
+            {/* Results and No Match State (Loading mudinjadhukku apuram mattum) */}
+            {!loading && (
+              <>
+                <h2 className="text-2xl py-5 px-2 text-start font-bold mb-4 text-[#4a2f1c]">
+                  Found **{matchProfiles.length}** Matching Profiles
+                </h2>
+
+                {matchProfiles.length === 0 ? (
+                  // 🚩 No Matching Profile Error
+                  <div className="p-6 text-center border mb-10 rounded-lg bg-white shadow-md">
+                    <h3 className="text-xl font-semibold text-red-500">
+                      No Matching Profiles Found 😟
+                    </h3>
+                    <p className="mt-2 text-gray-600">
+                      try modifying your search filters to get better results.
+                    </p>
+                  </div>
+                ) : (
+                  // 🚩 Profiles Display
+                  <div className="bg-white mb-10 p-4 mx-5 rounded-lg shadow-md overflow-x-auto">
+                    <div className="flex space-x-4 pb-2">
+                      {matchProfiles.map((p) => (
+                        <div
+                          key={p.id}
+                          onClick={() => router.push(`/profile/${p.id}`)}
+                          className="w-64 flex-shrink-0 border rounded-lg p-3 shadow-sm hover:shadow-md transition duration-200 cursor-pointer bg-white"
+                        >
+                          {/* Photo */}
+                          <div>
+                            <img
+                              src={formatImageUrl(p.image, p.gender)}
+                              alt={p.name || "Profile"}
+                              className="h-[150px] md:h-[250] md:w-[180px] w-[120px]"
+                            />
+                          </div>
+                          {/* Main Details */}
+                          <div className="space-y-1 text-sm">
+                            <div className="font-bold text-base text-[#4a2f1c] truncate">
+                              {p.pname || "N/A"}
+                            </div>
+                            <div className="text-xs text-[#4a2f1c] font-semibold">
+                              ID: {p.id || "N/A"}
+                            </div>
+                            <hr className="my-1 border-gray-100" />
+                            <div className="flex justify-between text-[#4a2f1c]">
+                              <span className="font-medium">Age:</span>
+                              <span>{p.age || "N/A"}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

@@ -129,7 +129,9 @@ const AllProfiles = () => {
 
   // Double Checkup delete confirmation
 
-  const handleDelete = (id) => {
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleDelete = async (id) => {
     // 1. முதல் உறுதிப்படுத்தல் (First Confirmation)
     const isConfirmedFirst = window.confirm(
       `⚠️ Warning: Profile ID ${id} will be permanently deleted. Are you sure you want to continue?`
@@ -137,6 +139,11 @@ const AllProfiles = () => {
 
     if (isConfirmedFirst) {
       // 2. Second / Final Confirmation
+
+      toast.loading("Waiting final confirmation...");
+      await delay(2000); // 👈 1000ms (1 second) தாமதம்
+      toast.dismiss(); // Loading toast-ஐ அகற்ற
+
       const isConfirmedFinal = window.confirm(
         `🔥 FINAL WARNING! Are you absolutely sure you want to delete Profile ID ${id}? This action cannot be undone.`
       );
@@ -146,7 +153,7 @@ const AllProfiles = () => {
         dispatch(adminDeleteProfile(id));
       } else {
         // Cancelled at second confirmation
-        toast.info("Delete operation cancelled. Profile remains safe...");
+        toast.info("Delete operation cancelled.");
       }
     } else {
       // Cancelled at first confirmation
