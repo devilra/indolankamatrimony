@@ -326,7 +326,7 @@ const AllProfiles = () => {
             <img
               src={profile.image}
               alt={profile.pname || "Profile Image"}
-              //onClick={() => handleImageClick(profile.image, profile.pname)}
+              onClick={() => handleImageClick(profile.image, profile.pname)}
               className="h-10 w-10 rounded-md cursor-pointer hover:shadow-lg transition duration-200"
             />
           )}
