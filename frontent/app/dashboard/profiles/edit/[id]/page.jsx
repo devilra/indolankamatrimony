@@ -57,6 +57,44 @@ const EditProfile = () => {
   const [profileImageFile, setProfileImageFile] = useState(null);
   const router = useRouter();
 
+  const [otherInputs, setOtherInputs] = useState({
+    education: false,
+    occupation: false,
+    foccupation: false,
+    moccupation: false,
+    mprofile: false,
+    rasi: false,
+    nakshatram: false,
+    laknam: false,
+    maritalstatus: false,
+    education: false,
+    annualincome: false,
+    mothertongue: false,
+    religion: false,
+    caste: false,
+    height: false,
+    color: false,
+  });
+
+  const [OtherValue, setOtherValue] = useState({
+    education: "",
+    occupation: "",
+    foccupation: "",
+    moccupation: "",
+    mprofile: "",
+    rasi: "",
+    nakshatram: "",
+    laknam: "",
+    height: "",
+    maritalstatus: "",
+    education: "",
+    annualincome: "",
+    mothertongue: "",
+    religion: "",
+    caste: "",
+    color: "",
+  });
+
   // singleProfile state-la irukkaa nu paakaam
   const { singleProfile, loading, error } = useSelector((state) => state.admin);
 
@@ -259,6 +297,7 @@ const EditProfile = () => {
     "Courier",
     "bluedart",
     "Diploma catering",
+    "Other",
   ];
 
   const uniqueOccupations = [...new Set(Occupations)];
@@ -457,6 +496,7 @@ const EditProfile = () => {
     "Dentist",
     "Surgeon",
     "Veterinary Doctor",
+    "Other",
   ];
 
   const uniqueFatherOccupations = [...new Set(FatherOccupations)];
@@ -654,6 +694,7 @@ const EditProfile = () => {
     "Dentist",
     "Surgeon",
     "Veterinary Doctor",
+    "Other",
   ];
 
   const uniqueMotherOccupations = [...new Set(MotherOccupations)];
@@ -685,6 +726,7 @@ const EditProfile = () => {
       "Sister",
       "Friends",
       "Relative",
+      "Other",
     ],
     Rasi: [
       "மேஷம் (Aries)",
@@ -699,6 +741,7 @@ const EditProfile = () => {
       "மகரம் (Capricorn)",
       "கும்பம் (Aquarius)",
       "மீனம் (Pisces)",
+      "Other",
     ],
 
     Nakshatram: [
@@ -729,6 +772,7 @@ const EditProfile = () => {
       "பூரட்டாதி (Purva Bhadrapada)",
       "உத்திரட்டாதி (Uttara Bhadrapada)",
       "ரேவதி (Revati)",
+      "Other",
     ],
 
     Laknam: [
@@ -744,9 +788,10 @@ const EditProfile = () => {
       "மகரம் (Capricorn)",
       "கும்பம் (Aquarius)",
       "மீனம் (Pisces)",
+      "Other",
     ], // Note: First code-la irundha short list
 
-    Color: ["Fair", "Black", "White", "Very Fair"],
+    Color: ["Fair", "Black", "White", "Very Fair", "Other"],
     "Marital Status": [
       "UnMarried",
       "Divorced",
@@ -754,6 +799,7 @@ const EditProfile = () => {
       "Separated",
       "Married",
       "Annulled",
+      "Other",
     ],
 
     Gender: ["Male", "Female"],
@@ -854,6 +900,7 @@ const EditProfile = () => {
       "Others in Diploma",
       "Higher Secondary School / High School",
       "Diploma catering",
+      "Other",
     ], // Note: First code-la irundha short list
 
     Occupation: uniqueOccupations,
@@ -886,6 +933,7 @@ const EditProfile = () => {
       "80 - 90 Lakhs",
       "90 Lakhs - 1 Crore",
       "1 Crore & Above",
+      "Other",
     ],
 
     "Mother Tongue": [
@@ -953,6 +1001,7 @@ const EditProfile = () => {
       "Nimadi",
       "Shekhawati",
       "Wagdi",
+      "Other",
     ],
 
     Religion: [
@@ -967,6 +1016,7 @@ const EditProfile = () => {
       "Buddhis",
       "Inter-Religion",
       "Others",
+      "Other",
     ],
 
     Caste: [
@@ -1124,6 +1174,7 @@ const EditProfile = () => {
       "Vokkaliga",
       "Yadav",
       "Yadava Naidu",
+      "Other",
     ],
 
     "Father's Occupation": uniqueFatherOccupations,
@@ -1160,6 +1211,7 @@ const EditProfile = () => {
       "6ft 11in - 210cm",
       // ✨ Practical Maximum
       "7ft - 213cm",
+      "Other",
     ],
   };
 

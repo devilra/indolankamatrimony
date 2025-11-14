@@ -610,6 +610,7 @@ const dropdownData = {
     "Sister",
     "Friends",
     "Relative",
+    "Other",
   ],
   Rasi: [
     "மேஷம் (Aries)",
@@ -624,6 +625,7 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
+    "Other",
   ],
 
   Nakshatram: [
@@ -654,6 +656,7 @@ const dropdownData = {
     "பூரட்டாதி (Purva Bhadrapada)",
     "உத்திரட்டாதி (Uttara Bhadrapada)",
     "ரேவதி (Revati)",
+    "Other",
   ],
 
   Laknam: [
@@ -669,9 +672,10 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
+    "Other",
   ], // Note: First code-la irundha short list
 
-  Color: ["Fair", "Black", "White", "Very Fair"],
+  Color: ["Fair", "Black", "White", "Very Fair", "Other"],
   "Marital Status": [
     "UnMarried",
     "Divorced",
@@ -679,6 +683,7 @@ const dropdownData = {
     "Separated",
     "Married",
     "Annulled",
+    "Other",
   ],
 
   Gender: ["Male", "Female"],
@@ -779,7 +784,7 @@ const dropdownData = {
     // "Others in Diploma",
     "Higher Secondary School / High School",
     "Diploma catering",
-    "Other",
+    //"Other",
   ], // Note: First code-la irundha short list
 
   Occupation: uniqueOccupations,
@@ -812,6 +817,7 @@ const dropdownData = {
     "80 - 90 Lakhs",
     "90 Lakhs - 1 Crore",
     "1 Crore & Above",
+    "Other",
   ],
 
   "Mother Tongue": [
@@ -879,6 +885,7 @@ const dropdownData = {
     "Nimadi",
     "Shekhawati",
     "Wagdi",
+    "Other",
   ],
 
   Religion: [
@@ -892,7 +899,7 @@ const dropdownData = {
     "Parsi",
     "Buddhis",
     "Inter-Religion",
-    "Others",
+    "Other",
   ],
 
   Caste: [
@@ -1050,6 +1057,7 @@ const dropdownData = {
     "Vokkaliga",
     "Yadav",
     "Yadava Naidu",
+    "Other",
   ],
 
   "Father's Occupation": uniqueFatherOccupations,
@@ -1086,6 +1094,7 @@ const dropdownData = {
     "6ft 10in - 208cm",
     "6ft 11in - 210cm",
     "7ft - 213cm",
+    "Other",
   ],
 };
 
@@ -1190,6 +1199,18 @@ export default function RegisterProfile() {
     occupation: false,
     foccupation: false,
     moccupation: false,
+    mprofile: false,
+    rasi: false,
+    nakshatram: false,
+    laknam: false,
+    maritalstatus: false,
+    education: false,
+    annualincome: false,
+    mothertongue: false,
+    religion: false,
+    caste: false,
+    height: false,
+    color: false,
   });
 
   // 🌟 NEW: State to manage the value of the 'Other' custom input
@@ -1198,6 +1219,18 @@ export default function RegisterProfile() {
     occupation: "",
     foccupation: "",
     moccupation: "",
+    mprofile: "",
+    rasi: "",
+    nakshatram: "",
+    laknam: "",
+    height: "",
+    maritalstatus: "",
+    education: "",
+    annualincome: "",
+    mothertongue: "",
+    religion: "",
+    caste: "",
+    color: "",
   });
 
   //console.log(validation);
@@ -1627,12 +1660,36 @@ export default function RegisterProfile() {
         occupation: false,
         foccupation: false,
         moccupation: false,
+        mprofile: false,
+        rasi: false,
+        nakshatram: false,
+        laknam: false,
+        maritalstatus: false,
+        education: false,
+        annualincome: false,
+        mothertongue: false,
+        religion: false,
+        caste: false,
+        height: false,
+        color: false,
       });
       setOtherValue({
         education: "",
         occupation: "",
         foccupation: "",
         moccupation: "",
+        mprofile: "",
+        rasi: "",
+        nakshatram: "",
+        laknam: "",
+        height: "",
+        maritalstatus: "",
+        education: "",
+        annualincome: "",
+        mothertongue: "",
+        religion: "",
+        caste: "",
+        color: "",
       });
 
       sessionStorage.setItem(
@@ -1721,21 +1778,27 @@ export default function RegisterProfile() {
 
             {/* 2. Custom Input Field (Enabled/Displayed only if 'Other' is selected) */}
             {showCustomInput && (
-              <Input
-                type="text"
-                name={fieldName} // Use fieldName for the input
-                value={OtherValue[fieldName]}
-                onChange={handleChange}
-                placeholder={`Please specify your ${field.label}`}
-                className={`mt-2 h-[32px] border-black rounded ${
-                  isInValid
-                    ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
-                    : ""
-                }`}
-                // Multi-select education needs the input only if 'Other' is in the array
-                // Adhanal, educationArray use pannalaam
-                //disabled={isEducation && !educationArray.includes("Other")}
-              />
+              <div className="flex items-center gap-2 mt-2">
+                {/* 🛑 NEW: Identifier label for the custom input */}
+                <span className="text-xs font-semibold text-neutral-600 whitespace-nowrap">
+                  Custom:
+                </span>
+
+                <Input
+                  type="text"
+                  name={fieldName} // Use fieldName for the input
+                  value={OtherValue[fieldName]}
+                  onChange={handleChange}
+                  placeholder={`Please specify your ${field.label}`}
+                  className={`h-[32px] border-black rounded w-full ${
+                    // Changed class for flex layout
+                    isInValid
+                      ? "border-red-500 focus:border-red-500 focus-visible:ring-red-500"
+                      : ""
+                  }`}
+                  //disabled={isEducation && !educationArray.includes("Other")}
+                />
+              </div>
             )}
           </div>
         </div>

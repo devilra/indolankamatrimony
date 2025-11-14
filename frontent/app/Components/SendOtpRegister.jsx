@@ -615,6 +615,7 @@ const dropdownData = {
     "Sister",
     "Friends",
     "Relative",
+    "Other",
   ],
   Rasi: [
     "மேஷம் (Aries)",
@@ -629,6 +630,7 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
+    "Other",
   ],
 
   Nakshatram: [
@@ -659,6 +661,7 @@ const dropdownData = {
     "பூரட்டாதி (Purva Bhadrapada)",
     "உத்திரட்டாதி (Uttara Bhadrapada)",
     "ரேவதி (Revati)",
+    "Other",
   ],
 
   Laknam: [
@@ -674,9 +677,10 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
+    "Other",
   ], // Note: First code-la irundha short list
 
-  Color: ["Fair", "Black", "White", "Very Fair"],
+  Color: ["Fair", "Black", "White", "Very Fair", "Other"],
   "Marital Status": [
     "UnMarried",
     "Divorced",
@@ -684,6 +688,7 @@ const dropdownData = {
     "Separated",
     "Married",
     "Annulled",
+    "Other",
   ],
 
   Gender: ["Male", "Female"],
@@ -817,6 +822,7 @@ const dropdownData = {
     "80 - 90 Lakhs",
     "90 Lakhs - 1 Crore",
     "1 Crore & Above",
+    "Other",
   ],
 
   "Mother Tongue": [
@@ -884,6 +890,7 @@ const dropdownData = {
     "Nimadi",
     "Shekhawati",
     "Wagdi",
+    "Other",
   ],
 
   Religion: [
@@ -897,7 +904,7 @@ const dropdownData = {
     "Parsi",
     "Buddhis",
     "Inter-Religion",
-    "Others",
+    "Other",
   ],
 
   Caste: [
@@ -1055,6 +1062,7 @@ const dropdownData = {
     "Vokkaliga",
     "Yadav",
     "Yadava Naidu",
+    "Other",
   ],
 
   "Father's Occupation": uniqueFatherOccupations,
@@ -1091,6 +1099,7 @@ const dropdownData = {
     "6ft 10in - 208cm",
     "6ft 11in - 210cm",
     "7ft - 213cm",
+    "Other",
   ],
 };
 
@@ -1330,6 +1339,18 @@ export default function SendOtpRegister() {
     occupation: false,
     foccupation: false,
     moccupation: false,
+    mprofile: false,
+    rasi: false,
+    nakshatram: false,
+    laknam: false,
+    maritalstatus: false,
+    education: false,
+    annualincome: false,
+    mothertongue: false,
+    religion: false,
+    caste: false,
+    height: false,
+    color: false,
   });
 
   // 🌟 NEW: State to manage the value of the 'Other' custom input
@@ -1338,6 +1359,18 @@ export default function SendOtpRegister() {
     occupation: "",
     foccupation: "",
     moccupation: "",
+    mprofile: "",
+    rasi: "",
+    nakshatram: "",
+    laknam: "",
+    height: "",
+    maritalstatus: "",
+    education: "",
+    annualincome: "",
+    mothertongue: "",
+    religion: "",
+    caste: "",
+    color: "",
   });
 
   // Resend OTP Timer
