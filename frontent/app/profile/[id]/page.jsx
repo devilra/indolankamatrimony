@@ -978,9 +978,9 @@ const page = () => {
                                 ID: {p.id || "N/A"}
                               </div>
                               <hr className="my-1 border-gray-100" />
-                              <div className="flex justify-between text-[#4a2f1c]">
+                              <div className="flex justify-start text-[#4a2f1c]">
                                 <span className="font-medium">Age:</span>
-                                <span>{p.age || "N/A"}</span>
+                                <span className="px-1">{p.age || "N/A"}</span>
                               </div>
                             </div>
                           </div>
@@ -1100,9 +1100,9 @@ const page = () => {
                               ID: {p.id || "N/A"}
                             </div>
                             <hr className="my-1 border-gray-100" />
-                            <div className="flex justify-between text-[#4a2f1c]">
+                            <div className="flex justify-start text-[#4a2f1c]">
                               <span className="font-medium">Age:</span>
-                              <span>{p.age || "N/A"}</span>
+                              <span className="px-1">{p.age || "N/A"}</span>
                             </div>
                           </div>
                         </div>
