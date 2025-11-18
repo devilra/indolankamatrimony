@@ -380,7 +380,7 @@ const AllProfiles = () => {
         {/* Search Input */}
         {/* ... Search Input section is unchanged ... */}
         <div className="lg:flex lg:gap-5 lg:items-center">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-bold text-black mb-1">
             Search (ID, Name) :
           </label>
           <div className="flex rounded-md shadow-sm">
@@ -403,7 +403,7 @@ const AllProfiles = () => {
           <div className=" lg:flex mt-5 lg:items-center lg:gap-3">
             <label
               htmlFor="marital-status"
-              className="block text-sm  font-medium text-gray-700 mb-1"
+              className="block text-sm  font-bold text-black mb-1"
             >
               M.Status:
             </label>
@@ -426,7 +426,7 @@ const AllProfiles = () => {
           <div className="min-w-[150px] lg:flex lg:items-center lg:gap-3 mt-5">
             <label
               htmlFor="gender"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-bold text-black mb-1"
             >
               Gender:
             </label>
@@ -448,7 +448,7 @@ const AllProfiles = () => {
 
       {/* Profile Counts Section */}
       {/* ... Profile Counts section is unchanged ... */}
-      <div className="mb-4 text-sm font-medium mt-5 text-gray-700">
+      <div className="mb-4 text-sm  mt-5 font-bold text-black">
         {loading ? (
           <span className="text-indigo-600">Fetching results...</span>
         ) : (
@@ -462,7 +462,9 @@ const AllProfiles = () => {
                 (Showing filtered results)
               </span>
             ) : (
-              <span className="ml-4 text-gray-500">(Total profiles in DB)</span>
+              <span className="ml-4 font-semibold text-black">
+                (Total profiles in DB)
+              </span>
             )}
           </>
         )}
@@ -496,7 +498,7 @@ const AllProfiles = () => {
                       {TABLE_HEADERS.map((col) => (
                         <th
                           key={col.key}
-                          className={`px-4 py-3 text-left text-xs border-gray-700 font-medium text-gray-600 uppercase tracking-wider ${
+                          className={`px-4 py-3 text-left text-xs border-gray-700  text-black font-bold uppercase tracking-wider ${
                             col.widthClass
                           } ${col.thClass || ""}`}
                         >
@@ -533,7 +535,7 @@ const AllProfiles = () => {
                           return (
                             <td
                               key={col.key}
-                              className="px-4 py-3 text-sm text-gray-600"
+                              className="px-4 py-3 text-sm text-black"
                             >
                               {/* Address-க்கு உங்கள் பழைய கோடில் phone number இருந்தது, 
                                   இப்போது அது profile ஆப்ஜெக்டில் உள்ள `address` என்ற key-ஐ பொறுத்து மாறும். 
