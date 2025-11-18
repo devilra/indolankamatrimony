@@ -381,12 +381,12 @@ const AllProfiles = () => {
         {/* ... Search Input section is unchanged ... */}
         <div className="lg:flex lg:gap-5 lg:items-center">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Search (ID, Name, Email) :
+            Search (ID, Name) :
           </label>
           <div className="flex rounded-md shadow-sm">
             <input
               type="text"
-              className="w-full md:w-full lg:w-full  min-w-0 block px-3 py-2  border border-gray-300 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="w-full md:w-full lg:w-full  min-w-0 block px-3 py-2  border border-gray-700 rounded-l-md focus:ring-indigo-500 focus:border-indigo-500 placeholder:text-black sm:text-sm"
               placeholder="Start typing to search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -489,14 +489,14 @@ const AllProfiles = () => {
               <div className="max-h-[600px] overflow-y-auto">
                 {/* min-w-[6000px] நீக்கப்பட்டுள்ளது. அதற்கு பதிலாக, ஒவ்வொரு TH/TD-க்கும் widthClass கொடுக்கப்பட்டுள்ளது.
                     அதிக காலம்ஸ் இருப்பதால், min-w-[2800px] போன்ற ஒரு பெரிய மதிப்பைத் தேர்வு செய்துள்ளேன். */}
-                <table className="min-w-[6800px] divide-y divide-gray-200">
-                  <thead className="bg-gray-100 sticky top-0 z-10">
+                <table className="min-w-[6800px] divide-y divide-gray-500">
+                  <thead className="bg-gray-100 sticky top-0 border-gray-700 z-10">
                     <tr>
                       {/* TH-களை MAP செய்கிறோம் */}
                       {TABLE_HEADERS.map((col) => (
                         <th
                           key={col.key}
-                          className={`px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider ${
+                          className={`px-4 py-3 text-left text-xs border-gray-700 font-medium text-gray-600 uppercase tracking-wider ${
                             col.widthClass
                           } ${col.thClass || ""}`}
                         >
@@ -506,7 +506,7 @@ const AllProfiles = () => {
                     </tr>
                   </thead>
 
-                  <tbody className="bg-white divide-y  divide-gray-200">
+                  <tbody className="bg-white divide-y  divide-gray-700">
                     {profiles.map((profile, index) => (
                       <tr key={profile.id} className="hover:bg-gray-50 ">
                         {/* TD-களை MAP செய்கிறோம் */}
@@ -533,7 +533,7 @@ const AllProfiles = () => {
                           return (
                             <td
                               key={col.key}
-                              className="px-4 py-3 text-sm text-gray-500"
+                              className="px-4 py-3 text-sm text-gray-600"
                             >
                               {/* Address-க்கு உங்கள் பழைய கோடில் phone number இருந்தது, 
                                   இப்போது அது profile ஆப்ஜெக்டில் உள்ள `address` என்ற key-ஐ பொறுத்து மாறும். 
