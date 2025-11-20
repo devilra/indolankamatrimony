@@ -738,7 +738,7 @@ const MatchDrawerContent = ({
         Found **{matchProfiles.length}** Matching Profiles
       </h2>
       <div className="bg-white mb-10 p-4 mx-5 rounded-lg shadow-md overflow-x-auto">
-        <div className="flex space-x-4 pb-2">
+        <div className="flex space-x-4 pb-2 justify-center">
           {matchProfiles.map((p) => (
             <div
               key={p.id}
