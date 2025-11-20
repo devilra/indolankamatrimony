@@ -28,6 +28,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ageOptions = Array.from({ length: 33 }, (_, i) => 18 + i);
 const heightCmOptions = Array.from({ length: 122 }, (_, i) => 100 + i); // 100cm to 220cm (121 options)
@@ -656,6 +657,31 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
   );
 };
 
+const SKELETON_COUNT = 5;
+// 🚩 NEW COMPONENT: Profile Skeleton Loader
+const ProfileSkeleton = () => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+    {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+      <div
+        key={index}
+        className="flex-shrink-0 border rounded-lg p-3 shadow-sm bg-white animate-pulse"
+      >
+        {/* Photo Placeholder */}
+        <Skeleton className="h-40 w-full mb-2 bg-gray-200" />
+
+        {/* Name Placeholder */}
+        <Skeleton className="h-4 w-3/4 mb-1 bg-gray-200" />
+
+        {/* ID Placeholder */}
+        <Skeleton className="h-3 w-1/2 mb-3 bg-gray-200" />
+
+        {/* Age Placeholder */}
+        <Skeleton className="h-3 w-1/3 bg-gray-200" />
+      </div>
+    ))}
+  </div>
+);
+
 // 🚩 NEW COMPONENT: Drawer-க்குள் Match Profiles-ஐக் காட்ட இந்த Component-ஐப் பயன்படுத்துவோம்
 const MatchDrawerContent = ({
   matchProfiles,
@@ -667,6 +693,20 @@ const MatchDrawerContent = ({
 }) => {
   // hasSearched true ஆகவும், loading false ஆகவும் இருக்கும்போதுதான் உள்ளே வரும்
   if (!hasSearched || loading) return null;
+
+  // 🚩 HIGHLIGHT: Loading State (Skeleton காட்டுகிறது)
+  if (loading) {
+    return (
+      <>
+        <div className="p-4">
+          <h2 className="text-2xl font-bold mb-4 text-[#4a2f1c]">
+            Searching for Matches...
+          </h2>
+        </div>
+        <ProfileSkeleton />
+      </>
+    );
+  }
 
   if (matchErrors) {
     return (
@@ -1023,14 +1063,14 @@ const page = () => {
                 className="w-full"
               >
                 {/* Loading State */}
-                {loading && (
+                {/* {loading && (
                   <div className="flex justify-center items-center h-48 p-6 border rounded-lg bg-white shadow-md">
                     <Loader2 className="animate-spin h-6 w-6 text-[#4a2f1c]" /> 
                     <span className="ml-2 text-lg text-gray-700">
                       Searching for Matches...
                     </span>
                   </div>
-                )}
+                )} */}
                 {/* Results and No Match State (Loading mudinjadhukku apuram mattum) */}
                 {/* {!loading && (
                   <>

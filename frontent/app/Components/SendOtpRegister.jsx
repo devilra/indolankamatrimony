@@ -52,6 +52,7 @@ const REQUIRED_FIELDS = [
 ];
 
 const Occupations = [
+  "Other",
   "Software Professional",
   "Teaching / Academician",
   "Executive",
@@ -206,12 +207,12 @@ const Occupations = [
   "Courier",
   "bluedart",
   "Diploma catering",
-  "Other",
 ];
 
 const uniqueOccupations = [...new Set(Occupations)];
 
 const FatherOccupations = [
+  "Other",
   // Common occupations
   "Software Professional",
   "Teaching / Academician",
@@ -404,12 +405,12 @@ const FatherOccupations = [
   "Dentist",
   "Surgeon",
   "Veterinary Doctor",
-  "Other",
 ];
 
 const uniqueFatherOccupations = [...new Set(FatherOccupations)];
 
 const MotherOccupations = [
+  "Other",
   "Software Professional",
   "Teaching / Academician",
   "Executive",
@@ -601,13 +602,13 @@ const MotherOccupations = [
   "Dentist",
   "Surgeon",
   "Veterinary Doctor",
-  "Other",
 ];
 
 const uniqueMotherOccupations = [...new Set(MotherOccupations)];
 
 const dropdownData = {
   "Matrimony Profile for": [
+    "Other",
     "Myself",
     "Son",
     "Daugther",
@@ -615,9 +616,9 @@ const dropdownData = {
     "Sister",
     "Friends",
     "Relative",
-    "Other",
   ],
   Rasi: [
+    "Other",
     "மேஷம் (Aries)",
     "ரிஷபம் (Taurus)",
     "மிதுனம் (Gemini)",
@@ -630,10 +631,10 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
-    "Other",
   ],
 
   Nakshatram: [
+    "Other",
     "அஸ்வினி (Ashwini)",
     "பரணி (Bharani)",
     "கார்த்திகை (Krittika)",
@@ -661,10 +662,10 @@ const dropdownData = {
     "பூரட்டாதி (Purva Bhadrapada)",
     "உத்திரட்டாதி (Uttara Bhadrapada)",
     "ரேவதி (Revati)",
-    "Other",
   ],
 
   Laknam: [
+    "Other",
     "மேஷம் (Aries)",
     "ரிஷபம் (Taurus)",
     "மிதுனம் (Gemini)",
@@ -677,18 +678,17 @@ const dropdownData = {
     "மகரம் (Capricorn)",
     "கும்பம் (Aquarius)",
     "மீனம் (Pisces)",
-    "Other",
   ], // Note: First code-la irundha short list
 
-  Color: ["Fair", "Black", "White", "Very Fair", "Other"],
+  Color: ["Other", "Fair", "Black", "White", "Very Fair"],
   "Marital Status": [
+    "Other",
     "UnMarried",
     "Divorced",
     "Widowed",
     "Separated",
     "Married",
     "Annulled",
-    "Other",
   ],
 
   Gender: ["Male", "Female"],
@@ -795,6 +795,7 @@ const dropdownData = {
   Occupation: uniqueOccupations,
 
   "Annual Income": [
+    "Other",
     "0 - 1 Lakh",
     "1 - 2 Lakhs",
     "2 - 3 Lakhs",
@@ -822,10 +823,10 @@ const dropdownData = {
     "80 - 90 Lakhs",
     "90 Lakhs - 1 Crore",
     "1 Crore & Above",
-    "Other",
   ],
 
   "Mother Tongue": [
+    "Other",
     "Tamil",
     "Telugu",
     "Malayalam",
@@ -890,10 +891,10 @@ const dropdownData = {
     "Nimadi",
     "Shekhawati",
     "Wagdi",
-    "Other",
   ],
 
   Religion: [
+    "Other",
     "Hindu",
     "Christian",
     "Muslim",
@@ -904,10 +905,10 @@ const dropdownData = {
     "Parsi",
     "Buddhis",
     "Inter-Religion",
-    "Other",
   ],
 
   Caste: [
+    "Other",
     "24 Manai Telugu Chettiar",
     "Aaru Nattu Vellala",
     "Achirapakkam Chettiar",
@@ -1062,12 +1063,12 @@ const dropdownData = {
     "Vokkaliga",
     "Yadav",
     "Yadava Naidu",
-    "Other",
   ],
 
   "Father's Occupation": uniqueFatherOccupations,
   "Mother's Occupation": uniqueMotherOccupations,
   Height: [
+    "Other",
     "4ft 6in - 137cm",
     "4ft 7in - 139cm",
     "4ft 8in - 142cm",
@@ -1099,7 +1100,6 @@ const dropdownData = {
     "6ft 10in - 208cm",
     "6ft 11in - 210cm",
     "7ft - 213cm",
-    "Other",
   ],
 };
 
