@@ -749,21 +749,26 @@ const MatchDrawerContent = ({
                 <img
                   src={formatImageUrl(p.image, p.gender)}
                   alt={p.name || "Profile"}
-                  className="h-[150px] md:h-[250] md:w-[180px] w-[120px]"
+                  className="h-[150px] md:h-[300] md:w-[280px] w-[120px]"
                 />
               </div>
 
               <div className="space-y-1 text-sm">
-                <div className="font-bold text-base text-[#4a2f1c] truncate">
-                  {p.pname || "N/A"}
+                <div className="flex items-center gap-5">
+                  <h1 className="font-bold text-base text-[#4a2f1c] truncate">
+                    {p.pname || "N/A"}
+                  </h1>
+                  <h1 className="font-bold text-base text-black truncate">
+                    {p.age || "N/A"}
+                  </h1>
                 </div>
                 <div className="text-xs text-[#4a2f1c] font-semibold">
                   ID: {p.id || "N/A"}
                 </div>
                 <hr className="my-1 border-gray-100" />
                 <div className="flex justify-start text-[#4a2f1c]">
-                  <span className="font-medium">Age:</span>
-                  <span className="px-1">{p.age || "N/A"}</span>
+                  <span className="font-medium">Edu :</span>
+                  <span className="px-1">{p.education || "N/A"}</span>
                 </div>
               </div>
             </div>
@@ -1157,7 +1162,7 @@ const page = () => {
                     />
                   </div>
                   <DrawerFooter className="border-t pt-2">
-                    <p className="text-xs text-center text-gray-500">
+                    <p className="text-xs text-center text-black">
                       Click on a profile to view full details.
                     </p>
                   </DrawerFooter>
@@ -1321,7 +1326,7 @@ const page = () => {
                   />
                 </div>
                 <DrawerFooter className="border-t pt-2">
-                  <p className="text-xs text-center text-gray-500">
+                  <p className="text-xs text-center  text-black">
                     Click on a profile to view full details.
                   </p>
                 </DrawerFooter>
