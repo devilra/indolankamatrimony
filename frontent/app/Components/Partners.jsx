@@ -149,7 +149,7 @@ const Partners = () => {
 
               {/* ... Profile Details ... */}
               <div className="flex gap-5 items-center">
-                <h3 className="text-lg font-semibold text-gray-800">
+                <h3 className="text-lg font-semibold truncate text-gray-800">
                   {/* <strong className="text-black font-bold">Name : </strong> */}
                   {profile.pname}
                 </h3>
@@ -158,11 +158,11 @@ const Partners = () => {
                   <span className=" text-[14px]">{profile.age}</span>
                 </p>
               </div>
-              <p className="text-sm py-1 font-semibold text-gray-800">
+              <p className="text-sm py-1 font-semibold truncate text-gray-800">
                 {/* <strong className="font-bold text-black">Educations : </strong> */}
                 <span className=" text-[12px]">{profile.education}</span>
               </p>
-              <p className="text-sm py-1 font-semibold text-gray-800">
+              <p className="text-sm py-1 font-semibold truncate text-gray-800">
                 {/* <strong className="font-bold text-black">Educations : </strong> */}
                 <span className=" text-[12px]">{profile.caste}</span>
               </p>
