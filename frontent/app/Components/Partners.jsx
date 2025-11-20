@@ -162,6 +162,10 @@ const Partners = () => {
                 {/* <strong className="font-bold text-black">Educations : </strong> */}
                 <span className=" text-[12px]">{profile.education}</span>
               </p>
+              <p className="text-sm py-1 font-semibold text-gray-800">
+                {/* <strong className="font-bold text-black">Educations : </strong> */}
+                <span className=" text-[12px]">{profile.caste}</span>
+              </p>
 
               {/* <p className="text-xs text-gray-500 mt-1">
                 <strong className="text-black font-bold">Joined : </strong>{" "}

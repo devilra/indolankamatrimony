@@ -336,6 +336,12 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
     setFilters((prev) => ({ ...prev, [name]: e.target.value }));
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && filters.profile_id.trim().length > 0) {
+      handleSearch();
+    }
+  };
+
   const handleSelectChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
@@ -354,10 +360,11 @@ const FilterForm = ({ filters, setFilters, handleSearch, loading }) => {
             placeholder="Enter Profile ID"
             value={filters.profile_id}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             className="h-10 placeholder:text-neutral-800 rounded-tr-none rounded-br-none border-2 border-black/35"
           />
           <button
-            disabled={filters.profile_id.length === 0}
+            disabled={filters.profile_id.trim().length === 0}
             className={`border-2 border-l-0 p-[8px] cursor-pointer hover:bg-black/5 border-black/35 disabled:cursor-not-allowed disabled:opacity-50`}
           >
             <BsSearchHeart size={20} onClick={handleSearch} />
@@ -762,13 +769,17 @@ const MatchDrawerContent = ({
                     {p.age || "N/A"}
                   </h1>
                 </div>
-                <div className="text-xs text-[#4a2f1c] font-semibold">
-                  ID: {p.id || "N/A"}
-                </div>
-                <hr className="my-1 border-gray-100" />
-                <div className="flex justify-start text-[#4a2f1c]">
-                  <span className="font-medium">Edu :</span>
+
+                {/* <hr className="my-1 border-gray-100" /> */}
+                <div className="flex justify-start text-[#4a2f1c] font-semibold text-md">
+                  <span className="">Edu :</span>
                   <span className="px-1">{p.education || "N/A"}</span>
+                </div>
+                <div className="text-md text-[#4a2f1c] font-semibold">
+                  Caste: {p.caste || "N/A"}
+                </div>
+                <div className="text-md text-[#4a2f1c] font-semibold">
+                  ID: {p.id || "N/A"}
                 </div>
               </div>
             </div>
