@@ -1791,6 +1791,11 @@ export default function SendOtpRegister() {
         duration: 5000,
       });
       setResendTimer(RESEND_TIME_LIMIT);
+      window.scrollTo({
+        top: 100,
+        left: 0,
+        behavior: "smooth",
+      });
       return true;
     } else {
       // RejectWithValue- error
