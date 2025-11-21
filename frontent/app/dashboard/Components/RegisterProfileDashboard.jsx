@@ -2018,7 +2018,7 @@ export default function RegisterProfile() {
                         onChange={handleChange}
                         placeholder={`Enter ${field.label}`}
                         readOnly={isAgeField}
-                        disabled={isAgeField && formData.age === ""}
+                        //disabled={isAgeField && formData.age === ""}
                         // ✅ NEW: MaxLength for Phone/Whatsapp
                         maxLength={isPhoneNumberField ? 10 : undefined}
                         // 🔴 Input Border Update

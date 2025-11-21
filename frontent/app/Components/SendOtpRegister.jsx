@@ -2361,7 +2361,7 @@ export default function SendOtpRegister() {
                         value={formData?.[fieldName]}
                         onChange={handleChange}
                         placeholder={`Enter ${field.label}`}
-                        disabled={fieldName === "age"} // Age is auto-calculated
+                        //disabled={fieldName === "age"} // Age is auto-calculated
                         readOnly={fieldName === "age"}
                         className={`border-black rounded${
                           isInValid
