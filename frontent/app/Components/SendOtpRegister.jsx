@@ -2279,8 +2279,8 @@ export default function SendOtpRegister() {
                               onSelect={handleDateSelect}
                               mode="single"
                               captionLayout="dropdown"
-                              fromYear={1960}
-                              toYear={2025}
+                              fromYear={1980}
+                              toYear={new Date().getFullYear()}
                             />
                           </PopoverContent>
                         </Popover>

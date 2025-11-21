@@ -1870,8 +1870,8 @@ export default function RegisterProfile() {
                             onSelect={handleDateSelect}
                             mode="single"
                             captionLayout="dropdown"
-                            fromYear={1950}
-                            toYear={2025}
+                            fromYear={1980}
+                            toYear={new Date().getFullYear()}
                           />
                         </PopoverContent>
                       </Popover>

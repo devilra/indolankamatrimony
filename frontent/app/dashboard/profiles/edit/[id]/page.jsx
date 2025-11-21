@@ -1694,7 +1694,7 @@ const EditProfile = () => {
                             onSelect={handleDateSelect} // Handle date selection
                             mode="single"
                             captionLayout="dropdown"
-                            fromYear={1950}
+                            fromYear={1980}
                             toYear={new Date().getFullYear()} // Set to current year
                           />
                         </PopoverContent>
