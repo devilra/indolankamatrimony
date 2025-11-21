@@ -1060,8 +1060,8 @@ const dropdownData = {
     "Other",
   ],
 
-  "Father's Occupation": uniqueFatherOccupations,
-  "Mother's Occupation": uniqueMotherOccupations,
+  // "Father's Occupation": uniqueFatherOccupations,
+  // "Mother's Occupation": uniqueMotherOccupations,
   Height: [
     "4ft 6in - 137cm",
     "4ft 7in - 139cm",
@@ -1113,8 +1113,8 @@ const dropdownFieldMap = {
   "Mother Tongue": "mothertongue",
   Religion: "religion",
   Caste: "caste",
-  "Father's Occupation": "foccupation",
-  "Mother's Occupation": "moccupation",
+  //"Father's Occupation": "foccupation",
+  //"Mother's Occupation": "moccupation",
 };
 
 // 📄 Field order - HEADINGS AND FIELDS ADDED/ARRANGED HERE
@@ -1144,9 +1144,9 @@ const fieldOrder = [
   { label: "Family Details", type: "heading" },
 
   { label: "Father's Name", name: "fname", type: "input" },
-  { label: "Father's Occupation", type: "select" },
+  { label: "Father's Occupation", name: "foccupation", type: "input" },
   { label: "Mother's Name", name: "mname", type: "input" },
-  { label: "Mother's Occupation", type: "select" },
+  { label: "Mother's Occupation", name: "moccupation", type: "input" },
   { label: "Sister", name: "sister", type: "input" },
   { label: "Brother", name: "brother", type: "input" },
   { label: "Children", name: "children", type: "input" },
@@ -1197,8 +1197,8 @@ export default function RegisterProfile() {
   const [otherInputs, setOtherInputs] = useState({
     education: false,
     //occupation: false,
-    foccupation: false,
-    moccupation: false,
+    //foccupation: false,
+    //moccupation: false,
     mprofile: false,
     rasi: false,
     nakshatram: false,
@@ -1217,8 +1217,8 @@ export default function RegisterProfile() {
   const [OtherValue, setOtherValue] = useState({
     education: "",
     //occupation: "",
-    foccupation: "",
-    moccupation: "",
+    //foccupation: "",
+    //moccupation: "",
     mprofile: "",
     rasi: "",
     nakshatram: "",
